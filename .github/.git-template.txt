@@ -1,0 +1,7 @@
+# 커밋 메시지 템플릿
+# 형식: [타입] 제목
+# ex) [✨] 채팅 기능 추가
+# 깃모지 종류: 기능 추가(:sparkles: ✨), 버그 수정(:bug: 🐛), 문서 작성(:memo: 📝), 디자인 변경(:art: 🎨), 파일 삭제(:fire: 🔥), 디렉토리 이동(:truck: 🚚), 코드 개선(:recycle: ♻️)
+
+# 다음 깃 명령어를 입력해 커밋 템플릿을 지정해주세요.
+# $ git config --global commit.template ~/.gitmessage.txt

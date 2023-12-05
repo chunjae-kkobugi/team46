@@ -1,0 +1,95 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.1.6'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // "Settings(ctrl+alt+s) > Build, Execution, Deployment > Compiler > Annotation Processors"
+    // ✅Enable annotation processing ( 반드시 체크하기)
+
+    // querydsl 라이브러리
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    implementation "com.querydsl:querydsl-core"
+    implementation "com.querydsl:querydsl-sql"
+
+    // BCrypt 사용 위해 의존성 추가
+    implementation 'org.springframework.security:spring-security-core'
+
+    // modelMapper: DTO 와 엔티티 간 변환 처리해주는 라이브러리
+    implementation "org.modelmapper:modelmapper:3.2.0"
+
+    // 롬복 외에도 querydsl 어노테이션 추가
+    compileOnly("org.projectlombok:lombok", "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // 기존 롬복 이외도, jakarta 와 querydsl 어노테이션 추가
+    annotationProcessor(
+            "org.projectlombok:lombok",
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    );
+
+    // JUnit 테스트 시 test Annotation
+    testAnnotationProcessor "org.projectlombok:lombok"
+    testImplementation 'org.projectlombok:lombok:1.18.26'
+
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def querydslDir = "src/main/generated"
+
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
+}
+
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+clean {
+    delete file(querydslDir)
+}
+
