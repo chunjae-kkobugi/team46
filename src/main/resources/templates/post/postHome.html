@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$Title$</title>
+</head>
+<body>
+<script th:src="@{/js/sockjs.min.js}"></script>
+<script th:src="@{/js/stomp.min.js}"></script>
+<script>
+    var socket = new SockJS('/stomp');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/stomp-receive/1');
+        stompClient.send("/stomp-send/1", {},
+            JSON.stringify({
+                'content': "stomp websocket test 20231206"
+            })
+        );
+    });
+</script>
+</body>
+</html>

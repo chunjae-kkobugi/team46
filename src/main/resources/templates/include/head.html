@@ -1,0 +1,40 @@
+<th:block th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="This is meta description">
+
+    <!-- 파비콘 설정 :32X32 자주 사용 -->
+    <!-- 표준 파비콘 -->
+    <link rel="shortcut icon" th:href="@{/images/favicon/favicon-16x16.png}">
+    <!-- 애플 계열 모바일 -->
+    <link rel="apple-touch-ico-precomposed" th:href="@{/images/favicon/apple-touch-icon.png}">
+
+    <!-- 파이어폭스, 오페라 또는 구형 크롬/사파리 -->
+    <link rel="icon" th:href="@{/images/favicon/favicon-16x16.png}" sizes="16x16">
+    <link rel="icon" th:href="@{/images/favicon/favicon-32x32.png}" sizes="32x32">
+    <link rel="icon" th:href="@{/images/favicon/favicon-48x48.png}" sizes="48x48">
+    <link rel="icon" th:href="@{/images/favicon/favicon-64x64.png}" sizes="64x64">
+    <link rel="icon" th:href="@{/images/favicon/favicon-96x96.png}" sizes="96x96">
+
+    <!-- # Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- # CSS Plugins -->
+
+    <link rel="stylesheet" th:href="@{/plugins/slick/slick.css}">
+    <link rel="stylesheet" th:href="@{/plugins/font-awesome/fontawesome.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/font-awesome/brands.css}">
+    <link rel="stylesheet" th:href="@{/plugins/font-awesome/solid.css}">
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap-grid.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap-reboot.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap-utilities.css}">
+
+    <!-- # Main Style Sheet -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- jQuery v3.5.1 -->
+    <script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+</th:block>
