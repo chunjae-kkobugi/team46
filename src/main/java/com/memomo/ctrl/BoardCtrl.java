@@ -35,6 +35,6 @@ public class BoardCtrl {
 
         model.addAttribute("pageDTO", pageDTO);
 
-        return "boardList";
+        return "board/boardList";
     }
 }

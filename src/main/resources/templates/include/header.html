@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<th:block th:fragment="header">
+    <header class="navigation bg-secondary mb-auto">
+        <nav class="navbar navbar-expand-xl navbar-light text-center py-3">
+            <div class="container">
+                <a class="navbar-brand" th:href="@{/}">
+                    <img class="img-fluid" width="130" th:src="@{/images/classboard.png}" alt="메모모">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span
+                        class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    </ul>
+                    <a th:href="@{/member/login}" class="btn btn-outline-main">로그인</a>
+                    <a th:href="@{/member/join}" class="btn btn-main ms-2 ms-lg-3">회원가입</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+</th:block>
+</body>
+</html>
