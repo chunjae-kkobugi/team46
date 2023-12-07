@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -16,7 +18,15 @@ public class EmailServiceImpl implements EmailService {
     private int code;
 
     public void generateCode() {
-        code = (int) (Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
+        Random random = new Random();
+        int firstDigit = 1 + random.nextInt(9); // 1부터 9까지의 숫자 생성
+        StringBuilder sb = new StringBuilder();
+        sb.append(firstDigit);
+        for (int i = 0; i < 5; i++) {
+            int randomNumber = random.nextInt(10); // 0부터 9까지의 숫자 생성
+            sb.append(randomNumber);
+        }
+        code = Integer.parseInt(sb.toString());
     }
 
     @Override
