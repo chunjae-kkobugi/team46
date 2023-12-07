@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>로그인</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<section class="bg-image join_area join my-5">
+    <div class="mask d-flex align-items-center">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mt-3 mb-5">회원가입</h2>
+
+                            <form name="frm1" id="frm1" action="/member/joinPro" method="post" onsubmit="return joinCheck(this)">
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" name="id" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력" class="form-control text-black" maxlength="16" autofocus="" required="">
+                                    <!--<label class="form-label blind" for="id">아이디</label>-->
+                                    <input type="button" class="btn btn-primary" value="아이디 중복 확인" onclick="idCheck()">
+                                    <input type="hidden" name="idCk" id="idCk" value="no">
+                                    <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.</p>
+                                    <!--                                        <p id="msg"><i class="fas fa-check"></i> 아이디 중복 체크후 수정하였습니다.</p>-->
+                                </div>
+
+                                <div class="form-outline mb-1">
+                                    <input type="password" name="pw" id="pw" placeholder="비밀번호 입력" class="form-control text-black" maxlength="16" required="">
+                                    <label class="form-label blind" for="pw">비밀번호</label>
+                                    <p class="info mb-0"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각 1개 이상 포함</p>
+                                </div>
+                                <!-- pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" -->
+                                <div class="form-outline mb-4">
+                                    <input type="password" name="pw2" id="pw2" placeholder="비밀번호  확인 입력" class="form-control text-black" maxlength="16" required="">
+                                    <label class="form-label blind" for="pw2">비밀번호 확인</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" name="name" id="name" placeholder="이름 입력" class="form-control text-black" required="">
+                                    <label class="form-label blind" for="name">이름</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="tel" name="tel" id="tel" maxlength="13" placeholder="전화번호 숫자만 입력 000-0000-0000" class="form-control text-black" required="">
+                                    <label class="form-label blind" for="tel">전화번호</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="email" name="email" id="email" placeholder="이메일 입력" class="form-control text-black" required="">
+                                    <label class="form-label blind" for="email">이메일</label>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소 입력" class="form-control text-black" required="">
+                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소 입력" class="form-control text-black" required="">
+                                    <input type="hidden" name="addr3" id="addr3" class="form-control">
+                                    <input type="text" name="postcode" id="postcode" placeholder="우편번호" class="form-control text-black">
+                                    <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-primary">우편번호 검색</button>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-primary px-5 py-2 mt-4" style="font-size:20px">회원가입</button>
+                                </div>
+                            </form>
+                            <script>
+                                let realpath = "\/";
+
+                                $(document).ready(function(){
+                                    $("#id").keyup(function(){
+                                        $("#idCk").val("no");
+                                        if($(this).val()!=""){
+                                            if($("#msg").hasClass("no_check")) {
+                                                $("#msg").removeClass("no_check");
+                                            }
+                                            $("#msg").html("아이디 입력중입니다.");
+                                            $("#id").focus();
+                                        } else {
+                                            $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
+                                        }
+                                    });
+                                });
+
+                                function idCheck(){
+                                    if($("#id").val()==""){
+                                        alert("아이디를 입력하지 않았습니다.");
+                                        $("#id").focus();
+                                        return false;
+                                    }
+
+                                    var params = {"id" : $("#id").val()};
+                                    $.ajax({
+                                        url: realpath+"member/idCheckPro",	//아이디가 전송되어질 곳
+                                        type:"post",
+                                        data:JSON.stringify(params),
+                                        dataType:"json",
+                                        contentType:"application/json",
+                                        success : function(result) {
+                                            var idPass = result;
+                                            if(idPass == false){
+                                                $("#idCk").val("no");
+                                                $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
+                                                $("#id").focus();
+                                            } else if(idPass == true){
+                                                $("#idCk").val("yes");
+                                                if($("#msg").hasClass("no_check")) {
+                                                    $("#msg").removeClass("no_check");
+                                                }
+                                                $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
+                                            } else if(idPass==""){
+                                                $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
+                                            }
+                                        }
+                                    });
+                                }
+
+                                function joinCheck(f){
+                                    if(f.pw.value!=f.pw2.value){
+                                        alert("비밀번호와 비밀번호 확인이 서로 다릅니다.");
+                                        f.pw.focus();
+                                        return false;
+                                    }
+                                    if(f.idCk.value!="yes"){
+                                        alert("아이디 중복 체크를 하지 않으셨습니다.");
+                                        return false;
+                                    }
+                                }
+                            </script>
+
+                            <script src="/js/common.js"></script>
+                            <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                            <script>
+                                function findAddr(){
+                                    new daum.Postcode({
+                                        oncomplete:function(data){
+                                            var roadAddr = data.roadAddress;
+                                            var jibunAddr = data.jibunAddress;
+                                            var bname = data.bname;
+                                            document.getElementById("postcode").value = data.zonecode;
+                                            if(roadAddr !== ''){
+                                                document.getElementById("addr1").value = roadAddr;
+                                            } else if(jibunAddr !== ''){
+                                                document.getElementById("addr1").value = jibunAddr;
+                                            }
+                                            document.getElementById("addr3").value = bname;
+                                            document.getElementById("addr2").focus();
+                                        }
+                                    }).open();
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+</html>

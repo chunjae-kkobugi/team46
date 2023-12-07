@@ -39,6 +39,12 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
+  # fileUpload Path
+  org:
+    zerock:
+      upload:
+        path: C:\\upload
+
 logging:
   level:
     org:

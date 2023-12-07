@@ -23,7 +23,7 @@ public class PageDTO<E, T> {
     private int pageNow = 1; // 현재 화면의 현재 페이지 번호
     private int pageTotal; // 전체 페이지 개수
 
-    private int postScreen = 10; // 한 화면(페이지) 당 게시글 개수
+    private int postScreen = 9; // 한 화면(페이지) 당 게시글 개수
     private Long postTotal; // 전체 게시글 개수 (Long 타입 반환)
 
     private String type; // 검색 종류(복수 선택 시 반점(,)으로 구분
