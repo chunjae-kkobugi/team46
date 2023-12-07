@@ -3,9 +3,15 @@ function connect() {
 
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        stompClient.subscribe('/stomp-receive/'+bno, function (chatListVO) {
-            showChat(JSON.parse(chatListVO.body));
-        });
+        stompClient.subscribe(
+            '/stomp-receive/'+bno, // destination (String 필수)
+            function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
+                console.log("THIS IS MESSAGE");
+                let postDTO = JSON.parse(message.body)
+                console.log(postDTO);
+            },
+            {}  // 헤더 (Object 선택)
+        );
     });
 }
 
@@ -17,39 +23,71 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function postAdd(){
+function postAdd(content){
     let sendUrl = "/stomp-send/add/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+            'content' : content,
+        })
+    );
 }
 
 function postEdit(){
     let sendUrl = "/stomp-send/edit/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+
+        })
+    );
 }
 
 function postRemove(){
     let sendUrl = "/stomp-send/remove/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+            'content' : "Hello STOMP websocket",
+            'layout': {
+                'priority': 3
+            }
+        })
+    );
 }
 
-function postMove(){
+function postMove(layout){
     let sendUrl = "/stomp-send/move/"+bno;
     stompClient.send(
         sendUrl, // destination (String 필수)
         {}, // 헤더 (Object 선택)
         JSON.stringify({ // body (String 선택)
-            'message' : $("#message").val()
-    }));
+            'pno': layout.pno,
+            'layout': layout
+        })
+    );
 }
 
+function layoutDrag(pno, x, y, z){
+    let layout = {
+        'pno': pno,
+        'x': x,
+        'y': y,
+        'z': z,
+    };
+    postMove(layout);
+}
 
-//html 에서 입력값, bno 를 받아서 Controller 로 전달
-function sendChat() {
-    if($("#message").val() === ''){
-        return false;
+function layoutSort(pno, priority){
+    let layout = {
+        'lno': null,
+        'pno': pno,
+        'priority': priority
     }
-
-    stompClient.send("/stomp-send/add/"+bno, {},
-        JSON.stringify({
-            'message' : $("#message").val()
-    }));
+    postMove(layout);
 }
 
 //저장된 채팅 불러오기
@@ -67,7 +105,7 @@ function loadChat(chatList){
             }
         }
     }
-    updateScroll();
+
 }
 
 //보낸 채팅 보기
@@ -82,10 +120,7 @@ function showChat(chatListVO) {
         );
     }
 
-    //this.scrollTo(0, $("#chatting").height());
-
     $("#message").val("");
-    updateScroll();
 }
 
 $(function () {
@@ -104,9 +139,4 @@ window.onload = function (){
 
 window.BeforeUnloadEvent = function (){
     disconnect();
-}
-
-function updateScroll(){
-    var chattingDiv = document.getElementById('chatting');
-    chattingDiv.scrollTop = chattingDiv.scrollHeight;
 }
