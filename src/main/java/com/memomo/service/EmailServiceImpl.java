@@ -13,22 +13,22 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender javaMailSender;
-    private int number;
+    private int code;
 
-    public void createNumber() {
-        number = (int) (Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
+    public void generateCode() {
+        code = (int) (Math.random() * (90000)) + 100000;// (int) Math.random() * (최댓값-최소값+1) + 최소값
     }
 
     @Override
     public MimeMessage createMail(String mail) {
-        createNumber();
+        generateCode();
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             message.setRecipients(MimeMessage.RecipientType.TO, mail);
             message.setSubject("이메일 인증");
             String body = "";
             body += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
-            body += "<h1>" + number + "</h1>";
+            body += "<h1>" + code + "</h1>";
             body += "<h3>" + "감사합니다." + "</h3>";
             message.setText(body, "UTF-8", "html");
         } catch (MessagingException e) {
@@ -41,6 +41,6 @@ public class EmailServiceImpl implements EmailService {
     public int sendMail(String mail) {
         MimeMessage message = createMail(mail);
         javaMailSender.send(message);
-        return number;
+        return code;
     }
 }

@@ -10,12 +10,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 public class EmailCtrl {
     private final EmailService emailService;
+    private int code;
 
     @ResponseBody
     @PostMapping("/send-mail")
-    public String MailSend(String mail) {
-        int number = emailService.sendMail(mail);
-        return String.valueOf(number);
+    public String mailSend(String mail) {
+        code = emailService.sendMail(mail);
+        return String.valueOf(code);
+    }
+
+    @ResponseBody
+    @PostMapping("/confirm")
+    public boolean confirm(int inputNum) {
+        return inputNum == code;
     }
 
 }
