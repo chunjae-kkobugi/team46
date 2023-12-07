@@ -45,6 +45,19 @@ spring:
       upload:
         path: C:\\upload
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: weekcrew2023@gmail.com
+    password: jwmr tjzi edlx ohxv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
 logging:
   level:
     org:
