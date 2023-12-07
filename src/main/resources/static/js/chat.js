@@ -1,24 +1,9 @@
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#chatting").html("");
-}
-
 function connect() {
     var socket = new SockJS('/stomp');
 
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        setConnected(true);
-
-        loadChat(chatList)  //저장된 채팅 불러오기
-        stompClient.subscribe('/stomp-receive/'+roomId, function (chatListVO) {
+        stompClient.subscribe('/stomp-receive/'+bno, function (chatListVO) {
             showChat(JSON.parse(chatListVO.body));
         });
     });
@@ -28,20 +13,43 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    setConnected(false);
+
     console.log("Disconnected");
 }
 
-//html 에서 입력값, roomId 를 받아서 Controller 로 전달
+function postAdd(){
+    let sendUrl = "/stomp-send/add/"+bno;
+}
+
+function postEdit(){
+    let sendUrl = "/stomp-send/edit/"+bno;
+}
+
+function postRemove(){
+    let sendUrl = "/stomp-send/remove/"+bno;
+}
+
+function postMove(){
+    let sendUrl = "/stomp-send/move/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+            'message' : $("#message").val()
+    }));
+}
+
+
+//html 에서 입력값, bno 를 받아서 Controller 로 전달
 function sendChat() {
     if($("#message").val() === ''){
         return false;
     }
 
-    stompClient.send("/chat/send/"+roomId, {},
+    stompClient.send("/stomp-send/add/"+bno, {},
         JSON.stringify({
             'message' : $("#message").val()
-        }));
+    }));
 }
 
 //저장된 채팅 불러오기
