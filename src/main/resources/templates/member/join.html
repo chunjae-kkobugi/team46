@@ -9,62 +9,72 @@
 
 <section class="bg-image join_area join my-5">
     <div class="mask d-flex align-items-center">
-        <div class="container h-100">
+        <div class="container-fluid">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                     <div class="card">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mt-3 mb-5">회원가입</h2>
 
-                            <form name="frm1" id="frm1" action="/member/joinPro" method="post" onsubmit="return joinCheck(this)">
+                            <form name="frm1" id="frm1" th:action="@{/member/joinPro}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
+                                <div class="form-outline mb-4">
+                                    <label class="form-label blind" for="name">이름</label>
+                                    <input type="text" th:field="*{name}" id="name" placeholder="이름 입력" class="form-control text-black" required="">
+                                </div>
+
 
                                 <div class="form-outline mb-4">
-                                    <input type="text" name="id" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력" class="form-control text-black" maxlength="16" autofocus="" required="">
-                                    <!--<label class="form-label blind" for="id">아이디</label>-->
-                                    <input type="button" class="btn btn-primary" value="아이디 중복 확인" onclick="idCheck()">
+                                    <label class="form-label blind" for="id">아이디</label>
+                                    <br>
+                                    <input type="text" th:field="*{id}" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력" class="form-control text-black" maxlength="16" autofocus="" required="">
+                                    <input type="button" class="btn btn-main ms-1" value="중복확인" onclick="idCheck()">
                                     <input type="hidden" name="idCk" id="idCk" value="no">
                                     <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.</p>
-                                    <!--                                        <p id="msg"><i class="fas fa-check"></i> 아이디 중복 체크후 수정하였습니다.</p>-->
                                 </div>
 
                                 <div class="form-outline mb-1">
-                                    <input type="password" name="pw" id="pw" placeholder="비밀번호 입력" class="form-control text-black" maxlength="16" required="">
                                     <label class="form-label blind" for="pw">비밀번호</label>
+                                    <input type="password" th:field="*{pw}" id="pw" placeholder="비밀번호 입력" class="form-control text-black" maxlength="16" required="">
                                     <p class="info mb-0"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각 1개 이상 포함</p>
                                 </div>
                                 <!-- pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" -->
                                 <div class="form-outline mb-4">
-                                    <input type="password" name="pw2" id="pw2" placeholder="비밀번호  확인 입력" class="form-control text-black" maxlength="16" required="">
                                     <label class="form-label blind" for="pw2">비밀번호 확인</label>
+                                    <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인 입력" class="form-control text-black" maxlength="16" required="">
                                 </div>
 
-                                <div class="form-outline mb-4">
-                                    <input type="text" name="name" id="name" placeholder="이름 입력" class="form-control text-black" required="">
-                                    <label class="form-label blind" for="name">이름</label>
-                                </div>
+
 
                                 <div class="form-outline mb-4">
-                                    <input type="tel" name="tel" id="tel" maxlength="13" placeholder="전화번호 숫자만 입력 000-0000-0000" class="form-control text-black" required="">
                                     <label class="form-label blind" for="tel">전화번호</label>
+                                    <input type="tel" th:field="*{tel}" id="tel" maxlength="13" placeholder="전화번호 숫자만 입력 000-0000-0000" class="form-control text-black" required="">
                                 </div>
 
                                 <div class="form-outline mb-4">
-                                    <input type="email" name="email" id="email" placeholder="이메일 입력" class="form-control text-black" required="">
-                                    <label class="form-label blind" for="email">이메일</label>
+                                    <label class="form-label blind" for="email">이메일</label><br>
+                                    <input type="email" th:field="*{email}" id="email" placeholder="이메일 입력" class="form-control text-black" required="">
+                                    <input type="button" class="btn btn-main ms-1" value="인증요청" onclick="verifyEmail()">
                                 </div>
 
                                 <div class="form-outline mb-4">
-                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소 입력" class="form-control text-black" required="">
-                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소 입력" class="form-control text-black" required="">
-                                    <input type="hidden" name="addr3" id="addr3" class="form-control">
+                                    <label class="form-label blind" for="school">학교</label>
+                                    <input type="text" th:field="*{school}" id="school" placeholder="학교 입력" class="form-control text-black" required="">
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label blind" for="addr1">주소</label>
+                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소 입력" class="form-control text-black mb-1" required="">
+                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소 입력" class="form-control text-black mb-1" required="">
                                     <input type="text" name="postcode" id="postcode" placeholder="우편번호" class="form-control text-black">
-                                    <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-primary">우편번호 검색</button>
+                                    <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-main ms-1">우편번호 검색</button>
                                 </div>
 
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary px-5 py-2 mt-4" style="font-size:20px">회원가입</button>
+                                    <button type="submit" class="btn btn-main px-5 py-2 mt-4" style="font-size:20px">회원가입</button>
                                 </div>
                             </form>
+
+
                             <script>
                                 let realpath = "\/";
 
@@ -129,7 +139,6 @@
                                 }
                             </script>
 
-                            <script src="/js/common.js"></script>
                             <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
                             <script>
                                 function findAddr(){
@@ -144,7 +153,6 @@
                                             } else if(jibunAddr !== ''){
                                                 document.getElementById("addr1").value = jibunAddr;
                                             }
-                                            document.getElementById("addr3").value = bname;
                                             document.getElementById("addr2").focus();
                                         }
                                     }).open();
