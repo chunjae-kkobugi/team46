@@ -19,7 +19,7 @@
             <div class="d-flex justify-content-end pb-4">
                 <a th:href="@{/board/register}" class="btn btn-main"> 게시판 생성 <i class="fa-solid fa-clipboard"></i></a>
             </div>
-            <div th:replace="/include/searchList :: search('board/boardList', 'title:제목')"></div>
+            <div th:replace="/include/searchList :: search('board/list', 'title:제목')"></div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <th:block th:each="list : ${boardList}">
                     <div class="col">
@@ -75,7 +75,7 @@
             </div>
         </div>
     </div>
-    <th:block th:if="${not #lists.isEmpty(boardList)}"><div th:replace="/include/pagination :: pagination('board/boardList')"></div></th:block>
+    <th:block th:if="${not #lists.isEmpty(boardList)}"><div th:replace="/include/pagination :: pagination('board/list')"></div></th:block>
     <th:block th:if="${boardList.isEmpty()}">
         <p class="text-center">만들어진 게시판이 없습니다.</p>
     </th:block>
