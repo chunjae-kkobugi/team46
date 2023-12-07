@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<th:block th:fragment="footer">
+    <footer class="py-4 bg-secondary mt-auto">
+        <div class="footer-info" style="white-space:nowrap">
+            <div class="inner"><span><em>고객센터 1577-7609</em>(평일 09:00~17:30)</span>
+                <div class="left-area">
+                    <ul class="link-list mt-3">
+                        <li><a href="https://www.chunjae.co.kr/">천재교육</a></li>
+                        <li><a href="https://chunjaetext.co.kr/">천재교과서</a></li>
+                        <li><a href="https://www.tsherpa.co.kr/mo_membership/info_policy.html?tab=policy1">이용약관</a></li>
+                        <li><a href="https://www.tsherpa.co.kr/mo_membership/info_policy.html?tab=policy2">개인정보처리방침</a></li>
+                        <li><a href="https://www.tsherpa.co.kr/center/M-noticM.html">고객센터</a></li>
+                    </ul>
+
+                    <div class="ms-2">
+                        <select name="sel" id="sel" class="sele" onchange="loc()">
+                            <option value="">패밀리 사이트</option>
+                            <option value="https://www.milkt.co.kr/">밀크티 초등</option>
+                            <option value="https://mid.milkt.co.kr/">밀크티 중학</option>
+                            <option value="https://mall.chunjae.co.kr/">천재교육 쇼핑몰</option>
+                        </select>
+                    </div>
+                    <script>
+                        function loc() {
+                            var url = document.getElementById("sel").value;
+                            //location.href = url;  //현재 창에
+                            if (url != "") {
+                                var win = window.open(url); //새창에
+                            }
+                        }
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- # JS Plugins -->
+    <script th:src="@{/plugins/bootstrap/bootstrap.min.js}"></script>
+    <script th:src="@{/plugins/slick/slick.min.js}"></script>
+    <script th:src="@{/plugins/scrollmenu/scrollmenu.min.js}"></script>
+    <!-- Main Script -->
+    <script th:src="@{/js/script.js}"></script>
+</th:block>
+</body>
+</html>

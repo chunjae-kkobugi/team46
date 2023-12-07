@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>로그인</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<section class="login py-5 border-top-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8 align-item-center">
+                <div class="border border-2 mx-5">
+                    <!-- <h3 class="bg-gray p-4 text-center">로그인</h3> -->
+                    <form th:action="@{/member/loginPro}" method="post">
+                        <fieldset class="p-4">
+                            <input class="form-control mb-3" name="id" type="text" placeholder="아이디" required="">
+                            <input class="form-control mb-3" name="pw" type="password" placeholder="비밀번호" required="">
+
+                            <p class="text-danger">[[${msg}]]</p>
+                            <button type="submit" class="form-control btn btn-main font-weight-bold" style="color: #ffffff !important">로그인</button>
+
+                            <div class="sign_area">
+                                <span class="save_box">
+                                    <input type="checkbox" id="keep-me-logged-in">
+                                    <label class="checkbox">아이디 저장</label>
+                                </span>
+                                <span class="look_box">
+                                    <a href="#" class="forgot">아이디/비밀번호를 잊으셨나요?</a>
+                                    <div class="signup">
+                                        <span>처음이신가요?</span>
+                                        <a th:href="@{/joinTerm}">회원가입</a>
+                                    </div>
+                                </span>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+</html>

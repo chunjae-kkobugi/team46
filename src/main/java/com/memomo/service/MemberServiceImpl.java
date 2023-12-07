@@ -1,7 +1,10 @@
 package com.memomo.service;
 
+import com.memomo.dto.MemberDTO;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,17 +14,23 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MemberServiceImpl implements MemberService{
-    @Autowired
-    private MemberRepository memberRepo;
-    @Autowired
-    private BCryptPasswordEncoder pwEncoder;
+@RequiredArgsConstructor
+public class MemberServiceImpl implements MemberService {
+
+    private final ModelMapper modelMapper;
+
+    private final MemberRepository memberRepo;
+
+    private final BCryptPasswordEncoder pwEncoder;
 
 
     @Override
-    public Member join(Member member) {
+    public void join(MemberDTO memberDTO) {
         // id, pw, email, tel 필수
-        return memberRepo.save(member);
+        Member member = modelMapper.map(memberDTO, Member.class);
+        String ppw = pwEncoder.encode(member.getPw());
+        member.setPw(ppw);
+        memberRepo.save(member);
     }
 
     @Override
@@ -34,13 +43,13 @@ public class MemberServiceImpl implements MemberService{
     public String login(String id, String pw) {
         Optional<Member> member = memberRepo.findById(id);
 
-        if(member.isEmpty()){
+        if (member.isEmpty()) {
             return "No such Id";
         }
 
         Member mem = member.orElseThrow();
 
-        if(pwEncoder.matches(pw, mem.getPw())){
+        if (pwEncoder.matches(pw, mem.getPw())) {
             // 입력한 비밀번호와 데이터베이스 비밀번호 일치 시 로그인 성공
             return "Login Success";
         }
