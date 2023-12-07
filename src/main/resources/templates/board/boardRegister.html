@@ -5,8 +5,8 @@
     <title>게시판 등록</title>
     <style>
         /* 겉부분의 디자인 변경 */
-        #deco {
-            width: 50px;
+        input[type=color] {
+            width: 63px;
             height: 50px;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -16,9 +16,9 @@
         }
 
         /* 안쪽부분의 디자인 변경 */
-        #deco::-webkit-color-swatch {
+        input[type=color]::-webkit-color-swatch {
             border-radius: 30px;
-            border: none;
+            border: 5px solid;
         }
 
     </style>
@@ -33,33 +33,32 @@
     </div>
 </section>
 <section class="section pb-5">
-    <div class="container">
-        <!-- 회원기능 완료되면 뺄 예정 -->
-        <div class="col-12">
-            <label for="teacher" class="form-label"> 선생님 </label>
-            <input type="text" class="form-control" id="teacher" maxlength="80" required>
-        </div>
-        <!-- 끝 -->
-        <div class="col-12">
-            <label for="title" class="form-label"> 게시판 이름 </label>
-            <input type="text" class="form-control" id="title" maxlength="80" required>
-        </div>
-        <div class="col-12">
-            <label for="password" class="form-label"> 비밀번호 <span>(선택)</span></label>
-            <input type="password" class="form-control" id="password" maxlength="10">
-        </div>
-        <div class="col-12">
-            <label for="maxStudent" class="form-label"> 최대 학생수 </label>
-            <input type="password" class="form-control" id="maxStudent">
-        </div>
-        <div class="col-12">
-            <label for="bgColor" class="form-label"> 배경색 <span>(선택)</span></label>
-            <input type="color" class="form-control" id="bgColor">
-        </div>
-        <div class="col-12">
-            <label for="bgImage" class="form-label"> 배경이미지 <span>(선택)</span></label>
-            <input type="c" class="form-control" id="bgImage">
-        </div>
+    <div class="col-6 container">
+        <form th:action="@{/board/register}" method="post">
+            <div class="col-12 mb-3">
+                <label for="title" class="form-label"> 게시판 이름 </label>
+                <input type="text" class="form-control" id="title" name="title" maxlength="80" required>
+            </div>
+            <div class="col-12 mb-3">
+                <label for="bpw" class="form-label"> 비밀번호 <span>(선택)</span></label>
+                <input type="password" class="form-control" id="bpw" name="bpw" maxlength="10">
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label for="maxStudent" class="form-label"> 최대 학생수 </label>
+                    <input type="number" class="form-control" name="maxStudent" id="maxStudent" value="1" max="50">
+                </div>
+                <div class="col-4">
+                    <label for="bgImage" class="form-label"> 배경이미지 <span>(선택)</span></label>
+                    <input type="text" class="form-control" name="bgImage" id="bgImage">
+                </div>
+                <div class="col-4">
+                    <label for="bgColor" class="form-label"> 배경색 <span>(선택)</span></label>
+                    <input type="color" class="form-control" name="bgColor" id="bgColor">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-main float-end"> 게시판 만들기 </button>
+        </form>
     </div>
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>

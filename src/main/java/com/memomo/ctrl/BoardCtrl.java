@@ -8,6 +8,7 @@ import com.memomo.entity.BoardFile;
 import com.memomo.entity.Post;
 import com.memomo.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -71,8 +72,9 @@ public class BoardCtrl {
         return "board/boardRegister";
     }
 
-    @PostMapping("rigister")
-    public String boardRegister(BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+    @PostMapping("register")
+    public String boardRegister(BoardDTO boardDTO, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+        HttpSession session = request.getSession();
         log.info("board register start=====================");
 
         if (bindingResult.hasErrors()){
@@ -81,8 +83,10 @@ public class BoardCtrl {
             return "redirect:/board/register";
         }
         log.info(boardDTO);
+        String sid = (String) session.getAttribute("sid");
+        boardDTO.setTeacher(sid);
         int bno = boardService.boardAdd(boardDTO);
         redirectAttributes.addFlashAttribute("result", bno);
-        return "redirect:/board/detail?bno="+boardDTO.getBno();
+        return "redirect:/board/list";
     }
 }
