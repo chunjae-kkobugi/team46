@@ -19,6 +19,6 @@ public class PostFile {
     private String saveName;        // 파일 저장 이름
     private String savePath;        // 파일 저장 경로
     private String fileType;        // 파일 유형
-    @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'")
-    private String status = "ACTIVE";          // 파일 상태
+    @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'", name = "status")
+    private String fstatus = "ACTIVE";          // 파일 상태
 }
