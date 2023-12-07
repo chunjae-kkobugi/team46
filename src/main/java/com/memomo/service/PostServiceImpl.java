@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService{
             layoutRepo.save(layout);
         }
 
-        if(dto.getFile().getSavePath()!=null){
+        if(dto.getFile()!=null){
             PostFile file = mapper.map(dto, PostFile.class);
             fileRepo.save(file);
         }
@@ -54,6 +54,13 @@ public class PostServiceImpl implements PostService{
         post.setStatus("REMOVE");
 
         return postRepo.save(post).getPno();
+    }
+
+    @Override
+    public void postMove(Layout layout) {
+        Layout origin = layoutRepo.findByPno(layout.getPno()).orElseThrow();
+        mapper.map(origin, layout);
+        layoutRepo.save(origin);
     }
 
     @Override

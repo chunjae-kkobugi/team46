@@ -20,5 +20,6 @@ public class PostDTO {
 
     private PostFile file;              // 본 포스트잇의 파일
     private Layout layout;              // 본 포스트잇의 레이아웃
-    private List<Comment> comments;     // 본 포스트잇에 달린 댓글들
+
+    private String action;      // 소켓 ctrl (add, edit, move, remove)
 }

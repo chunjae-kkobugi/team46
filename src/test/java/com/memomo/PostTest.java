@@ -1,6 +1,7 @@
 package com.memomo;
 
 import com.memomo.dto.PostDTO;
+import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
 import com.memomo.service.PostService;
 import lombok.extern.log4j.Log4j2;
@@ -25,11 +26,22 @@ public class PostTest {
         for(int i=0; i<100; i++){
             Post post = new Post();
             post.setBno((i%10)+10);
-            post.setAuthor("nickname "+(random.nextInt(10) + 1));
-            post.setContent("content "+(random.nextInt(10) + 1));
+            post.setAuthor("nickname "+random.nextInt(1, 6));
+            post.setContent("content "+random.nextInt(1, 6));
+
+            Layout layout = new Layout();
+            layout.set
 
             PostDTO dto = mapper.map(post, PostDTO.class);
             postService.postAdd(dto);
         }
+    }
+
+    @Test
+    public void postMoveTest(){
+        Layout layout = new Layout();
+        layout.setPno(1L);
+        layout.setPriority(3);
+        postService.postMove(layout);
     }
 }
