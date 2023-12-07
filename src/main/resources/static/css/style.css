@@ -291,6 +291,7 @@ textarea.form-control {
 .join_area #address1, .join_area #address2 {margin-bottom:5px;}
 .join_area #postcode {width:calc(100% - 162px); float: left; }
 .join_area #email { width:calc(100% - 124px); float: left; }
+.join_area #number { width:calc(100% - 124px); float: left; }
 .join_area input::-webkit-input-placeholder {font-size:1rem;}
 .join_area input:-ms-input-placeholder {font-size:1rem;}
 .join_agree label {display:block;}
