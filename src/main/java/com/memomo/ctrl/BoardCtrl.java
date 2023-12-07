@@ -1,24 +1,45 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.BoardDTO;
+import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
 import com.memomo.entity.Board;
+import com.memomo.entity.BoardFile;
+import com.memomo.entity.Post;
 import com.memomo.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
+@Log4j2
 @RequestMapping("/board/")
 public class BoardCtrl {
     @Autowired
     private BoardService boardService;
 
-    @RequestMapping("boardList")
+    @RequestMapping("list")
     public String boardList(Model model, HttpServletRequest request){
         PageDTO<Board, BoardDTO> pageDTO = new PageDTO<>();
 
@@ -35,6 +56,33 @@ public class BoardCtrl {
 
         model.addAttribute("pageDTO", pageDTO);
 
-        return "boardList";
+        return "board/boardList";
+    }
+
+    @RequestMapping("detail")
+    public String boardDetail(@RequestParam("bno") int bno, HttpServletRequest request, Model model) {
+        BoardPostDTO boardPostDTO = boardService.boardDetail(bno);
+        model.addAttribute("detail", boardPostDTO);
+        return "board/boardDetail";
+    }
+
+    @RequestMapping("register")
+    public String boardRegisterForm() {
+        return "board/boardRegister";
+    }
+
+    @PostMapping("rigister")
+    public String boardRegister(BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+        log.info("board register start=====================");
+
+        if (bindingResult.hasErrors()){
+            log.info("has Error============================");
+            redirectAttributes.addFlashAttribute("error", bindingResult);
+            return "redirect:/board/register";
+        }
+        log.info(boardDTO);
+        int bno = boardService.boardAdd(boardDTO);
+        redirectAttributes.addFlashAttribute("result", bno);
+        return "redirect:/board/detail?bno="+boardDTO.getBno();
     }
 }
