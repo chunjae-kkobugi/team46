@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>게시판 등록</title>
+    <style>
+        /* 겉부분의 디자인 변경 */
+        #deco {
+            width: 50px;
+            height: 50px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: transparent;
+            border: none;
+        }
+
+        /* 안쪽부분의 디자인 변경 */
+        #deco::-webkit-color-swatch {
+            border-radius: 30px;
+            border: none;
+        }
+
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light"> 게시판 등록 <i class="fa-regular fa-clipboard"></i> </h1>
+        </div>
+    </div>
+</section>
+<section class="section pb-5">
+    <div class="container">
+        <!-- 회원기능 완료되면 뺄 예정 -->
+        <div class="col-12">
+            <label for="teacher" class="form-label"> 선생님 </label>
+            <input type="text" class="form-control" id="teacher" maxlength="80" required>
+        </div>
+        <!-- 끝 -->
+        <div class="col-12">
+            <label for="title" class="form-label"> 게시판 이름 </label>
+            <input type="text" class="form-control" id="title" maxlength="80" required>
+        </div>
+        <div class="col-12">
+            <label for="password" class="form-label"> 비밀번호 <span>(선택)</span></label>
+            <input type="password" class="form-control" id="password" maxlength="10">
+        </div>
+        <div class="col-12">
+            <label for="maxStudent" class="form-label"> 최대 학생수 </label>
+            <input type="password" class="form-control" id="maxStudent">
+        </div>
+        <div class="col-12">
+            <label for="bgColor" class="form-label"> 배경색 <span>(선택)</span></label>
+            <input type="color" class="form-control" id="bgColor">
+        </div>
+        <div class="col-12">
+            <label for="bgImage" class="form-label"> 배경이미지 <span>(선택)</span></label>
+            <input type="c" class="form-control" id="bgImage">
+        </div>
+    </div>
+</section>
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+</html>

@@ -24,7 +24,7 @@ public class BoardTest {
     public void boardTestAll(){
         Random random = new Random();
         // 게시판 추가하기
-        for(int i=0; i<100; i++){
+        for(int i=0; i<10; i++){
             Board board = new Board();
             board.setTitle("title "+(random.nextInt(10) + 1));
             board.setTeacher("teacher "+(random.nextInt(10) + 1));

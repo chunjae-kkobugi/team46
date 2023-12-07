@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="d-flex justify-content-end" th:fragment="search(pageLink, options)">
+    <form id="search-form" class="d-flex mb-3" role="search" method="get" style="max-width: 60%;">
+        <div class="input-group">
+            <select class="form-select" id="type" name="type" required style="width: 20%">
+                <option value="">검색 옵션</option>
+            </select>
+            <input class="form-control" type="search" placeholder="검색어 입력" aria-label="search" name="keyword" required th:value="${pageDTO.keyword}" style="width: 40%;">
+            <button class="btn btn-main" type="submit">Search</button>
+        </div>
+    </form>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // fragment-search(pageLink, options)에서 options 가 여기에 들어간다.
+        let realpath = /*[[@{'/'}]]*/ 'default';
+        let pageLink = /*[[${pageLink}]]*/ 'default';
+        $("#search-form").attr("action", realpath+pageLink);
+
+        var options = /*[[${options}]]*/ 'default';
+
+        // 혹시 일전에 검색을 했을 경우 해당 검색 내용을 불러온다. 이는 page 객체에 저장되어 전달된다.
+        var type = /*[[${pageDTO.type}]]*/ 'default';
+
+        // include하는 main화면에서 options를 넘겨줄 때 하나의 옵션을 ,(반점)으로 구분한다.
+        // ex. options = ['id:아이디', 'name:이름', 'tel:전화번호']
+        options = options.split(",");
+        console.log(options);
+
+        for(i in options){
+            // 혹시 "id:아이디  "과 같이 공백이 들어있을 경우 대비하여 trim 한 후 :(콜론)을 기준으로 분리한다.
+            // 이때 콜론 왼쪽에는 DB 테이블의 컬럼 이름이, 오른쪽에는 사용자에게 표시될 이름을 입력한다.
+            // ex. option = ['id', '아이디']
+            var option = options[i].trim().split(":");
+            var newoption;
+
+            var optionVal = option[0].trim(); // ex. id
+            var optionName = option[1].trim(); // ex. 아이디
+            if(type===optionVal){
+                // 만약 현재 검색 타입이라면 selected를 추가하여 선택되게 한다.
+                newoption = `<option value="${optionVal}" selected>${optionName}</option>`;
+            } else {
+                newoption = `<option value="${optionVal}">${optionName}</option>`;
+            }
+
+            $("#type").append(newoption); // form 의 select 에 새로운 옵션을 추가한다.
+        }
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>
