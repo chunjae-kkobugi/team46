@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
@@ -73,7 +74,7 @@ public class BoardCtrl {
     }
 
     @PostMapping("register")
-    public String boardRegister(BoardDTO boardDTO, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+    public String boardRegister(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
         HttpSession session = request.getSession();
         log.info("board register start=====================");
 
@@ -85,7 +86,8 @@ public class BoardCtrl {
         log.info(boardDTO);
         String sid = (String) session.getAttribute("sid");
         boardDTO.setTeacher(sid);
-        int bno = boardService.boardAdd(boardDTO);
+//        boardDTO.setBgImage(boardDTO.getFile().getFno());
+        int bno = boardService.boardAdd(boardDTO, boardFile, request);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";
     }
