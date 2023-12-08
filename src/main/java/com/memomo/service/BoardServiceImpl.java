@@ -49,7 +49,6 @@ public class BoardServiceImpl implements BoardService{
     public Integer boardAdd(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) throws IOException {
         String imageOriginName = "";
         String imageSaveName = "";
-        String imageSavePath = "";
 
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
@@ -61,12 +60,12 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = "C://upload/";
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir +'\\'+ today;
+            System.out.println(saveFolder);
 
             File uploadPath = new File(saveFolder);
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
             }
-            imageSavePath = saveFolder;
 
             String originalName = boardFile.getOriginalFilename();
             imageOriginName = originalName;
@@ -90,7 +89,7 @@ public class BoardServiceImpl implements BoardService{
             BoardFile image = new BoardFile();
             image.setOriginName(imageOriginName);
             image.setSaveName(imageSaveName);
-            image.setSavePath(imageSavePath);
+            image.setSavePath(today);
             image.setFileType("bgImage");
             image.setStatus("ACTIVE");
 
@@ -104,8 +103,13 @@ public class BoardServiceImpl implements BoardService{
             log.info("--------------------------------------------------------------------------------------------- board" + boardDTO);
 
             return boardRepo.save(board).getBno();
+        } else {
+            // 파일이 업로드되지 않은 경우 처리
+            Board board = modelMapper.map(boardDTO, Board.class);
+            boardRepo.save(board);
+            log.info("게시글에 업로드된 파일이 없습니다: " + boardDTO);
+            return boardRepo.save(board).getBno(); // 기본 값 반환하거나 필요한 작업 수행
         }
-        return null;
     }
 
     @Override

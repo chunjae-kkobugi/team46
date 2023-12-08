@@ -32,7 +32,7 @@
                                 </div>
                                 <!-- 배경이미지O -->
                                 <div th:if="${list.bgImage ne null}" class="bd-placeholder-img card-img-top" style="width: 100%; height: 225px;">
-                                    <img th:src="|@{/images/} + ${list.file.saveName}|" th:alt="${list.file.originName}" style="width: 100%; height: 255px">
+                                    <img th:src="|@{/images/boardImage/}${list.file.savePath}/${list.file.savePath}|"> <!-- th:alt="${list.file.originName}"-->
                                 </div>
                             </a>
                             <div class="card-body">
