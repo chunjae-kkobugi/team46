@@ -52,14 +52,13 @@ public class BoardServiceImpl implements BoardService{
 
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
+
+            // 서버 경로
             ServletContext application = request.getSession().getServletContext();
-//            // 서버경로
-//            String uploadDir = application.getRealPath("/upload/");
-            Resource resource = new ClassPathResource("/static/images/boardImage");
-            String uploadDir = resource.getFile().getAbsolutePath();
-//            String uploadDir = "C://upload/";
+            String uploadDir = application.getRealPath("/images/boardImage/");
+
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir +'\\'+ today;
+            String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
 
             File uploadPath = new File(saveFolder);
