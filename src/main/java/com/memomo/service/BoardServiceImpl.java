@@ -49,11 +49,14 @@ public class BoardServiceImpl implements BoardService{
 
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
-            Resource resource = new ClassPathResource("/static/images");
+            ServletContext application = request.getSession().getServletContext();
+//            // 서버경로
+//            String uploadDir = application.getRealPath("/upload/");
+            Resource resource = new ClassPathResource("/static/images/boardImage");
             String uploadDir = resource.getFile().getAbsolutePath();
 //            String uploadDir = "C://upload/";
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
+            String saveFolder = uploadDir +'\\'+ today;
 
             File uploadPath = new File(saveFolder);
             if (!uploadPath.exists()) {
@@ -71,7 +74,7 @@ public class BoardServiceImpl implements BoardService{
             imageSaveName = saveName;
 
             try {
-                multipartFile.transferTo(new File(uploadDir, saveName));
+                multipartFile.transferTo(new File(uploadPath, saveName));
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
