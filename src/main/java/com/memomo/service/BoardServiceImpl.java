@@ -11,6 +11,7 @@ import com.memomo.repository.PostRepository;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -23,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -62,7 +66,6 @@ public class BoardServiceImpl implements BoardService{
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
             }
-
             imageSavePath = saveFolder;
 
             String originalName = boardFile.getOriginalFilename();
@@ -73,8 +76,13 @@ public class BoardServiceImpl implements BoardService{
             String saveName = uuid + "_" + originalName;
             imageSaveName = saveName;
 
+            Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
             try {
                 multipartFile.transferTo(new File(uploadPath, saveName));
+                if (Files.probeContentType(savePath).startsWith("image")){
+                    File thumbnail = new File(uploadPath, "s_" + saveName);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 411, 255);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
