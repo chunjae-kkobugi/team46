@@ -1,6 +1,7 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.MemberDTO;
+import com.memomo.entity.Member;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -70,6 +71,28 @@ public class MemberCtrl {
         String id = member.getId();
         boolean result = memberService.idCheck(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("mypage")
+    public String myPage(Model model) {
+        //MemberDTO member = new MemberDTO();
+        //System.out.println("아이디 : " + id);
+        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
+        String id = (String) session.getAttribute("sid");
+        model.addAttribute("member", memberService.memberDetail(id));
+
+        return "member/mypage";
+    }
+
+    @PostMapping("edit")
+    public String edit(Member member, Model model) {
+        //MemberDTO member = new MemberDTO();
+        //System.out.println("아이디 : " + id);
+        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
+        //String id = (String) session.getAttribute("sid");
+        //model.addAttribute("member", memberService.memberDetail(id));
+        memberService.memberEdit(member);
+        return "member/mypage";
     }
 
 

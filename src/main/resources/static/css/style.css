@@ -286,7 +286,7 @@ textarea.form-control {
 .join_area .no_check {color:red;}
 .join_area .info {font-size:12px;}
 .join_area #msg {font-size:14px;}
-.join_area.join #id { width:calc(100% - 124px); float: left; }
+.join_area #id { width:calc(100% - 124px); float: left; }
 .join_area .check_btn {line-height:36px;padding-top:0;padding-bottom:0;vertical-align:top;}
 .join_area #address1, .join_area #address2 {margin-bottom:5px;}
 .join_area #postcode {width:calc(100% - 162px); float: left; }
@@ -296,6 +296,109 @@ textarea.form-control {
 .join_area input:-ms-input-placeholder {font-size:1rem;}
 .join_agree label {display:block;}
 .join_agree .agree_fr {border:2px solid #eee;height:400px;overflow-y:auto;white-space:pre-wrap;padding:24px;}
-.join_area .btn {
-    height: 55px;
+.join_area .btn { height: 55px; }
+.join_area .form-control:not(textarea) { height: 55px; }
+
+h3.tit:before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 5px solid #E0F2E5;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+h4.tit {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+h4.tit:before {
+    content: '';
+    color: #E0F2E5;
+    font-size: 12px;
+    margin-right: 5px;
+    vertical-align: 2px;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #E0F2E5;
+    border-radius: 50%;
+    vertical-align: 0;
+}
+
+.contents {
+    padding: 3rem;
+    position: relative;
+}
+.tit-area {
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #e3e3e3;
+    margin-bottom: 1.75rem;
+}
+.sub-tit-area {
+    margin-top: 50px;
+}
+hr.dashed-dark {
+    border: 0;
+    border-top: 1px solid #e3e3e3;
+}
+
+.btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.3rem;
+}
+.btn-sm {
+    padding: 0.425rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+}
+
+
+.my_area .logo, .join_agree .logo, .join_finish .logo {display:block;}
+.my_area .card {border-radius:15px;}
+.my_area .no_check {color:red;}
+.my_area .no_check {color:red;}
+.my_area .info {font-size:12px;}
+.my_area #msg {font-size:14px;}
+.my_area #id { width:calc(100% - 124px); float: left; }
+.my_area .check_btn {line-height:36px;padding-top:0;padding-bottom:0;vertical-align:top;}
+.my_area #address1, .my_area #address2 {margin-bottom:5px;}
+.my_area #postcode {width:calc(100% - 138px); float: left; }
+/*.my_area #email { width:calc(100% - 124px); float: left; }*/
+.my_area #cert-num { width:calc(100% - 124px); float: left; }
+.my_area input::-webkit-input-placeholder {font-size:1rem;}
+.my_area input:-ms-input-placeholder {font-size:1rem;}
+.join_agree label {display:block;}
+.join_agree .agree_fr {border:2px solid #eee;height:400px;overflow-y:auto;white-space:pre-wrap;padding:24px;}
+.my_area .btn { height: 55px; }
+.my_area .form-control:not(textarea) { height: 55px; }
+
+.tbl-write.th-gray table th {
+    background: #f7f7f7;
+}
+
+.tbl-write.th-gray table td, .tbl-write.th-pink table td, .tbl-write.th-white table td {
+    padding-left: 1.5rem;
+}
+
+.tbl-write table td {
+    text-align: left;
+    font-size: 1rem;
+    color: #555;
+    padding: 10px 20px;
+    /*border-bottom: 1px solid #e3e3e3;*/
+}
+
+/*.tbl-write #email {*/
+/*    width: auto;*/
+/*}*/
+
+.tbl-write table .form-control {
+    height: initial;
+}
+.tbl-write table .btn {
+    height: initial;
 }
