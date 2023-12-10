@@ -1,5 +1,6 @@
 package com.memomo.repository;
 
+import com.memomo.dto.PostDTO;
 import com.memomo.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -16,4 +19,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public void boardPostRemove(@Param("bno") Integer bno); // board 제거시 해당 bno 가진 post 도 제거
     // @Param 은 @Query 안의 :변수와 함수의 매개변수를 연결해주는 역할.
     // 두 이름이 동일하다면 생략 가능
+
+    // 게시판 별 포스트잇 보기
+    @Query("select p from Post p where p.pno = :bno order by p.createAt desc ")
+    public List<Post> postListByBno(@Param("bno") Integer bno);
 }

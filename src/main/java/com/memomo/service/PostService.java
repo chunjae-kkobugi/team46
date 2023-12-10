@@ -1,5 +1,6 @@
 package com.memomo.service;
 
+import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Post;
 

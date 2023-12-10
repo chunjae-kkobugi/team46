@@ -7,6 +7,7 @@ import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
 import com.memomo.entity.Post;
 import com.memomo.service.BoardService;
+import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -40,6 +41,8 @@ import java.util.UUID;
 public class BoardCtrl {
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private PostService postService;
 
     @RequestMapping("list")
     public String boardList(Model model, HttpServletRequest request){

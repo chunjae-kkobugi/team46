@@ -1,5 +1,6 @@
 package com.memomo.service;
 
+import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
@@ -11,6 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -60,4 +64,5 @@ public class PostServiceImpl implements PostService{
     public void postDelete(Long pno) {
         postRepo.deleteById(pno);
     }
+
 }

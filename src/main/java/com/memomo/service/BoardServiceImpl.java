@@ -3,8 +3,10 @@ package com.memomo.service;
 import com.memomo.dto.BoardDTO;
 import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
+import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
+import com.memomo.entity.Post;
 import com.memomo.repository.BoardFileRepository;
 import com.memomo.repository.BoardRepository;
 import com.memomo.repository.PostRepository;
@@ -29,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

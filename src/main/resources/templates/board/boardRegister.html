@@ -54,159 +54,20 @@
                 </div>
                 <div class="col-4">
                     <label for="bgColor" class="form-label"> 배경색 <span>(선택)</span></label>
-                    <input type="color" class="form-control" name="bgColor" id="bgColor">
+                    <input type="color" class="form-control" name="bgColor" id="bgColor" value="#ffffff">
                 </div>
             </div>
-            <!-- 첨부파일 미리보기 -->
-            <div class="col-12 mb-3 row">
-                <div class="col">
-                    <div class="container d-flex uploadResult" style="flex-wrap: wrap;"></div>
-                </div>
-            </div>
-            <!-- 첨부파일 미리보기 끝 -->
-            <button type="submit" class="btn btn-main float-end submitBtn"> 게시판 만들기 </button>
-        </form>
-<!--        &lt;!&ndash; 첨부파일 모달창 &ndash;&gt;-->
-<!--        <div class="modal uploadModal" tabindex="-1">-->
-<!--            <div class="modal-dialog">-->
-<!--                <div class="modal-content">-->
-<!--                    <div class="modal-header">-->
-<!--                        <h5 class="modal-title"> 이미지 업로드 </h5>-->
-<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                    </div>-->
-<!--                    <div class="modal-body">-->
-<!--                        <div class="input-group mb-3">-->
-<!--                            <input type="file" name="files" class="form-control" multiple >-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="modal-footer">-->
-<!--                        <button type="button" class="btn btn-primary uploadBtn">업로드</button>-->
-<!--                        <button type="button" class="btn btn-outline-dark closeUploadBtn" >닫기</button>-->
-<!--                    </div>-->
+<!--            &lt;!&ndash; 첨부파일 미리보기 &ndash;&gt;-->
+<!--            <div class="col-12 mb-3 row">-->
+<!--                <div class="col">-->
+<!--                    <div class="container d-flex uploadResult" style="flex-wrap: wrap;"></div>-->
 <!--                </div>-->
 <!--            </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; 모달창 끝 &ndash;&gt;-->
+<!--            &lt;!&ndash; 첨부파일 미리보기 끝 &ndash;&gt;-->
+            <button type="submit" class="btn btn-main float-end submitBtn"> 게시판 만들기 </button>
+        </form>
     </div>
 </section>
-<!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
-<!--<script th:inline="javascript">-->
-<!--    // 서버에 업로드-->
-<!--    async function uploadToServer (formObj){-->
-<!--        console.log("upload to server.............")-->
-<!--        console.log(formObj)-->
-
-<!--        const response = await axios({-->
-<!--            method : 'post',-->
-<!--            url: '/boardUpload',-->
-<!--            data: formObj,-->
-<!--            headers:{-->
-<!--                'Content-Type': 'multipart/form-data',-->
-<!--            },-->
-<!--        });-->
-<!--        return response.data-->
-<!--    }-->
-
-<!--    // 서버의 특정 파일 삭제-->
-<!--    async function removeFileToServer(originalName){-->
-<!--        const response = await axios.delete(`/remove/${originalName}`)-->
-<!--        return response.data-->
-<!--    }-->
-
-<!--    // 모달창-->
-<!--    const errors = [[${errors}]]-->
-<!--    console.log(errors)-->
-
-<!--    let errorMsg = ''-->
-<!--    if (errors){-->
-<!--        for (let i = 0; i<errors.length; i++){-->
-<!--            errorMsg += `${errors[i].field}은(는) ${errors[i].code}\n`-->
-<!--        }-->
-<!--        alert(errorMsg)-->
-<!--    }-->
-
-<!--    // 업로드모달-->
-<!--    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))-->
-<!--    document.querySelector(".uploadFileBtn").addEventListener("click", function (e){-->
-<!--        e.stopPropagation()-->
-<!--        e.preventDefault()-->
-<!--        uploadModal.show()-->
-<!--    }, false)-->
-
-<!--    document.querySelector(".uploadBtn").addEventListener("click", function(e){-->
-
-<!--        const formObj = new FormData();-->
-
-<!--        const fileInput = document.querySelector("input[name='files']")-->
-
-<!--        console.log(fileInput.files)-->
-
-<!--        const files = fileInput.files-->
-
-<!--        for (let i = 0; i < files.length; i++) {-->
-<!--            formObj.append("files", files[i]);-->
-<!--        }-->
-
-
-<!--        uploadToServer(formObj).then(result => {-->
-<!--            console.log(result)-->
-
-<!--            for (const uploadResult of result) {-->
-<!--                showUploadFile(uploadResult)-->
-<!--            }-->
-<!--            uploadModal.hide()-->
-<!--        }).catch(e => {-->
-<!--            uploadModal.hide()-->
-<!--        })-->
-
-<!--    },false)-->
-
-<!--    // 미리보기-->
-<!--    const uploadResult = document.querySelector(".uploadResult")-->
-
-<!--    function showUploadFile({uuid, originalName, link}){-->
-
-<!--        const str =`<div class="card col-4">-->
-<!--            <div class="card-header d-flex justify-content-center">-->
-<!--                ${originalName}-->
-<!--                <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}', '${originalName}', this)" >X</button>-->
-<!--            </div>-->
-<!--            <div class="card-body">-->
-<!--                 <img src="/view/${link}" data-src="${uuid+"_"+originalName}" >-->
-<!--            </div>-->
-<!--        </div>&lt;!&ndash; card &ndash;&gt;`-->
-
-<!--        uploadResult.innerHTML += str-->
-<!--    }-->
-
-<!--    // 삭제-->
-<!--    function removeFile(uuid,originalName, obj){-->
-
-<!--        console.log(uuid)-->
-<!--        console.log(originalName)-->
-
-<!--        console.log(obj)-->
-
-<!--        const targetDiv = obj.closest(".card")-->
-
-<!--        removeFileToServer(uuid, originalName).then(data => {-->
-<!--            targetDiv.remove()-->
-<!--        })-->
-<!--    }-->
-
-<!--    // 게시물 등록-->
-<!--    document.querySelector(".submitBtn").addEventListener("click", function(e){-->
-<!--        e.preventDefault()-->
-<!--        e.stopPropagation()-->
-
-<!--        const target = document.querySelector(".uploadHidden")-->
-<!--        const uploadFile = uploadResult.querySelector("img")-->
-<!--        let str = ''-->
-<!--        const imgLink = uploadFile.getAttribute("src")-->
-<!--        str += `<input type='hidden' name='originalName' value='${imgLink}'>`-->
-<!--        target.innerHTML = str;-->
-<!--    }, false)-->
-<!--</script>-->
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
 </html>
