@@ -9,16 +9,19 @@ import java.util.List;
 
 @Data
 public class PostDTO {
+    // Post 영역
     private Long pno;
     private Integer bno;
     private String author;
     private String content;
     private String bgColor;
     private Long bgImage;
-    private String status;
+    private String pstatus;
     private Boolean vote;
 
+    // 파일 영역
     private PostFile file;              // 본 포스트잇의 파일
     private Layout layout;              // 본 포스트잇의 레이아웃
-    private List<Comment> comments;     // 본 포스트잇에 달린 댓글들
+
+    private String action;      // 소켓 ctrl (add, edit, move, remove)
 }

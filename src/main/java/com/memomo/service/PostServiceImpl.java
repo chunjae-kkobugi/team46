@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import java.util.*;
+
 @Transactional
 @Service
 @Log4j2
@@ -97,7 +99,7 @@ public class PostServiceImpl implements PostService{
             image.setSavePath(today);
             // 파일 확장자를 fileType 에 저장
             image.setFileType(fileExtension);
-            image.setStatus("ACTIVE");
+            image.setFstatus("ACTIVE");
 
             Post post = mapper.map(dto, Post.class);
             postRepo.save(post);
@@ -108,12 +110,22 @@ public class PostServiceImpl implements PostService{
             postRepo.save(post);
             log.info("---------------------------------------- post : " + dto);
 
+            Layout layout = mapper.map(dto.getLayout(), Layout.class);
+            layout.setPno(postRepo.save(post).getPno());
+            System.out.println(layout);
+            layoutRepo.save(layout);
+
             return postRepo.save(post).getPno();
         } else {
             // 파일이 업로드 되지 않은 경우
             Post post = mapper.map(dto, Post.class);
             postRepo.save(post);
             log.info("포스트에 업로드 된 파일이 없습니다" + dto);
+
+            Layout layout = mapper.map(dto.getLayout(), Layout.class);
+            layout.setPno(postRepo.save(post).getPno());
+            System.out.println(layout);
+            layoutRepo.save(layout);
             return postRepo.save(post).getPno();
         }
     }
@@ -126,9 +138,16 @@ public class PostServiceImpl implements PostService{
     @Override
     public Long postRemove(Long pno) {
         Post post = postRepo.findById(pno).orElseThrow();
-        post.setStatus("REMOVE");
+        post.setPstatus("REMOVE");
 
         return postRepo.save(post).getPno();
+    }
+
+    @Override
+    public void postMove(Layout layout) {
+        Layout origin = layoutRepo.findByPno(layout.getPno()).orElseThrow();
+        mapper.map(origin, layout);
+        layoutRepo.save(origin);
     }
 
     @Override
@@ -136,4 +155,55 @@ public class PostServiceImpl implements PostService{
         postRepo.deleteById(pno);
     }
 
+    @Override
+    public List<PostDTO> postList(Integer bno) {
+        List<PostDTO> postDTOS = new ArrayList<>();
+        List<PostDTO> sortedDTO = new ArrayList<>();
+
+        List<Object[]> objects = postRepo.postDTOList(bno);
+        for(Object[] o: objects){
+            Post p = (Post) o[0];
+            Layout l = (Layout) o[1];
+            PostDTO dto = new PostDTO();
+            dto = mapper.map(p, PostDTO.class);
+            dto.setLayout(l);
+            postDTOS.add(dto);
+        }
+
+        PostDTO head = postDTOS.stream().filter(p->p.getPstatus().equals("HEAD")).findFirst().orElseThrow();
+        Long headP = head.getLayout().getPriority();
+        while(headP!= 0){
+            Long finalHeadP = headP;
+            PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
+            sortedDTO.add(post);
+            headP = post.getLayout().getPriority();
+        }
+
+        return sortedDTO;
+    }
+
+    @Transactional
+    @Override
+    public void postSort(Long oldBefore, Long oldNext, Long newBefore, Long newNext, Long changed, Integer bno) {
+        // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
+        if(oldBefore==0){
+            // 내가 head 였다면 head 값을 바꿔야 함
+            Post head = postRepo.postHeadGet(bno);
+            layoutRepo.layoutPriority(oldNext, head.getPno());
+        } else {
+            layoutRepo.layoutPriority(oldNext, oldBefore);
+        }
+
+        // 나의 새로운 이전 노드
+        if(newBefore==0){
+            // 내가 새로운 head 가 될 때, head 에 나를 넣어줌
+            Post head = postRepo.postHeadGet(bno);
+            layoutRepo.layoutPriority(changed, head.getPno());
+        } else {
+            layoutRepo.layoutPriority(changed, newBefore);
+        }
+
+        // 나의 새로운 다음 노드(새로운 이전 노드가 원래 가지고 있던 값)
+        layoutRepo.layoutPriority(newNext, changed);
+    }
 }

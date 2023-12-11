@@ -23,6 +23,8 @@ public class QPostFile extends EntityPathBase<PostFile> {
 
     public final NumberPath<Long> fno = createNumber("fno", Long.class);
 
+    public final StringPath fstatus = createString("fstatus");
+
     public final StringPath originName = createString("originName");
 
     public final NumberPath<Long> pno = createNumber("pno", Long.class);
@@ -30,8 +32,6 @@ public class QPostFile extends EntityPathBase<PostFile> {
     public final StringPath saveName = createString("saveName");
 
     public final StringPath savePath = createString("savePath");
-
-    public final StringPath status = createString("status");
 
     public QPostFile(String variable) {
         super(PostFile.class, forVariable(variable));

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post HOME</title>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.css}">
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.strucutre.css}">
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.theme.css}">
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+    <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
+
+    <style>
+        #sortable { list-style-type: none; margin: 1rem; padding: 0; width: 350px; }
+        #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;}
+    </style>
+</head>
+<body>
+
+<ul id="sortable" class="ui-sortable">
+    <li class="ui-state-default ui-sortable-handle" th:each="p: ${postList}" th:text="${p.content}" th:id="${p.pno}">
+</ul>
+
+</body>
+
+
+<script th:src="@{/js/posts.js}"></script>
+<script th:src="@{/js/postJQ-UI.js}"></script>
+<script>
+    const bno = 1;
+</script>
+
+</html>

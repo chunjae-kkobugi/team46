@@ -25,8 +25,8 @@ public class Post extends BaseEntity{
     @Column(length = 10)
     private String bgColor;
     private Long bgImage;
-    @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'")
-    private String status = "ACTIVE";
+    @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'", name="status")
+    private String pstatus = "ACTIVE";
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean vote = false;
 }
