@@ -20,6 +20,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // @Param 은 @Query 안의 :변수와 함수의 매개변수를 연결해주는 역할.
     // 두 이름이 동일하다면 생략 가능
 
+    // 게시판 별 포스트잇 보기
+    @Query("select p from Post p where p.bno = :bno order by p.createAt desc")
+    public List<Post> postListByBno(@Param("bno") Integer bno);
+
     public List<Post> findAllByBnoAndPstatus(Integer bno, String status);
 
     @Transactional
@@ -28,4 +32,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p from Post p WHERE p.bno = :bno AND p.pstatus='HEAD'")
     public Post postHeadGet(@Param("bno") Integer bno);
+
 }

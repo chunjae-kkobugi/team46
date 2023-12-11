@@ -23,4 +23,5 @@ public class BoardFile {
 
     @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'")
     private String status = "ACTIVE";       // 파일 상태
+
 }

@@ -60,6 +60,9 @@ dependencies {
     // 메일
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    // Thumbnailator
+    implementation 'net.coobird:thumbnailator:0.4.16'
+
     // 롬복 외에도 querydsl 어노테이션 추가
     compileOnly("org.projectlombok:lombok", "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 

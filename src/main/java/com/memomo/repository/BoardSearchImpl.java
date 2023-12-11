@@ -28,8 +28,9 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         String[] types = pageDTO.getTypes();
         String keyword = pageDTO.getKeyword();
 
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
         if(types!=null && keyword!=null && !keyword.isEmpty()){
-            BooleanBuilder booleanBuilder = new BooleanBuilder();
             for(String type: types){
                 System.out.println(type);
                 switch(type){
@@ -41,8 +42,13 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                         break;
                 }
             }
-            query.where(booleanBuilder);
         }
+
+        if(pageDTO.getTeacher() != "") {
+            booleanBuilder.or(board.teacher.contains(pageDTO.getTeacher()));
+        }
+
+        query.where(booleanBuilder);
 
         // 부모 클래스인 QuerydslRepositorySupport 를 상속하면서 BoardSearchImpl(this)에  querydsl 필드가 있음
         this.getQuerydsl().applyPagination(pageable, query);
