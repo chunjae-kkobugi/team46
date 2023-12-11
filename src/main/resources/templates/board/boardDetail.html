@@ -21,6 +21,9 @@
             border: 5px solid;
         }
 
+        .register {
+            display: none;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -57,7 +60,7 @@
         <th:block th:each="list : ${detail.posts}">
             <p th:text="${list.content}"></p>
         </th:block>
-        <div id="postRegister" class="album py-5 bg-body-tertiary" style="display: none;">
+        <div id="postRegister" class="album py-5 bg-body-tertiary register">
             <div class="container-fluid">
                 <div class="row g-3">
                     <div class="col-3">
@@ -97,7 +100,7 @@
 
     // 포스트잇 글쓰기 영역
     $("#postRegisterBtn").click(function (){
-        $("postRegister").removeAttr("style");
+        $("#postRegister").removeClass("register")
     })
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>

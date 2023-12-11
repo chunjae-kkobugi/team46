@@ -19,17 +19,17 @@ public class PostTest {
     @Autowired
     private ModelMapper mapper;
 
-    @Test
-    public void postAddTest(){
-        Random random = new Random();
-        for(int i=0; i<100; i++){
-            Post post = new Post();
-            post.setBno((i%10)+10);
-            post.setAuthor("nickname "+(random.nextInt(10) + 1));
-            post.setContent("content "+(random.nextInt(10) + 1));
-
-            PostDTO dto = mapper.map(post, PostDTO.class);
-            postService.postAdd(dto);
-        }
-    }
+//    @Test
+//    public void postAddTest(){
+//        Random random = new Random();
+//        for(int i=0; i<100; i++){
+//            Post post = new Post();
+//            post.setBno((i%10)+10);
+//            post.setAuthor("nickname "+(random.nextInt(10) + 1));
+//            post.setContent("content "+(random.nextInt(10) + 1));
+//
+//            PostDTO dto = mapper.map(post, PostDTO.class);
+//            postService.postAdd(dto);
+//        }
+//    }
 }

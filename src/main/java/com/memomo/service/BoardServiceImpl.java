@@ -56,15 +56,19 @@ public class BoardServiceImpl implements BoardService{
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
 
-            // 서버 경로
-            ServletContext application = request.getSession().getServletContext();
-            String uploadDir = application.getRealPath("/images/boardImage/");
+//            // 서버 경로
+//            ServletContext application = request.getSession().getServletContext();
+//            String uploadDir = application.getRealPath("/images/boardImage/");
+
+            // 로컬 경로
+            String uploadDir = "C://upload/boardImage/";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
 
             File uploadPath = new File(saveFolder);
+            // 업로드 날짜의 폴더가 없다면 새로 생성
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
             }
@@ -76,6 +80,16 @@ public class BoardServiceImpl implements BoardService{
 
             String saveName = uuid + "_" + originalName;
             imageSaveName = saveName;
+
+            String fileExtension = "";
+
+            // 파일 이름에 확장자가 있는지 확인
+            if (originalName != null) {
+                int lastIndex = originalName.lastIndexOf(".");
+                if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
+                    fileExtension = originalName.substring(lastIndex + 1);
+                }
+            }
 
             Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
             try {
@@ -92,7 +106,8 @@ public class BoardServiceImpl implements BoardService{
             image.setOriginName(imageOriginName);
             image.setSaveName(imageSaveName);
             image.setSavePath(today);
-            image.setFileType("bgImage");
+            // 파일 확장자를 fileType 에 저장
+            image.setFileType(fileExtension);
             image.setStatus("ACTIVE");
 
             Board board = modelMapper.map(boardDTO, Board.class);
@@ -102,7 +117,7 @@ public class BoardServiceImpl implements BoardService{
             board.setBgImage(image.getFno());
             boardDTO.setFile(image);
             boardRepo.save(board);
-            log.info("--------------------------------------------------------------------------------------------- board" + boardDTO);
+            log.info("---------------------------------------------------- board : " + boardDTO);
 
             return boardRepo.save(board).getBno();
         } else {
