@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Random;
 
 @SpringBootTest
@@ -23,16 +24,41 @@ public class PostTest {
     @Test
     public void postAddTest(){
         Random random = new Random();
-        for(int i=0; i<100; i++){
+        if(true){
             Post post = new Post();
-            post.setBno((i%10)+10);
-            post.setAuthor("nickname "+random.nextInt(1, 6));
-            post.setContent("content "+random.nextInt(1, 6));
+            post.setBno(1);
+            post.setPstatus("HEAD");
+            post.setAuthor("admin");
+            post.setContent("Head");
+            PostDTO dto = mapper.map(post, PostDTO.class);
 
             Layout layout = new Layout();
-            layout.set
+            layout.setPriority(2L);
+
+            dto.setLayout(layout);
+
+            postService.postAdd(dto);
+        }
+
+        for(int i=2; i<=100; i++){
+            Post post = new Post();
+
+            post.setBno(((i-1)/10+1));
+            if((i-1)%10==0){
+                post.setPstatus("HEAD");
+            }
+
+            post.setAuthor("nickname "+random.nextInt(1, 6));
+            post.setContent("content "+i%10);
 
             PostDTO dto = mapper.map(post, PostDTO.class);
+
+            Layout layout = new Layout();
+            if(i%10!=0){
+                layout.setPriority((long) (i+1));
+            }
+            dto.setLayout(layout);
+
             postService.postAdd(dto);
         }
     }
@@ -41,7 +67,12 @@ public class PostTest {
     public void postMoveTest(){
         Layout layout = new Layout();
         layout.setPno(1L);
-        layout.setPriority(3);
+        layout.setPriority(3L);
         postService.postMove(layout);
+    }
+
+    @Test
+    public void postSelect(){
+        List<PostDTO> postDTOs = postService.postList(1);
     }
 }

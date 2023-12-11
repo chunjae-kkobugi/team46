@@ -35,8 +35,8 @@ dependencies {
 
     // 웹소켓 통신
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:stomp-websocket'
-    implementation 'org.webjars:sockjs-client'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:sockjs-client:1.5.1'
 
     // Spring Security 일단 나중에 합시다!
 //    implementation 'org.springframework.boot:spring-boot-starter-security'

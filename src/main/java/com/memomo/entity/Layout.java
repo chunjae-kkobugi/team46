@@ -1,5 +1,6 @@
 package com.memomo.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,9 +14,11 @@ public class Layout {
     private Long pno;               // 레이아웃의 포스트잇
 
     private Integer gno;            // 해당 포스트잇이 속한 그룹
+    @JsonProperty("gPriority")
     private Integer gPriority;      // 그룹 내 우선순위
     private Integer x;
     private Integer y;
     private Integer z;
-    private Integer priority;
+    @Column(columnDefinition = "BIGINT DEFAULT 0")
+    private Long priority = 0L;
 }

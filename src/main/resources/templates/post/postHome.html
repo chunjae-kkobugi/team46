@@ -23,13 +23,13 @@
 <body>
 
 <ul id="sortable" class="ui-sortable">
-    <li class="ui-state-default ui-sortable-handle" th:each="p: ${plist}" th:text="${p.content}" th:id="${p.pno}">
+    <li class="ui-state-default ui-sortable-handle" th:each="p: ${postList}" th:text="${p.content}" th:id="${p.pno}">
 </ul>
 
 </body>
 
 
-<script th:src="@{/js/chat.js}"></script>
+<script th:src="@{/js/posts.js}"></script>
 <script th:src="@{/js/postJQ-UI.js}"></script>
 <script>
     const bno = 1;
