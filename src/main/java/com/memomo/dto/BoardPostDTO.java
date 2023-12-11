@@ -2,6 +2,7 @@ package com.memomo.dto;
 
 import com.memomo.entity.BoardFile;
 import com.memomo.entity.BoardGroup;
+import com.memomo.entity.Post;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -23,5 +24,5 @@ public class BoardPostDTO {
 
     private BoardFile file;             // 본 게시판의 이미지 파일
     private List<BoardGroup> groups;         // 본 게시판의 그룹
-    private List<PostDTO> posts;        // 본 게시판의 포스트잇들
+    private List<Post> posts;        // 본 게시판의 포스트잇들
 }

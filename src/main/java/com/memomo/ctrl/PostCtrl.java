@@ -11,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @Log4j2
@@ -22,21 +25,22 @@ public class PostCtrl {
     private PostService postService;
 
     @PostMapping("register")
-    public String postRegister(PostDTO dto, MultipartFile postFile, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String postRegister(@RequestParam("bno") Integer bno, PostDTO dto, MultipartFile postFile, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession();
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
             log.info("has error-------------------------------------------");
-            redirectAttributes.addFlashAttribute("errror", bindingResult);
+            redirectAttributes.addFlashAttribute("error", bindingResult);
             return "redirect:/post/register";
         }
         log.info(dto);
         String sid = (String) session.getAttribute("sid");
         dto.setAuthor(sid);
-        dto.setBno(dto.getBno());
+        dto.setBno(bno);
+        dto.setStatus("ACTIVE");
         Long pno = postService.postAdd(dto, postFile, request);
         redirectAttributes.addFlashAttribute("result", pno);
-        return "redirect:/board/detail?bno="+ dto.getBno();
+        return "redirect:/board/detail?bno="+ bno;
     }
 }

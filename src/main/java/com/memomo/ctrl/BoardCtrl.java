@@ -51,12 +51,21 @@ public class BoardCtrl {
         String type = request.getParameter("type");
         String keyword = request.getParameter("keyword");
         int pageNow = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        String teacher = request.getSession().getAttribute("sid") != null ? (String) request.getSession().getAttribute("sid") : "";
         pageDTO.setType(type);
         pageDTO.setKeyword(keyword);
         pageDTO.setPageNow(pageNow);
+        pageDTO.setTeacher(teacher);
 
         pageDTO = boardService.boardList(pageDTO);
         List<BoardDTO> boardList = pageDTO.getListDTO();
+
+        for(BoardDTO board : boardList) {
+            BoardFile boardFile = boardService.getBoardFile(board.getBno());
+            board.setFile(boardFile);
+        }
+
+
         model.addAttribute("boardList", boardList);
 
         model.addAttribute("pageDTO", pageDTO);

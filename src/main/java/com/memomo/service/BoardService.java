@@ -4,6 +4,7 @@ import com.memomo.dto.BoardDTO;
 import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
 import com.memomo.entity.Board;
+import com.memomo.entity.BoardFile;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +19,6 @@ public interface BoardService {
 
     public PageDTO<Board, BoardDTO> boardList(PageDTO<Board, BoardDTO> pageDTO);
     public BoardPostDTO boardDetail(Integer bno);
+
+    public BoardFile getBoardFile(Integer bno);
 }

@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService{
 //            String uploadDir = application.getRealPath("/images/postImage");
 
             // 로컬 경로
-            String uploadDir = "C://upload/postImage/";
+            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\postImage\\";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;

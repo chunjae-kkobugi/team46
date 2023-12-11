@@ -10,6 +10,7 @@ import com.memomo.entity.Post;
 import com.memomo.repository.BoardFileRepository;
 import com.memomo.repository.BoardRepository;
 import com.memomo.repository.PostRepository;
+import com.querydsl.core.BooleanBuilder;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
@@ -61,11 +62,12 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
-            String uploadDir = "C://upload/boardImage/";
+            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
+
 
             File uploadPath = new File(saveFolder);
             // 업로드 날짜의 폴더가 없다면 새로 생성
@@ -163,8 +165,15 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardPostDTO boardDetail(Integer  bno) {
         Optional<Board> result = boardRepo.findById(bno);
+        List<Post> postList = postRepo.postListByBno(bno);
         Board board = result.orElseThrow();
         BoardPostDTO dto = modelMapper.map(board, BoardPostDTO.class);
+        dto.setPosts(postList);
         return dto;
+    }
+
+    @Override
+    public BoardFile getBoardFile(Integer bno) {
+        return boardFileRepo.findBoardFileByBno(bno);
     }
 }

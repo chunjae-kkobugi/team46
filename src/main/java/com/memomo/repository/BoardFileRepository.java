@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardFileRepository extends JpaRepository<BoardFile, Integer> {
+
+    BoardFile findBoardFileByBno(Integer bno);
+
 }
