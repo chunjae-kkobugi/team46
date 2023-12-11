@@ -6,9 +6,7 @@ function connect() {
         stompClient.subscribe(
             '/stomp-receive/'+bno, // destination (String 필수)
             function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
-                console.log("THIS IS MESSAGE");
                 let postDTO = JSON.parse(message.body)
-                console.log(postDTO);
             },
             {}  // 헤더 (Object 선택)
         );
@@ -70,8 +68,6 @@ function postMove(layout){
             'action': "SORT",
         })
     );
-
-    console.log(layout);
 }
 
 function layoutDrag(pno, x, y, z){

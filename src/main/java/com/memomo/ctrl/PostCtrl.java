@@ -1,7 +1,9 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.PostDTO;
+import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
+import com.memomo.service.BoardService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,11 +31,13 @@ public class PostCtrl {
     @Autowired
     private PostService postService;
     @Autowired
+    private BoardService boardService;
+    @Autowired
     private ModelMapper mappper;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
-    @RequestMapping("enter")
+    @RequestMapping("detail")
     public String postEnter(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
@@ -41,11 +45,13 @@ public class PostCtrl {
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
-
+        
         plist = plist2;
 
+        Board board = boardService.boardDetail(bno);
+        model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
-        return "post/postHome";
+        return "board/boardDetail";
     }
 
     @MessageMapping("/add/{bno}")
@@ -76,23 +82,23 @@ public class PostCtrl {
     @MessageMapping("/sort/{bno}")
     @SendTo("/stomp-receive/{bno}")
     public void postMove(@DestinationVariable Integer bno, Layout layout){
+        System.out.println("기존 정렬 "+plist);
         int originIdx = plist.indexOf(layout.getPno()); // 나의 기존 정렬 순서
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
         Long oldBefore = ((originIdx-1)>=0)?plist.get(originIdx-1): 0; // 나의 기존 이전 노드. 내가 head 인 경우 0
         Long oldNext = ((originIdx+1)<plist.size()) ? plist.get(originIdx+1): 0; // 나의 기존 다음 노드. 내가 tail 인 경우 0
 
-        System.out.println("WHAT IS gPriority");
-        System.out.println(layout);
         int changedIdx = layout.getGPriority(); // 나의 새로운 정렬 순서
 
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
-        Long newNext = (changedIdx!=plist.size()) ? plist.get(changedIdx) : 0; // 나의 다음 노드. 내가 tail 이 되는 경우 0
-        Long newBefore = ((changedIdx-1)>=0)?plist.get(changedIdx-1) : 0; // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
+        System.out.println(changedIdx);
+        Long newNext = (changedIdx<plist.size()-1) ? plist.get(changedIdx) : 0; // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0
+        Long newBefore = ((changedIdx)>0)? plist.get(changedIdx) : 0; // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
         plist.remove(originIdx);
         plist.add(changedIdx, layout.getPno());
+        System.out.println("나중 정렬 "+plist);
 
-        System.out.println(oldBefore+" "+oldNext+" "+newBefore+" "+newNext);
-
+        System.out.println(newNext);
         postService.postSort(oldBefore, oldNext, newBefore, newNext, layout.getPno(), bno);
 
         System.out.println(layout);
@@ -113,7 +119,14 @@ public class PostCtrl {
         dto.setAuthor(sid);
         dto.setBno(bno);
         dto.setPstatus("ACTIVE");
-        Long pno = postService.postAdd(dto, postFile, request);
+        // 로컬 경로
+        String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\postImage\\";
+//        서버 경로
+//            ServletContext application = request.getSession().getServletContext();
+//            String uploadDir = application.getRealPath("/images/postImage");
+
+        Long oldTail = plist.peekLast();
+        Long pno = postService.postAdd(dto, postFile, uploadDir, oldTail);
         redirectAttributes.addFlashAttribute("result", pno);
         return "redirect:/board/detail?bno="+ bno;
     }

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public interface PostService {
-    public Long postAdd(PostDTO dto, MultipartFile postFile, HttpServletRequest request);
+    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir, Long oldTail);
     public Long postEdit(Post post);
     public Long postRemove(Long pno);
     public void postMove(Layout layout);
