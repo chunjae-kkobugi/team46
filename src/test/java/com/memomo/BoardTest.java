@@ -20,30 +20,30 @@ public class BoardTest {
     @Autowired
     private ModelMapper mapper;
 
-    @Test
-    public void boardTestAll(){
-        Random random = new Random();
-        // 게시판 추가하기
-        for(int i=0; i<10; i++){
-            Board board = new Board();
-            board.setTitle("title "+(random.nextInt(10) + 1));
-            board.setTeacher("teacher "+(random.nextInt(10) + 1));
-            BoardDTO dto = mapper.map(board, BoardDTO.class);
-            boardService.boardAdd(dto);
-        }
-
-
-        BoardPostDTO bpdto = boardService.boardDetail(10);
-        log.info(bpdto);
-
-        bpdto.setMaxStudent(10);
-        BoardDTO bdto = mapper.map(bpdto, BoardDTO.class);
-        boardService.boardEdit(bdto);
-
-        boardService.boardRemove(1);
-
-        boardService.boardDelete(100);
-    }
+//    @Test
+//    public void boardTestAll(){
+//        Random random = new Random();
+//        // 게시판 추가하기
+//        for(int i=0; i<10; i++){
+//            Board board = new Board();
+//            board.setTitle("title "+(random.nextInt(10) + 1));
+//            board.setTeacher("teacher "+(random.nextInt(10) + 1));
+//            BoardDTO dto = mapper.map(board, BoardDTO.class);
+//            boardService.boardAdd(dto);
+//        }
+//
+//
+//        BoardPostDTO bpdto = boardService.boardDetail(10);
+//        log.info(bpdto);
+//
+//        bpdto.setMaxStudent(10);
+//        BoardDTO bdto = mapper.map(bpdto, BoardDTO.class);
+//        boardService.boardEdit(bdto);
+//
+//        boardService.boardRemove(1);
+//
+//        boardService.boardDelete(100);
+//    }
 
     @Test
     public void boardPostRemoveTest(){

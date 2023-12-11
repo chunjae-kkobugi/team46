@@ -29,6 +29,8 @@ public class PageDTO<E, T> {
     private String type; // 검색 종류(복수 선택 시 반점(,)으로 구분
     private String keyword; // 검색어
 
+    private String teacher = "";
+
     private List<T> listDTO; // 페이지 결과
 
     // 검색 종류가 여러 개일 경우, 반점(,)으로 구분
