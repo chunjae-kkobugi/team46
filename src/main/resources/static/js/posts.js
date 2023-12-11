@@ -66,9 +66,12 @@ function postMove(layout){
         {}, // 헤더 (Object 선택)
         JSON.stringify({ // body (String 선택)
             'pno': layout.pno,
-            'layout': layout
+            'layout': layout,
+            'action': "SORT",
         })
     );
+
+    console.log(layout);
 }
 
 function layoutDrag(pno, x, y, z){
@@ -82,12 +85,16 @@ function layoutDrag(pno, x, y, z){
 }
 
 function layoutSort(pno, priority){
-    let layout = {
-        'lno': null,
-        'pno': pno,
-        'priority': priority
-    }
-    postMove(layout);
+    let sendUrl = "/stomp-send/sort/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+            'pno': pno,
+            'gPriority': priority,
+            'action': "SORT",
+        })
+    );
 }
 
 //저장된 채팅 불러오기

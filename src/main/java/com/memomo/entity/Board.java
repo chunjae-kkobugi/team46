@@ -40,5 +40,5 @@ public class Board extends BaseEntity {
     private String layout = "GRID";     // 게시판 최근 레이아웃
     // 격자형(GRID), 자유형(CANVAS), 타임라인형(TIMELINE), 그룹형(GROUP)
 
-    // private Long firstPost; //우선순위 첫 번째 (연결 리스트의 헤드)
+     // private Long firstPost; //우선순위 첫 번째 (연결 리스트의 헤드)
 }

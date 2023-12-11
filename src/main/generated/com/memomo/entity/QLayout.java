@@ -27,7 +27,7 @@ public class QLayout extends EntityPathBase<Layout> {
 
     public final NumberPath<Long> pno = createNumber("pno", Long.class);
 
-    public final NumberPath<Integer> priority = createNumber("priority", Integer.class);
+    public final NumberPath<Long> priority = createNumber("priority", Long.class);
 
     public final NumberPath<Integer> x = createNumber("x", Integer.class);
 
