@@ -7,7 +7,7 @@ public interface MemberService {
     public void join(MemberDTO member);
     public boolean idCheck(String id);
     public String login(String id, String pw);
-    public Member memberEdit(Member member);
+    public void memberEdit(MemberDTO member);
     public String memberRemove(String id);
     public Member memberDetail(String id);
 }
