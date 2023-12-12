@@ -35,7 +35,7 @@
             display: none;
         }
 
-        #postMenuList {
+        #boardMenuList {
             position: absolute;
             right: 0;
             top: 50px;
@@ -45,6 +45,17 @@
             border: 1px solid rgb(175 174 174);
             border-radius: 20px;
             background-color: #eeeeee
+        }
+
+        #postMenuList {
+            position: absolute;
+            right: -200px;
+            display: none;
+            width: auto;
+            height: auto;
+            border: 1px solid rgb(175 174 174);
+            background-color: #eeeeee;
+            z-index: 10;
         }
 
         .xBtn i {
@@ -71,12 +82,11 @@
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 -->
             <div class="col-6 pe-5 text-end" style="position: relative; z-index: 10">
-                <div style="margin-left: 125px"><i class="fas fa-plus-circle fa-3x" style="color: #51B56D; cursor: pointer" id="postMenu"></i></div>
-                <div id="postMenuList"
-                     class="me-5 mt-3 p-2 pb-0 pt-3">
+                <div style="margin-left: 125px"><i class="fas fa-plus-circle fa-3x" style="color: #51B56D; cursor: pointer" id="boardMenu"></i></div>
+                <div id="boardMenuList" class="me-5 mt-3 p-2 pb-0 pt-3">
                     <ul class="p-0" style="list-style-type: none">
                         <li><button type="button" id="postRegisterBtn" class="btn btn-outline-main mb-2">포스트잇 쓰기</button></li>
-                        <li><a th:href="@{/post/register}" class="btn btn-outline-main mb-2" style="width: 100%">버튼2</a></li>
+                        <li><a th:href="@{/}" class="btn btn-outline-main mb-2" style="width: 100%">게시판 수정</a></li>
                     </ul>
                 </div>
             </div>
@@ -89,7 +99,15 @@
                 <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
                     <div class="m-2">
                         <div class="card shadow-sm">
-                            <i class="fa-solid fa-ellipsis-vertical" style="position: absolute; top: 10px; right: 10px; mix-blend-mode: difference; color: #eeeeee"></i>
+                            <!-- 포스트잇 메뉴 버튼 -->
+                            <i class="fa-solid fa-ellipsis-vertical" id="postMenu"
+                               style="position: absolute; top: 10px; right: 10px; mix-blend-mode: difference; color: #eeeeee; cursor: pointer"></i>
+                            <div id="postMenuList" class="p-2">
+                                <ul class="p-0" style="list-style-type: none">
+                                    <li class="me-2"><button type="button" id="postModifyBtn" class="btn btn-main" style="width: 100%">수정</button></li>
+                                    <li><button type="button" id="postRemoveBtn" class="btn btn-main" style="width: 100%">삭제</button></li>
+                                </ul>
+                            </div>
                             <div class="card-body" th:style="${ p.bgImage eq null ? 'background-color : ' + p.bgColor : null }">
                                 <div class="text-body" style="height: 200px;">
                                     <p class="card-text" th:text="${p.content}" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;"></p>
@@ -134,16 +152,16 @@
 
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
-    // 포스트잇 등록 버튼
+    // 게시판 메뉴
     $(document).ready(function(){
         var sw = true;
         sw =! sw;
-        $("#postMenu").click(function () {
+        $("#boardMenu").click(function () {
             if (sw==true) {
-                $("#postMenuList").slideDown()
+                $("#boardMenuList").slideDown()
                 sw = false;
             } else if(sw==false){
-                $("#postMenuList").slideUp()
+                $("#boardMenuList").slideUp()
                 sw = true;
             }
         })
@@ -155,6 +173,21 @@
     })
     $(".xBtn i").click(function(){
         $("#postRegister").addClass("register")
+    })
+
+    // 포스트잇 메뉴
+    $(document).ready(function(){
+        var sw = true;
+        sw =! sw;
+        $("#postMenu").click(function(){
+            if (sw == true) {
+                $("#postMenuList").slideDown();
+                sw = false;
+            } else if (sw == false) {
+                $("#postMenuList").slideUp();
+                sw = true;
+            }
+        })
     })
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
