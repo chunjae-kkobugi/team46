@@ -28,7 +28,7 @@ public class PostTest {
         Random random = new Random();
         String uploadDir = "D:\\sangmin0816\\kkobugi\\team46\\src\\main\\resources\\static\\images\\postImage";
 
-        for(int i=2; i<=5; i++){
+        for(int i=2; i<=12; i++){
             Post post = new Post();
             post.setBno(1);
 

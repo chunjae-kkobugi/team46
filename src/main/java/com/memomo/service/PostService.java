@@ -19,4 +19,5 @@ public interface PostService {
     public List<PostDTO> postList(Integer bno);
 
     public void postSort(Long oldBefore, Long oldNext, Long newBefore, Long newNext, Long changed, Integer bno);
+    public PostDTO postGet(Long pno);
 }

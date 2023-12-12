@@ -220,4 +220,16 @@ public class PostServiceImpl implements PostService{
         // 나의 새로운 다음 노드(새로운 이전 노드가 원래 가지고 있던 값)
         layoutRepo.layoutPriority(newNext, changed);
     }
+
+    @Override
+    public PostDTO postGet(Long pno) {
+        Post post = postRepo.findById(pno).orElseThrow();
+        Layout layout = layoutRepo.findByPno(pno).orElseThrow();
+        PostFile file = fileRepo.findByPnoAndFstatus(pno, "ACTIVE");
+
+        PostDTO dto = mapper.map(post, PostDTO.class);
+        dto.setLayout(layout);
+        dto.setFile(file);
+        return dto;
+    }
 }
