@@ -50,14 +50,15 @@
         .xBtn i {
             position: absolute;
             right: -12px;
-            top: -12px;
+            top: -15px;
             cursor: pointer;
         }
         .register {
             display: none;
+            position: relative;
         }
-        #sortable { list-style-type: none; margin: 1rem; padding: 0; width: 350px; }
-        #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;}
+        #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
+        #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -68,64 +69,69 @@
             <div class="col-6">
                 <h1 th:text="${detail.title}" class="ms-5"></h1>
             </div>
-            <!-- 포스트잇 등록 창 -->
+            <!-- 포스트잇 등록 슬라이드 메뉴 -->
             <div class="col-6 pe-5 text-end" style="position: relative; z-index: 10">
                 <div style="margin-left: 125px"><i class="fas fa-plus-circle fa-3x" style="color: #51B56D; cursor: pointer" id="postMenu"></i></div>
                 <div id="postMenuList"
                      class="me-5 mt-3 p-2 pb-0 pt-3">
                     <ul class="p-0" style="list-style-type: none">
                         <li><button type="button" id="postRegisterBtn" class="btn btn-outline-main mb-2">포스트잇 쓰기</button></li>
-                        <li><a th:href="@{/post/register}" class="btn btn-outline-main mb-2">버튼2</a></li>
+                        <li><a th:href="@{/post/register}" class="btn btn-outline-main mb-2" style="width: 100%">버튼2</a></li>
                     </ul>
                 </div>
             </div>
-            <!-- 포스트잇 등록 창 끝 -->
+            <!-- 포스트잇 등록 슬라이드 메뉴 -->
         </div>
     </div>
-    <ul id="sortable" class="ui-sortable">
-        <li class="ui-state-default ui-sortable-handle" th:each="p: ${postList}" th:text="${p.content}" th:id="${p.pno}" th:pno="${p.pno}">
-    </ul>
-<!--    <div class="post" style="min-height: 700px;">-->
-<!--        <div class="container-fluid m-0 row">-->
-<!--            <th:block th:each="list : ${detail.posts}">-->
-<!--                <div class="col-2 mb-3 mt-2">-->
-<!--                    <div class="card shadow-sm">-->
-<!--                        <div class="card-body" th:style="${ list.bgImage eq null ? 'background-color : ' + list.bgColor : null }">-->
-<!--                            <div class="text-body" style="height: 200px;">-->
-<!--                                <p class="card-text" th:text="${list.content}" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;"></p>-->
-<!--                            </div>-->
-<!--                            <div class="d-flex justify-content-between row">-->
-<!--                                <p class="card-text col-6 mb-0" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${list.author}"></p>-->
-<!--                                <p class="card-text col-6 text-end" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${#temporals.format(list.createAt, 'yyyy-MM-dd')}"></p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </th:block>-->
-<!--            <div class="col-2 mb-3 mt-2 register" id="postRegister">-->
-<!--                <div class="card shadow-sm">-->
-<!--                    <div class="card-body">-->
-<!--                        <div class="xBtn">-->
-<!--                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; 포스트잇 글 등록 &ndash;&gt;-->
-<!--                        <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">-->
-<!--                            <input name="content" type="text" maxlength="200" class="form-control" placeholder="내용을 입력하세요" style="height: 200px;">-->
-<!--                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">-->
-<!--                            <div class="justify-content-center row">-->
-<!--                                <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">-->
-<!--                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: 100%">-->
-<!--                            </div>-->
-<!--                            <div class="btn-group d-flex">-->
-<!--                                <button type="submit" class="btn btn-main"> 포스트잇 등록 </button>-->
-<!--                            </div>-->
-<!--                        </form>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div class="post" style="min-height: 700px;">
+        <div class="container-fluid m-0 row">
+            <ul id="sortable" class="col-12 ui-sortable">
+                <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
+                    <div class="m-2">
+                        <div class="card shadow-sm">
+                            <i class="fa-solid fa-ellipsis-vertical" style="position: absolute; top: 10px; right: 10px; mix-blend-mode: difference; color: #eeeeee"></i>
+                            <div class="card-body" th:style="${ p.bgImage eq null ? 'background-color : ' + p.bgColor : null }">
+                                <div class="text-body" style="height: 200px;">
+                                    <p class="card-text" th:text="${p.content}" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;"></p>
+                                </div>
+                                <div class="d-flex justify-content-between row">
+                                    <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${p.author}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- 포스트잇 등록 -->
+                <li class="col-2 mb-3 mt-2 register" id="postRegister">
+                    <div class="m-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body" style="height: 258px;">
+                                <div class="xBtn">
+                                    <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
+                                </div>
+                                <!-- 포스트잇 글 등록 -->
+                                <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">
+                                    <div class="justify-content-center row">
+                                        <textarea name="content" type="text" maxlength="1000" class="form-control" placeholder="내용을 입력하세요" style="height: 115px; resize: none;"></textarea>
+                                        <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                                        <div class="justify-content-between row">
+                                            <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
+                                            <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                        </div>
+                                        <div class="btn-group d-flex mt-2">
+                                            <button type="submit" class="btn btn-main"> 포스트잇 등록 </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
 </section>
+
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
     // 포스트잇 등록 버튼
