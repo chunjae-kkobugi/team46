@@ -58,8 +58,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member memberEdit(Member member) {
-        return memberRepo.save(member);
+    public void memberEdit(MemberDTO memberDTO) {
+        Member member = modelMapper.map(memberDTO, Member.class);
+        //String ppw = pwEncoder.encode(member.getPw());
+        //member.setPw(ppw);
+        System.out.println("멤버 : " + member);
+        memberRepo.save(member);
     }
 
     @Override
