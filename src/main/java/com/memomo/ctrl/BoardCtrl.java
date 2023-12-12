@@ -73,12 +73,16 @@ public class BoardCtrl {
         return "board/boardList";
     }
 
+    /*
+    특정 게시판을 여는 것부터는 PostCtrl로 넘어가야 함
+
     @RequestMapping("detail")
     public String boardDetail(@RequestParam("bno") int bno, HttpServletRequest request, Model model) {
         BoardPostDTO boardPostDTO = boardService.boardDetail(bno);
         model.addAttribute("detail", boardPostDTO);
         return "board/boardDetail";
     }
+    */
 
     @RequestMapping("register")
     public String boardRegisterForm() {
