@@ -89,9 +89,9 @@
 
                                 $(document).ready(function(){
                                     $("#id").keyup(function(){
-                                        $("#idCk").val("no");
-                                        if($(this).val()!=""){
-                                            if($("#msg").hasClass("no_check")) {
+                                        $("#idCk").val("neu");
+                                        if ($(this).val() != "") {
+                                            if ($("#msg").hasClass("no_check")) {
                                                 $("#msg").removeClass("no_check");
                                             }
                                             $("#msg").html("아이디 입력중입니다.");
@@ -100,9 +100,22 @@
                                             $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
                                         }
                                     });
-                                });
 
-                                $(document).ready(function() {
+                                    $("#id").focusout(function () {
+                                        //$("#idCk").
+                                        var ck = $("#idCk").val();
+                                        if (ck == "yes") {
+                                            if ($("#msg").hasClass("no_check")) {
+                                                $("#msg").removeClass("no_check");
+                                            }
+                                            $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
+                                        } else if (ck == "no") {
+                                            $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
+                                        } else {
+                                            $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
+                                        }
+                                    })
+
                                     $('#cert-num').on('keypress', function(e) {
                                         var key = e.which; // 입력된 키 코드 가져오기
                                         // 숫자(0-9) 허용 (숫자 키, 백스페이스, 화살표 키)
@@ -110,7 +123,10 @@
                                             e.preventDefault(); // 입력 방지
                                         }
                                     });
+
+
                                 });
+
 
                                 function idCheck(){
                                     if($("#id").val()==""){
@@ -126,19 +142,19 @@
                                         data:JSON.stringify(params),
                                         dataType:"json",
                                         contentType:"application/json",
-                                        success : function(result) {
+                                        success: function (result) {
                                             var idPass = result;
-                                            if(idPass == false){
+                                            if (idPass == false) {
                                                 $("#idCk").val("no");
                                                 $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
                                                 $("#id").focus();
-                                            } else if(idPass == true){
+                                            } else if (idPass == true) {
                                                 $("#idCk").val("yes");
-                                                if($("#msg").hasClass("no_check")) {
+                                                if ($("#msg").hasClass("no_check")) {
                                                     $("#msg").removeClass("no_check");
                                                 }
                                                 $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
-                                            } else if(idPass==""){
+                                            } else {
                                                 $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
                                             }
                                         }
@@ -146,54 +162,54 @@
                                 }
 
                                 function joinCheck(f){
-                                    if(f.pw.value!=f.pw2.value){
+                                    if (f.pw.value != f.pw2.value) {
                                         alert("비밀번호와 비밀번호 확인이 서로 다릅니다.");
                                         f.pw.focus();
                                         return false;
                                     }
-                                    if(f.idCk.value!="yes"){
+                                    if (f.idCk.value != "yes") {
                                         alert("아이디 중복 체크를 하지 않으셨습니다.");
                                         return false;
                                     }
-                                    if(f.emailCk.value!="yes"){
+                                    if (f.emailCk.value != "yes") {
                                         alert("이메일 인증을 하지 않으셨습니다.");
                                         return false;
                                     }
                                 }
 
                                 function sendNumber(){
-                                    if($("#email").val()===""){
+                                    if ($("#email").val() === "") {
                                         alert("이메일을 입력하지 않았습니다.");
                                         $("#email").focus();
                                         return;
                                     }
 
-                                    $("#mail_number").css("display","block");
+                                    $("#mail_number").css("display", "block");
                                     $.ajax({
-                                        url:"/send-mail",
-                                        type:"post",
-                                        dataType:"json",
-                                        data:{"mail" : $("#email").val()},
-                                        success: function(data){
+                                        url: "/send-mail",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {"mail": $("#email").val()},
+                                        success: function (data) {
                                             alert("인증번호가 발송되었습니다.");
-                                            $("#confirm").attr("value",data);
+                                            $("#confirm").attr("value", data);
                                         }
                                     });
                                 }
                                 function confirmNumber(){
                                     var inputNum = $("#cert-num").val();
-                                    if(inputNum==="") {
+                                    if (inputNum === "") {
                                         alert("인증번호를 입력해주세요");
                                         $("#cert-num").focus();
                                         return;
                                     }
                                     $.ajax({
-                                        url:"/confirm",
-                                        type:"post",
-                                        dataType:"json",
-                                        data:{"inputNum" : inputNum},
-                                        success: function(data){
-                                            if(data) {
+                                        url: "/confirm",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {"inputNum": inputNum},
+                                        success: function (data) {
+                                            if (data) {
                                                 $("#emailCk").val("yes");
                                                 alert("인증되었습니다.");
                                             } else {
@@ -207,16 +223,16 @@
 
                             <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
                             <script>
-                                function findAddr(){
+                                function findAddr() {
                                     new daum.Postcode({
-                                        oncomplete:function(data){
+                                        oncomplete: function (data) {
                                             var roadAddr = data.roadAddress;
                                             var jibunAddr = data.jibunAddress;
                                             var bname = data.bname;
                                             document.getElementById("postcode").value = data.zonecode;
-                                            if(roadAddr !== ''){
+                                            if (roadAddr !== '') {
                                                 document.getElementById("addr1").value = roadAddr;
-                                            } else if(jibunAddr !== ''){
+                                            } else if (jibunAddr !== '') {
                                                 document.getElementById("addr1").value = jibunAddr;
                                             }
                                             document.getElementById("addr2").focus();
