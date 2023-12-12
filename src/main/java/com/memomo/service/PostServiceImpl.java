@@ -2,9 +2,11 @@ package com.memomo.service;
 
 import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
+import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
 import com.memomo.entity.PostFile;
+import com.memomo.repository.BoardRepository;
 import com.memomo.repository.LayoutRepository;
 import com.memomo.repository.PostFileRepository;
 import com.memomo.repository.PostRepository;
@@ -43,38 +45,23 @@ public class PostServiceImpl implements PostService{
     private LayoutRepository layoutRepo;
     @Autowired
     private PostFileRepository fileRepo;
+    @Autowired
+    private BoardRepository boardRepo;
 
     @Override
-    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir, Long oldTail){
+    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir){
         Post post = mapper.map(dto, Post.class);
-
-        if(oldTail == null || oldTail == 1) {
-            // 아예 하나도 없는 경우 내가 head
-            Post head = postRepo.postHeadGet(dto.getBno());
-            if(head==null){
-                head = new Post();
-                head.setBno(dto.getBno());
-                head.setPstatus("HEAD");
-                head.setAuthor("admin");
-                head.setContent("This is Head");
-                Long p = postRepo.save(head).getPno();
-                head.setPno(p);
-
-                Layout layout = new Layout();
-                layout.setPno(p);
-                layoutRepo.save(layout);
-            }
-            oldTail = head.getPno();
-            System.out.println("=====oldTail"+oldTail);
-        }
-
-        // 마지막 꼬리에 현재 추가한 포스트 추가
         Long pno = postRepo.save(post).getPno();
-        System.out.println(pno+"========"+oldTail);
-        layoutRepo.layoutPriority(pno, oldTail);
+
+        // 새로운 포스트 가장 앞에 추가됨
+        Board head = boardRepo.findById(dto.getBno()).orElseThrow();
+        Long beforeHead = head.getPostHead(); // 이전 head
+        head.setPostHead(pno);
+        boardRepo.save(head);
 
         // 내 위치 저장
         Layout layout = mapper.map(dto.getLayout(), Layout.class);
+        layout.setPriority(beforeHead); // 나는 이전 head 를 다음 노드로 함
         layout.setPno(pno);
         layoutRepo.save(layout);
 
@@ -184,8 +171,8 @@ public class PostServiceImpl implements PostService{
             postDTOS.add(dto);
         }
 
-        PostDTO head = postDTOS.stream().filter(p->p.getPstatus().equals("HEAD")).findFirst().orElseThrow();
-        Long headP = head.getLayout().getPriority();
+        Board head = boardRepo.findById(bno).orElseThrow();
+        Long headP = head.getPostHead();
         while(headP!= 0){
             Long finalHeadP = headP;
             PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
@@ -193,6 +180,7 @@ public class PostServiceImpl implements PostService{
             headP = post.getLayout().getPriority();
         }
 
+        Collections.reverse(sortedDTO); // head 가 마지막에 오도록 뒤집기
         return sortedDTO;
     }
 
@@ -202,8 +190,9 @@ public class PostServiceImpl implements PostService{
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
         if(oldBefore==0){
             // 내가 head 였다면 head 값을 바꿔야 함
-            Post head = postRepo.postHeadGet(bno);
-            layoutRepo.layoutPriority(oldNext, head.getPno());
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(oldNext);
+            boardRepo.save(head);
         } else {
             layoutRepo.layoutPriority(oldNext, oldBefore);
         }
@@ -211,8 +200,9 @@ public class PostServiceImpl implements PostService{
         // 나의 새로운 이전 노드
         if(newBefore==0){
             // 내가 새로운 head 가 될 때, head 에 나를 넣어줌
-            Post head = postRepo.postHeadGet(bno);
-            layoutRepo.layoutPriority(changed, head.getPno());
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(changed);
+            boardRepo.save(head);
         } else {
             layoutRepo.layoutPriority(changed, newBefore);
         }
