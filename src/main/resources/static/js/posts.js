@@ -6,9 +6,15 @@ function connect() {
         stompClient.subscribe(
             '/stomp-receive/'+bno, // destination (String 필수)
             function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
-                console.log("THIS IS MESSAGE");
-                let postDTO = JSON.parse(message.body)
-                console.log(postDTO);
+                console.log(message);
+            },
+            {}  // 헤더 (Object 선택)
+        );
+        stompClient.subscribe(
+            '/stomp-receive/sort/'+bno, // destination (String 필수)
+            function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
+                let newOrder = JSON.parse(message.body);
+                receiveSort(newOrder);
             },
             {}  // 헤더 (Object 선택)
         );
@@ -70,8 +76,6 @@ function postMove(layout){
             'action': "SORT",
         })
     );
-
-    console.log(layout);
 }
 
 function layoutDrag(pno, x, y, z){
@@ -95,6 +99,17 @@ function layoutSort(pno, priority){
             'action': "SORT",
         })
     );
+}
+
+// 다른 사람이 순서 바꿨을 때 나한테도 적용
+function receiveSort(newOrder){
+    let fragment = document.createDocumentFragment();
+    newOrder.forEach(function(order){
+        let pnoLi = document.querySelector(`#sortable > li[pno='${order}']`);
+        fragment.appendChild(pnoLi);
+    });
+
+    document.getElementById('sortable').appendChild(fragment);
 }
 
 //저장된 채팅 불러오기
