@@ -45,17 +45,41 @@ public class PostServiceImpl implements PostService{
     private PostFileRepository fileRepo;
 
     @Override
-    public Long postAdd(PostDTO dto, MultipartFile postFile, HttpServletRequest request){
+    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir, Long oldTail){
+        Post post = mapper.map(dto, Post.class);
+
+        if(oldTail == null || oldTail == 1) {
+            // 아예 하나도 없는 경우 내가 head
+            Post head = postRepo.postHeadGet(dto.getBno());
+            if(head==null){
+                head = new Post();
+                head.setBno(dto.getBno());
+                head.setPstatus("HEAD");
+                head.setAuthor("admin");
+                head.setContent("This is Head");
+                Long p = postRepo.save(head).getPno();
+                head.setPno(p);
+
+                Layout layout = new Layout();
+                layout.setPno(p);
+                layoutRepo.save(layout);
+            }
+            oldTail = head.getPno();
+            System.out.println("=====oldTail"+oldTail);
+        }
+
+        // 마지막 꼬리에 현재 추가한 포스트 추가
+        Long pno = postRepo.save(post).getPno();
+        System.out.println(pno+"========"+oldTail);
+        layoutRepo.layoutPriority(pno, oldTail);
+
+        // 내 위치 저장
+        Layout layout = mapper.map(dto.getLayout(), Layout.class);
+        layout.setPno(pno);
+        layoutRepo.save(layout);
 
         if (postFile != null && ! postFile.isEmpty()) {
             MultipartFile multipartFile = postFile;
-
-//            // 서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/postImage");
-
-            // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\postImage\\";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
@@ -93,6 +117,7 @@ public class PostServiceImpl implements PostService{
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
             }
+
             PostFile image = new PostFile();
             image.setOriginName(originalName);
             image.setSaveName(saveName);
@@ -101,33 +126,22 @@ public class PostServiceImpl implements PostService{
             image.setFileType(fileExtension);
             image.setFstatus("ACTIVE");
 
-            Post post = mapper.map(dto, Post.class);
-            postRepo.save(post);
-            image.setPno(post.getPno());
+            image.setPno(pno);
             fileRepo.save(image);
-            post.setBgImage(image.getFno());
-            dto.setFile(image);
-            postRepo.save(post);
-            log.info("---------------------------------------- post : " + dto);
 
-            Layout layout = mapper.map(dto.getLayout(), Layout.class);
-            layout.setPno(postRepo.save(post).getPno());
+            post.setBgImage(image.getFno());
+            postRepo.save(post);
+            log.info("---------------------------------------- post : " + post);
+
+
             System.out.println(layout);
             layoutRepo.save(layout);
-
-            return postRepo.save(post).getPno();
         } else {
             // 파일이 업로드 되지 않은 경우
-            Post post = mapper.map(dto, Post.class);
-            postRepo.save(post);
             log.info("포스트에 업로드 된 파일이 없습니다" + dto);
-
-            Layout layout = mapper.map(dto.getLayout(), Layout.class);
-            layout.setPno(postRepo.save(post).getPno());
-            System.out.println(layout);
-            layoutRepo.save(layout);
-            return postRepo.save(post).getPno();
         }
+
+        return pno;
     }
 
     @Override
@@ -205,5 +219,17 @@ public class PostServiceImpl implements PostService{
 
         // 나의 새로운 다음 노드(새로운 이전 노드가 원래 가지고 있던 값)
         layoutRepo.layoutPriority(newNext, changed);
+    }
+
+    @Override
+    public PostDTO postGet(Long pno) {
+        Post post = postRepo.findById(pno).orElseThrow();
+        Layout layout = layoutRepo.findByPno(pno).orElseThrow();
+        PostFile file = fileRepo.findByPnoAndFstatus(pno, "ACTIVE");
+
+        PostDTO dto = mapper.map(post, PostDTO.class);
+        dto.setLayout(layout);
+        dto.setFile(file);
+        return dto;
     }
 }

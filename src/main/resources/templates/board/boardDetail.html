@@ -3,6 +3,16 @@
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
     <title th:text="${detail.title}"></title>
+
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.css}">
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.strucutre.css}">
+    <link rel="stylesheet" th:src="@{/js/jqeury-ui-1.13.2/jquery-ui.theme.css}">
+
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+    <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
+
     <style>
         /* 겉부분의 디자인 변경 */
         input[type=color] {
@@ -46,6 +56,8 @@
         .register {
             display: none;
         }
+        #sortable { list-style-type: none; margin: 1rem; padding: 0; width: 350px; }
+        #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;}
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -73,48 +85,49 @@
     <ul id="sortable" class="ui-sortable">
         <li class="ui-state-default ui-sortable-handle" th:each="p: ${postList}" th:text="${p.content}" th:id="${p.pno}" th:pno="${p.pno}">
     </ul>
-    <div class="post" style="min-height: 700px;">
-        <div class="container-fluid m-0 row">
-            <th:block th:each="list : ${detail.posts}">
-                <div class="col-2 mb-3 mt-2">
-                    <div class="card shadow-sm">
-                        <div class="card-body" th:style="${ list.bgImage eq null ? 'background-color : ' + list.bgColor : null }">
-                            <div class="text-body" style="height: 200px;">
-                                <p class="card-text" th:text="${list.content}" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;"></p>
-                            </div>
-                            <div class="d-flex justify-content-between row">
-                                <p class="card-text col-6 mb-0" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${list.author}"></p>
-                                <p class="card-text col-6 text-end" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${#temporals.format(list.createAt, 'yyyy-MM-dd')}"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-            <div class="col-2 mb-3 mt-2 register" id="postRegister">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="xBtn">
-                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
-                        </div>
-                        <!-- 포스트잇 글 등록 -->
-                        <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">
-                            <input name="content" type="text" maxlength="200" class="form-control" placeholder="내용을 입력하세요" style="height: 200px;">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
-                            <div class="justify-content-center row">
-                                <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
-                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: 100%">
-                            </div>
-                            <div class="btn-group d-flex">
-                                <button type="submit" class="btn btn-main"> 포스트잇 등록 </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--    <div class="post" style="min-height: 700px;">-->
+<!--        <div class="container-fluid m-0 row">-->
+<!--            <th:block th:each="list : ${detail.posts}">-->
+<!--                <div class="col-2 mb-3 mt-2">-->
+<!--                    <div class="card shadow-sm">-->
+<!--                        <div class="card-body" th:style="${ list.bgImage eq null ? 'background-color : ' + list.bgColor : null }">-->
+<!--                            <div class="text-body" style="height: 200px;">-->
+<!--                                <p class="card-text" th:text="${list.content}" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;"></p>-->
+<!--                            </div>-->
+<!--                            <div class="d-flex justify-content-between row">-->
+<!--                                <p class="card-text col-6 mb-0" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${list.author}"></p>-->
+<!--                                <p class="card-text col-6 text-end" style="mix-blend-mode: exclusion; color: #ffffff" th:text="${#temporals.format(list.createAt, 'yyyy-MM-dd')}"></p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </th:block>-->
+<!--            <div class="col-2 mb-3 mt-2 register" id="postRegister">-->
+<!--                <div class="card shadow-sm">-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="xBtn">-->
+<!--                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; 포스트잇 글 등록 &ndash;&gt;-->
+<!--                        <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">-->
+<!--                            <input name="content" type="text" maxlength="200" class="form-control" placeholder="내용을 입력하세요" style="height: 200px;">-->
+<!--                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">-->
+<!--                            <div class="justify-content-center row">-->
+<!--                                <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">-->
+<!--                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: 100%">-->
+<!--                            </div>-->
+<!--                            <div class="btn-group d-flex">-->
+<!--                                <button type="submit" class="btn btn-main"> 포스트잇 등록 </button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </section>
 <script th:inline="javascript">
+    const bno = /*[[${detail.bno}]]*/ 1;
     // 포스트잇 등록 버튼
     $(document).ready(function(){
         var sw = true;
@@ -140,4 +153,6 @@
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
+<script th:src="@{/js/posts.js}"></script>
+<script th:src="@{/js/postJQ-UI.js}"></script>
 </html>
