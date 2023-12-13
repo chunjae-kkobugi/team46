@@ -57,4 +57,5 @@ public class PostTest {
     public void postSelect(){
         List<PostDTO> postDTOs = postService.postList(1);
     }
+
 }
