@@ -172,20 +172,46 @@
 
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
-    // 게시판 메뉴
+
     $(document).ready(function(){
-        var sw = true;
-        sw =! sw;
-        $("#boardMenu").click(function () {
-            if (sw==true) {
-                $("#boardMenuList").slideDown()
-                sw = false;
-            } else if(sw==false){
-                $("#boardMenuList").slideUp()
-                sw = true;
+        var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수
+        var isOpen = false; // 메뉴가 열려있는지 여부
+
+        // 메뉴를 열고 닫는 함수
+        function toggleMenu(action) {
+            clearTimeout(hoverTimeout);
+            if (action === 'open') {
+                $("#boardMenuList").slideDown();
+                isOpen = true;
+            } else if (action === 'close') {
+                $("#boardMenuList").slideUp();
+                isOpen = false;
             }
-        })
-    })
+        }
+
+        // boardMenu에 호버(Hover) 이벤트 추가
+        $("#boardMenu").hover(
+            function() {
+                toggleMenu('open'); // 호버되면 메뉴 열기
+            },
+            function() {
+                // 마우스가 벗어났을 때 메뉴를 닫음
+                hoverTimeout = setTimeout(function() {
+                    toggleMenu('close');
+                }, 500);
+            }
+        );
+
+        // 메뉴를 유지
+        $("#boardMenuList").hover(
+            function() {
+                clearTimeout(hoverTimeout); // 메뉴에 호버할 때 타임아웃 제거하여 메뉴가 열려있는 상태로 유지
+            },
+            function() {
+                toggleMenu('close'); // 메뉴에서 마우스가 벗어나면 닫힘
+            }
+        );
+    });
 
     // 포스트잇 글쓰기 영역
     $("#postRegisterBtn").click(function (){
