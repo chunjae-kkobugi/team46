@@ -56,7 +56,7 @@
     </div>
 
     <div class="post" style="min-height: 700px;">
-        <!-- 포스트잇 등록 창 -->
+        <!-- 포스트잇 드롭다운 -->
         <div class="float-end m-4">
             <div style="margin-left: 125px"><i class="fas fa-plus-circle fa-3x" style="color: #51B56D; cursor: pointer" id="postMenu"></i></div>
             <div id="postMenuList"
@@ -71,20 +71,17 @@
                 </ul>
             </div>
         </div>
-        <!-- 포스트잇 등록 창 끝 -->
+        <!-- 포스트잇 드롭다운 끝 -->
 
         <h1>포스트잇 배치 될 위치</h1>
-
-        <ul id="sortable" class="ui-sortable">
-            <li class="ui-state-default ui-sortable-handle" th:each="p: ${postList}" th:text="${p.content}" th:id="${p.pno}" th:pno="${p.pno}">
-        </ul>
+        <th:block th:if="${detail.layout == 'GRID'}" th:replace="~{include/boardTemplate :: grid-layout}" class="mb-0" />
 
         <div id="postRegister" class="album py-5 bg-body-tertiary register">
             <div class="container-fluid">
                 <div class="row g-3">
                     <div class="col-3">
                         <div class="card shadow-sm">
-                            <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">
+                            <form enctype="multipart/form-data" onsubmit="postAddBtn(this)">
                                 <input name="content" type="text" maxlength="200" class="form-control" placeholder="내용을 입력하세요" style="height: 255px;">
                                 <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
                                 <div class="justify-content-center row">
@@ -97,7 +94,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <!-- 포스트잇 등록창 창 끝-->
@@ -108,7 +104,7 @@
 
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
-    // 포스트잇 등록 버튼
+    // 포스트잇 드롭다운
     $(document).ready(function(){
         var sw = true;
         sw =! sw;
@@ -128,6 +124,6 @@
         $("#postRegister").removeClass("register")
     })
 </script>
-<script th:src="@{/js/posts.js}"></script>
-<script th:src="@{/js/postJQ-UI.js}"></script>
+<script th:src="@{/js/postSocket.js}"></script>
+<script th:src="@{/js/postjs.js}"></script>
 </html>

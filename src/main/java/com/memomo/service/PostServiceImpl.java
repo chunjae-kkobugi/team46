@@ -60,7 +60,10 @@ public class PostServiceImpl implements PostService{
         boardRepo.save(head);
 
         // 내 위치 저장
-        Layout layout = mapper.map(dto.getLayout(), Layout.class);
+        Layout layout = new Layout();
+        if(dto.getLayout()!=null){
+            layout = mapper.map(dto.getLayout(), Layout.class);
+        }
         layout.setPriority(beforeHead); // 나는 이전 head 를 다음 노드로 함
         layout.setPno(pno);
         layoutRepo.save(layout);

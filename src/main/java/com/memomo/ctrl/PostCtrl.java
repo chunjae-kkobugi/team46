@@ -16,9 +16,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -49,6 +47,7 @@ public class PostCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
+        
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/boardDetail";
@@ -94,10 +93,15 @@ public class PostCtrl {
         return plist;
     }
 
-    @MessageMapping("/add/{bno}")
-    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
-    @SendTo("/stomp-receive/{bno}")
-    public PostDTO postRegister(@RequestParam("bno") Integer bno, PostDTO dto, MultipartFile postFile, HttpServletRequest request, BindingResult bindingResult) {
+
+
+
+//    @MessageMapping("/add/{bno}")
+//    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+//    @SendTo("/stomp-receive/add/{bno}")
+    @PostMapping("add")
+    @ResponseBody
+    public PostDTO postRegister(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, HttpServletRequest request, BindingResult bindingResult) {
         HttpSession session = request.getSession();
         log.info("post register start------------------------------");
 
@@ -108,7 +112,6 @@ public class PostCtrl {
         log.info(dto);
         String sid = (String) session.getAttribute("sid");
         dto.setAuthor(sid);
-        dto.setBno(bno);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
         String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\postImage\\";
@@ -117,7 +120,14 @@ public class PostCtrl {
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/postImage");
 
-        Long pno = postService.postAdd(dto, postFile, uploadDir);
+        Long pno;
+        if(!postFile.isPresent() || postFile.isEmpty()){
+            pno = postService.postAdd(dto, null, uploadDir);
+        } else{
+            pno = postService.postAdd(dto, postFile.orElseThrow(), uploadDir);
+        }
+
+
         return postService.postGet(pno);
     }
 }
