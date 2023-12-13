@@ -48,14 +48,15 @@
         }
 
         #postMenuList {
+            border-radius: 20px;
             position: absolute;
-            right: -200px;
+            right: -112px;
             display: none;
-            width: auto;
             height: auto;
             border: 1px solid rgb(175 174 174);
             background-color: #eeeeee;
             z-index: 10;
+            width: 110px;
         }
 
         .xBtn i {
@@ -96,16 +97,26 @@
     <div class="post" style="min-height: 700px;">
         <div class="container-fluid m-0 row">
             <ul id="sortable" class="col-12 ui-sortable">
-                <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
+                <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p, status : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
                     <div class="m-2">
                         <div class="card shadow-sm">
                             <!-- 포스트잇 메뉴 버튼 -->
-                            <i class="fa-solid fa-ellipsis-vertical" id="postMenu"
+                            <i class="fa-solid fa-ellipsis-vertical" th:id="'postMenuBtn'+${status.count}"
                                style="position: absolute; top: 10px; right: 10px; mix-blend-mode: difference; color: #eeeeee; cursor: pointer"></i>
-                            <div id="postMenuList" class="p-2">
+                            <div th:id="postMenuList+${status.count}" class="p-2"
+                                 style="border-radius: 20px; position: absolute; right: -112px; display: none; height: auto;
+                                 border: 1px solid rgb(175 174 174); background-color: #eeeeee; z-index: 10; width: 110px;">
                                 <ul class="p-0" style="list-style-type: none">
-                                    <li class="me-2"><button type="button" id="postModifyBtn" class="btn btn-main" style="width: 100%">수정</button></li>
-                                    <li><button type="button" id="postRemoveBtn" class="btn btn-main" style="width: 100%">삭제</button></li>
+                                    <li class="mb-1">
+                                        <button type="button" th:id="'postModifyBtn'+${status.count}" class="btn" style="width: 100%; border: 1px solid #b4b4b4;"
+                                                th:style="${ p.bgImage eq null ? 'width: 100%; border: 1px solid #b4b4b4; background-color : ' + p.bgColor : 'width: 100%; border: 1px solid #b4b4b4;' }">
+                                            <span style="color: #eeeeee; mix-blend-mode: difference;" th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">수정</span>
+                                        </button>
+                                    </li>
+                                    <li><button type="button" th:id="'postRemoveBtn'+${status.count}" class="btn" style="width: 100%; border: 1px solid #b4b4b4"
+                                                th:style="${ p.bgImage eq null ? 'width: 100%; border: 1px solid #b4b4b4; background-color : ' + p.bgColor : 'width: 100%; border: 1px solid #b4b4b4;' }">
+                                        <span style="color: #eeeeee; mix-blend-mode: difference;" th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">삭제</span>
+                                    </button></li>
                                 </ul>
                             </div>
                             <div class="card-body" th:style="${ p.bgImage eq null ? 'background-color : ' + p.bgColor : null }">
@@ -177,18 +188,18 @@
 
     // 포스트잇 메뉴
     $(document).ready(function(){
-        var sw = true;
-        sw =! sw;
-        $("#postMenu").click(function(){
-            if (sw == true) {
-                $("#postMenuList").slideDown();
-                sw = false;
-            } else if (sw == false) {
-                $("#postMenuList").slideUp();
-                sw = true;
+        $('[id^=postMenuBtn]').click(function(){
+            var index = this.id.replace('postMenuBtn', ''); // 클릭된 메뉴의 인덱스 추출
+            var postMenuList = $("#postMenuList" + index);
+
+            // 현재 메뉴 리스트의 표시 여부를 확인하고 그에 따라 토글합니다.
+            if (postMenuList.is(":hidden")) {
+                postMenuList.slideDown();
+            } else {
+                postMenuList.slideUp();
             }
-        })
-    })
+        });
+    });
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
