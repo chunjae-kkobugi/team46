@@ -165,10 +165,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public Board boardDetail(Integer  bno) {
         Optional<Board> result = boardRepo.findById(bno);
-        List<Post> postList = postRepo.postListByBno(bno);
+//        List<Post> postList = postRepo.postListByBno(bno);
         Board board = result.orElseThrow();
-        BoardPostDTO dto = modelMapper.map(board, BoardPostDTO.class);
-        dto.setPosts(postList);
+//        BoardPostDTO dto = modelMapper.map(board, BoardPostDTO.class);
+//        dto.setPosts(postList);
         return board;
     }
 
