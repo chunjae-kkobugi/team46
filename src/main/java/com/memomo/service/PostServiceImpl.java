@@ -165,6 +165,10 @@ public class PostServiceImpl implements PostService{
         List<PostDTO> sortedDTO = new ArrayList<>();
 
         List<Object[]> objects = postRepo.postDTOList(bno);
+        if(objects.isEmpty()){
+            return sortedDTO;
+        }
+
         for(Object[] o: objects){
             Post p = (Post) o[0];
             Layout l = (Layout) o[1];

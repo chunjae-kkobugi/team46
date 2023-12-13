@@ -38,5 +38,9 @@
 </section>
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    let sid = /*[[${session.sid}]]*/ 'sid';
+    console.log(sid);
+</script>
 </body>
 </html>

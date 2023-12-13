@@ -17,25 +17,37 @@ $("#sortable").disableSelection();
 
 function postAddBtn(form){
     var formData = new FormData();
+
     formData.append('postFile', form.postFile.files[0]);
-    formData.append('color', form.bgColor.value);
+    formData.append('bgColor', form.bgColor.value);
     formData.append('content', form.content.value);
     formData.append('bno', form.bno.value);
 
-
     $.ajax({
-        type : "POST",
+        // type : "post",
+        method: "post",
         enctype : "multipart/form-data",
-        url : "/post/add",
+        url : "/post/addPro",
         cache : false,
         contentType : false,
         processData : false,
         data : formData,
-        success : function(data){
-            console.log(data);
+        xhrFields: {
+            withCredentials: true
         },
-        error : function(){
-            alert('에러');
+        success : function(data){
+            alert("SUCCESS");
+            console.log(data);
+            confirm("DATA SUCCESS?");
+            console.log(data);
+            // let newPost = JSON.parse(data);
+            // alert(data);
+            // alert(data.pno);
+            // postAdd(newPost.pno);
+        },
+        error : function(e){
+            console.log("포스트잇 추가 에러");
+            console.log(e);
         }
     });
 }

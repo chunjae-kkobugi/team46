@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,14 +20,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 
 @Controller
 @Log4j2
-@RequestMapping("/post")
-public class PostCtrl {
+@CrossOrigin(origins = "*")
+public class SocketCtrl {
     @Autowired
     private PostService postService;
     @Autowired
@@ -35,11 +36,12 @@ public class PostCtrl {
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
-    @RequestMapping("detail")
+    @RequestMapping("/post/detail")
     public String postEnter(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
+
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
@@ -96,12 +98,19 @@ public class PostCtrl {
 
 
 
-//    @MessageMapping("/add/{bno}")
-//    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
-//    @SendTo("/stomp-receive/add/{bno}")
-    @PostMapping("add")
+    @MessageMapping("/add/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/add/{bno}")
+    public PostDTO postAdd(@DestinationVariable Integer bno, Long pno){
+        log.info("post register start------------------------------");
+        log.info(pno+"------pno");
+        return postService.postGet(pno);
+    };
+
+
+    @PostMapping("/post/addPro")
     @ResponseBody
-    public PostDTO postRegister(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, HttpServletRequest request, BindingResult bindingResult) {
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, HttpServletRequest request, BindingResult bindingResult) {
         HttpSession session = request.getSession();
         log.info("post register start------------------------------");
 
@@ -127,7 +136,6 @@ public class PostCtrl {
             pno = postService.postAdd(dto, postFile.orElseThrow(), uploadDir);
         }
 
-
-        return postService.postGet(pno);
+        return pno;
     }
 }

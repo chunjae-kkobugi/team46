@@ -18,6 +18,14 @@ function connect() {
             },
             {}  // 헤더 (Object 선택)
         );
+        stompClient.subscribe(
+            '/stomp-receive/add/'+bno, // destination (String 필수)
+            function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
+                let newPost = JSON.parse(message.body);
+                receiveAdd(newPost);
+            },
+            {}  // 헤더 (Object 선택)
+        );
     });
 }
 
@@ -29,13 +37,14 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function postAdd(content){
+function postAdd(pno){
+    alert("post ADD of postSocket");
     let sendUrl = "/stomp-send/add/"+bno;
     stompClient.send(
         sendUrl, // destination (String 필수)
         {}, // 헤더 (Object 선택)
         JSON.stringify({ // body (String 선택)
-            'content' : content,
+            'pno' : pno,
         })
     );
 }
@@ -109,55 +118,24 @@ function receiveSort(newOrder){
         fragment.appendChild(pnoLi);
     });
 
-    document.getElementById('sortable').appendChild(fragment);
-}
-
-//저장된 채팅 불러오기
-function loadChat(chatList){
-    if(chatList != null) {
-        for(chat in chatList) {
-            if(chatList[chat].senderId == loginId){
-                $("#chatting").append(
-                    "<div class='row right'><div class='col'></div><div class='col-md-auto align-self-end task-tooltip me-3 mt-3 p-3'>" + chatList[chat].message + "</div></div>"
-                );
-            } else {
-                $("#chatting").append(
-                    "<div class='row left'><div class='col-md-auto align-self-star task-tooltip ms-3 mt-3 p-3'>" + "[" + chatList[chat].userName + "] " + chatList[chat].message + "</div><div class='col'></div>"
-                );
-            }
-        }
+    if(layoutNow === 'GRID'){
+        document.getElementById('sortable').appendChild(fragment);
     }
-
 }
 
-//보낸 채팅 보기
-function showChat(chatListVO) {
-    if(chatListVO.senderId == loginId){
-        $("#chatting").append(
-            "<div class='row right'><div class='col'></div><div class='col-md-auto align-self-end task-tooltip me-3 mt-3 p-3'>" + chatListVO.message + "</div></div>"
-        );
-    } else {
-        $("#chatting").append(
-            "<div class='row left'><div class='col-md-auto align-self-star task-tooltip ms-3 mt-3 p-3'>" + "[" + chatListVO.userName + "] " + chatListVO.message + "</div><div class='col'></div></div>"
-        );
+function receiveAdd(newPost){
+    let fragment = `<div th:replace="~{include/postLayout :: post-layout(p=${newPost})}" class="mb-0"></div>`;
+
+    if(layoutNow === 'GRID'){
+        document.getElementById('sortable').appendChild(fragment);
     }
-
-    $("#message").val("");
 }
-
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    //$( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendChat(); });
-});
 
 //창 키면 바로 연결
 window.onload = function (){
     connect();
 }
+
 
 window.BeforeUnloadEvent = function (){
     disconnect();
