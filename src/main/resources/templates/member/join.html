@@ -28,19 +28,22 @@
                                     <br>
                                     <input type="text" th:field="*{id}" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력" class="form-control" maxlength="16" autofocus="" required="">
                                     <input type="button" class="btn btn-main ms-1" value="중복확인" onclick="idCheck()">
-                                    <input type="hidden" name="idCk" id="idCk" value="no">
+                                    <input type="hidden" name="idCk" id="idCk" value="neu">
                                     <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.</p>
                                 </div>
 
                                 <div class="form-outline mb-1">
                                     <label class="form-label blind" for="pw">비밀번호</label>
                                     <input type="password" th:field="*{pw}" id="pw" placeholder="비밀번호 입력" class="form-control" maxlength="16" required="">
-                                    <p class="info mb-0"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각 1개 이상 포함</p>
+                                    <p class="info"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각 1개 이상 포함</p>
                                 </div>
                                 <!-- pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" -->
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="pw2">비밀번호 확인</label>
                                     <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인 입력" class="form-control" maxlength="16" required="">
+
+                                    <div class="info" id="alert-success">비밀번호가 일치합니다.</div>
+                                    <div class="info text-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
                                 </div>
 
 
@@ -81,13 +84,15 @@
                                     <button type="submit" class="btn btn-main px-5 py-2 mt-4" style="font-size:20px">회원가입</button>
                                 </div>
                             </form>
-
-
                             <script>
                                 let realpath = "\/";
                                 var confirm = "";
 
                                 $(document).ready(function(){
+                                    $("#alert-success").hide();
+                                    $("#alert-danger").hide();
+
+
                                     $("#id").keyup(function(){
                                         $("#idCk").val("neu");
                                         if ($(this).val() != "") {
@@ -95,14 +100,12 @@
                                                 $("#msg").removeClass("no_check");
                                             }
                                             $("#msg").html("아이디 입력중입니다.");
-                                            $("#id").focus();
                                         } else {
                                             $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
                                         }
                                     });
 
                                     $("#id").focusout(function () {
-                                        //$("#idCk").
                                         var ck = $("#idCk").val();
                                         if (ck == "yes") {
                                             if ($("#msg").hasClass("no_check")) {
@@ -124,7 +127,19 @@
                                         }
                                     });
 
-
+                                    $("#pw2").keyup(function(){
+                                        var pw=$("#pw").val();
+                                        var pw2=$("#pw2").val();
+                                        if(pw != "" || pw2 != ""){
+                                            if(pw == pw2){
+                                                $("#alert-success").show();
+                                                $("#alert-danger").hide();
+                                            }else{
+                                                $("#alert-success").hide();
+                                                $("#alert-danger").show();
+                                            }
+                                        }
+                                    });
                                 });
 
 

@@ -283,8 +283,7 @@ textarea.form-control {
 .join_area .logo, .join_agree .logo, .join_finish .logo {display:block;}
 .join_area .card {border-radius:15px;}
 .join_area .no_check {color:red;}
-.join_area .no_check {color:red;}
-.join_area .info {font-size:12px;}
+.join_area .info {font-size:14px;}
 .join_area #msg {font-size:14px;}
 .join_area #id { width:calc(100% - 124px); float: left; }
 .join_area .check_btn {line-height:36px;padding-top:0;padding-bottom:0;vertical-align:top;}
