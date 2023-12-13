@@ -120,7 +120,7 @@
                                 <div class="modify register" th:id="'modify' + ${p.pno}">
                                     <form th:action="@{/post/modify}" method="post" enctype="multipart/form-data">
                                         <div class="justify-content-center row">
-                                            <textarea name="content" cols="30" rows="5" class="form-control" th:value="${p.content}" style="resize: none;height: 104px;"></textarea>
+                                            <textarea name="content" cols="30" rows="5" class="form-control" style="resize: none;height: 104px;">[[${p.content}]]</textarea>
                                             <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
                                             <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
                                             <div class="justify-content-between row">
