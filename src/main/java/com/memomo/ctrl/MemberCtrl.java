@@ -5,6 +5,7 @@ import com.memomo.dto.MemberDTO;
 import com.memomo.entity.Member;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,11 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Log4j2
 @Controller
@@ -105,6 +106,32 @@ public class MemberCtrl {
         //model.addAttribute("member", memberService.memberDetail(id));
         memberService.memberEdit(member);
         return "member/mypage";
+    }
+
+    @GetMapping("remove")
+    public String remove(@RequestParam String id, HttpServletResponse response, Model model) {
+        System.out.println("탈퇴할 아이디 : " + id);
+
+        session.invalidate();
+        memberService.memberRemove(id);
+//        memberService.memberOutside(id);
+//        model.addAttribute("msg", "회원 탈퇴가 정상적으로 이루어졌습니다. 감사합니다.");
+//        model.addAttribute("url", "");
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out;
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        out.println("<script>");
+        out.println("회원 탈퇴가 정상적으로 이루어졌습니다. 감사합니다.");
+        out.println("</script>");
+        out.flush();
+
+
+
+        return "/index";
     }
 
 

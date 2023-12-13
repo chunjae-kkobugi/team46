@@ -30,17 +30,17 @@
                                     <tr>
                                         <th class="text-center">이름</th>
                                         <td><span th:text="${member.name}"></span></td>
-                                        <td><input type="hidden" name="name" id="name" th:field="*{name}" th:value="*{name}"></td>
+                                        <input type="hidden" name="name" id="name" th:field="*{name}" th:value="*{name}">
                                     </tr>
                                     <tr>
                                         <th class="text-center">아이디</th>
                                         <td><span th:text="${member.id}"></span></td>
-                                        <td><input type="hidden" name="id" id="id" th:field="*{id}" th:value="${member.id}"></td>
+                                        <input type="hidden" name="id" id="id" th:field="*{id}" th:value="${member.id}">
                                     </tr>
                                     <tr>
                                         <th class="text-center pwd">비밀번호</th>
                                         <td><button type="button" class="btn btn-main btn-sm" onclick="reco()">변경</button></td>
-                                        <td><input type="hidden" name="pw" id="pw" th:field="*{pw}" th:value="${member.pw}"></td>
+                                        <input type="hidden" name="pw" id="pw" th:field="*{pw}" th:value="${member.pw}">
                                     </tr>
                                     <tr>
                                         <th class="text-center">전화번호</th>
