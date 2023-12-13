@@ -45,7 +45,7 @@ public class PostCtrl {
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
-        
+
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
