@@ -84,8 +84,8 @@
     </div>
     <div class="post" style="min-height: 700px;">
         <div class="container-fluid m-0 row">
-            <ul id="sortable" class="col-12 ui-sortable">
-                <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
+            <ul id="sortable" class="ui-sortable">
+                <li class="mb-3 mt-2 ui-sortable-handle ui-state-default" style="width: 305px;" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
                     <div class="m-2">
                         <div class="card shadow-sm">
                             <!-- 포스트잇 내용-->
@@ -125,7 +125,7 @@
                                             <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
                                             <div class="justify-content-between row">
                                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" th:value="${p.bgColor}">
-                                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                                <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
                                             </div>
                                             <div class="btn-group d-flex">
                                                 <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>
@@ -140,7 +140,7 @@
                     </div>
                 </li>
                 <!-- 포스트잇 등록 -->
-                <li class="col-2 mb-3 mt-2 register" id="postRegister">
+                <li class="mb-3 mt-2 register"  style="width: 305px;" id="postRegister">
                     <div class="m-2">
                         <div class="card shadow-sm">
                             <div class="card-body" style="height: 240px;">
@@ -154,7 +154,7 @@
                                         <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
                                         <div class="justify-content-between row">
                                             <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
-                                            <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                            <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
                                         </div>
                                         <div class="btn-group d-flex">
                                             <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
