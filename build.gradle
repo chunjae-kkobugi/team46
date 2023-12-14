@@ -32,6 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // 웹소켓 통신
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -39,8 +40,8 @@ dependencies {
     implementation 'org.webjars:sockjs-client:1.5.1'
 
     // Spring Security 일단 나중에 합시다!
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-//    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
     // "Settings(ctrl+alt+s) > Build, Execution, Deployment > Compiler > Annotation Processors"
     // ✅Enable annotation processing ( 반드시 체크하기)
