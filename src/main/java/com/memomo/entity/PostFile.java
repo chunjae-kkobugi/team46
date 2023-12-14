@@ -13,7 +13,7 @@ public class PostFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fno;            // 파일 고유번호
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Long pno;              // 파일의 포스트잇 번호
     private String originName;      // 파일 업로드 이름
     private String saveName;        // 파일 저장 이름
