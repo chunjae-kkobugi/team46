@@ -132,14 +132,89 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long postEdit(Post post) {
-        return postRepo.save(post).getPno();
+    public Long postEdit(PostDTO dto, MultipartFile postFile, String uploadDir) {
+        Post post = postRepo.findById(dto.getPno()).orElseThrow();
+        Post newPost= mapper.map(dto, Post.class);
+        post.setContent(newPost.getContent());
+        post.setBgColor(newPost.getBgColor());
+
+        Long pno = postRepo.save(post).getPno();
+
+        if (postFile != null && ! postFile.isEmpty()) {
+            MultipartFile multipartFile = postFile;
+
+            String today = new SimpleDateFormat("yyMMdd").format(new Date());
+            String saveFolder = uploadDir + today;
+            System.out.println(saveFolder);
+
+            File uploadPath = new File(saveFolder);
+            // 업로드 날짜의 폴더가 없다면 새로 생성
+            if (!uploadPath.exists()) {
+                uploadPath.mkdirs();
+            }
+
+            String originalName = postFile.getOriginalFilename();
+            String fileExtension = "";
+
+            // 파일 이름에 확장자가 있는지 확인
+            if (originalName != null) {
+                int lastIndex = originalName.lastIndexOf(".");
+                if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
+                    fileExtension = originalName.substring(lastIndex + 1);
+                }
+            }
+
+            String uuid = UUID.randomUUID().toString();
+            String saveName = uuid + "_" + originalName;
+
+            Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
+
+            try {
+                multipartFile.transferTo(new File(uploadPath, saveName));
+                if (Files.probeContentType(savePath).startsWith("image")){
+                    File thumbnail = new File(uploadPath, "s_" + saveName);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 300, 300);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("업로드 실패" + e.getMessage());
+            }
+
+            PostFile image = new PostFile();
+            image.setOriginName(originalName);
+            image.setSaveName(saveName);
+            image.setSavePath(today);
+            // 파일 확장자를 fileType 에 저장
+            image.setFileType(fileExtension);
+            image.setFstatus("ACTIVE");
+
+            image.setPno(pno);
+            fileRepo.save(image);
+
+            post.setBgImage(image.getFno());
+            postRepo.save(post);
+            log.info("---------------------------------------- post : " + post);
+        } else {
+            // 파일이 업로드 되지 않은 경우
+            log.info("포스트에 업로드 된 파일이 없습니다" + dto);
+        }
+
+        return pno;
     }
 
     @Override
-    public Long postRemove(Long pno) {
+    public Long postRemove(Long pno, Long oldLeft, Long oldRight, Integer bno) {
         Post post = postRepo.findById(pno).orElseThrow();
         post.setPstatus("REMOVE");
+
+        if(oldRight==0){
+            // 내가 head 였다면 head 값을 바꿔야 함
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(oldLeft);
+            boardRepo.save(head);
+        } else {
+            layoutRepo.layoutPriority(oldLeft, oldRight);
+        }
 
         return postRepo.save(post).getPno();
     }
@@ -228,55 +303,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long postAddFile(MultipartFile postFile, String uploadDir) {
-        System.out.println(postFile);
-        MultipartFile multipartFile = postFile;
-
-        String today = new SimpleDateFormat("yyMMdd").format(new Date());
-        String saveFolder = uploadDir + today;
-        System.out.println(saveFolder);
-
-        File uploadPath = new File(saveFolder);
-        // 업로드 날짜의 폴더가 없다면 새로 생성
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs();
-        }
-
-        String originalName = postFile.getOriginalFilename();
-        String fileExtension = "";
-
-        // 파일 이름에 확장자가 있는지 확인
-        if (originalName != null) {
-            int lastIndex = originalName.lastIndexOf(".");
-            if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
-                fileExtension = originalName.substring(lastIndex + 1);
-            }
-        }
-
-        String uuid = UUID.randomUUID().toString();
-        String saveName = uuid + "_" + originalName;
-
-        Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
-
-        try {
-            multipartFile.transferTo(new File(uploadPath, saveName));
-            if (Files.probeContentType(savePath).startsWith("image")){
-                File thumbnail = new File(uploadPath, "s_" + saveName);
-                Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 300, 300);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("업로드 실패" + e.getMessage());
-        }
-
-        PostFile image = new PostFile();
-        image.setOriginName(originalName);
-        image.setSaveName(saveName);
-        image.setSavePath(today);
-        // 파일 확장자를 fileType 에 저장
-        image.setFileType(fileExtension);
-        image.setFstatus("ACTIVE");
-
+    public Long postAddFile(PostFile image) {
         return fileRepo.save(image).getFno();
     }
 }

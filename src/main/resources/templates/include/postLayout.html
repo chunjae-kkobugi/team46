@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<body>
 <!-- 포스트잇 하나에 대한 템플릿 -->
 <!-- AJAX 등 처리할 때 간편하게 추가하기 위함 -->
 <th:block th:fragment="post-layout(p)">
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
-            <div class="card-body" th:id="'post' + ${p.pno}" th:style="${ p.bgImage eq null ? 'background-color : ' + p.bgColor : null }">
+            <div class="card-body" th:id="'post' + ${p.pno}" th:style="${ p.bgImage==null ? 'background-color : ' + p.bgColor : null }">
                 <div class="original" th:id="'original' + ${p.pno}">
                     <div th:id="postMenuList+${p.pno}" class="pe-2"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
@@ -16,16 +12,16 @@
 
                             <!-- 수정버튼 -->
                             <li class="me-2" th:id="'postModifyBtn'+${p.pno}"
-                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
-                                <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                                th:style="${ p.bgImage==null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
+                                <span th:style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
                                     <i class="fa-pen-to-square fa-solid"></i>
                                 </span>
                             </li>
 
                             <!-- 삭제 버튼 -->
-                            <li th:id="'postRemoveBtn'+${p.pno}"
-                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
-                                <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                            <li class="postRemoveBtn" th:id="'postRemoveBtn'+${p.pno}" th:pno="${p.pno}" onclick="postRemove(this.getAttribute('pno'))"
+                                th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
+                                <span th:style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
                                     <i class="fa-solid fa-trash-can"></i></span>
                             </li>
                         </ul>
@@ -40,11 +36,10 @@
 
                 <!-- 포스트잇 수정 -->
                 <div class="modify register" th:id="'modify' + ${p.pno}">
-                    <form method="post" enctype="multipart/form-data" onsubmit="postEdit(this)">
+                    <form method="post" enctype="multipart/form-data" class="postEditForm" th:id="'postEditForm'+${p.pno}">
                         <div class="justify-content-center row">
                             <textarea name="content" cols="30" rows="5" class="form-control" th:text="${p.content}" style="resize: none;height: 104px;"></textarea>
                             <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
-                            <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
                             <div class="justify-content-between row">
                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" th:value="${p.bgColor}">
                                 <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
@@ -61,9 +56,3 @@
         </div>
     </div>
 </th:block>
-
-
-
-
-</body>
-</html>

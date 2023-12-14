@@ -99,7 +99,7 @@
 
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
-    let layoutNow = /*[[${detail.bno}]]*/ 'GRID';
+    let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
 
     // 게시판 메뉴
     $(document).ready(function(){
@@ -161,6 +161,6 @@
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
-<script th:src="@{/js/postSocket.js}"></script>
-<script th:src="@{/js/postjs.js}"></script>
+<script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
+<script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
 </html>

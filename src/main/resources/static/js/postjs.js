@@ -15,53 +15,72 @@ $("#sortable").sortable({
 
 $("#sortable").disableSelection();
 
-/*
-$.ajax(
-    {
-        type: "POST",
-        url: "/post/hello",
-        success: function(data){
-            console.log(data);
-            alert("SUCCESS")
-        }
-    }
-)
-*/
 
-function postAddBtn(form) {
+$('.postEditForm').on('submit', function (e) {
+    e.preventDefault();
+    let form = $(this)[0];
+
     var formData = new FormData();
 
     if (form.postFile.files[0] !== undefined) {
         formData.append('postFile', form.postFile.files[0]);
+    }
+
+    formData.append('bgColor', form.bgColor.value);
+    formData.append('content', form.content.value);
+    formData.append('pno', form.pno.value);
+
+    $.ajax({
+        type: "post",
+        method: "post",
+        enctype: "multipart/form-data",
+        url: "/post/edit",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function(data) {
+            postEdit(data);
+        },
+        error: function(e) {
+            alert("포스트잇 추가 에러");
+            console.log("포스트잇 추가 에러");
+            console.log(e);
+        }
+    });
+});
+
+$('#postAddForm').on('submit', function (e) {
+    var form = document.querySelector('#postAddForm');
+
+    e.preventDefault();
+    var formData = new FormData();
+
+    if (form.postFile.files[0] !== undefined) {
+        formData.append('postFile', form.postFile.files[0]);
+    }
+
+    formData.append('bgColor', form.bgColor.value);
+    formData.append('content', form.content.value);
+    formData.append('bno', form.bno.value);
 
         // AJAX 요청을 Promise로 감싸서 처리합니다.
-        return new Promise(function(resolve, reject) {
-            $.ajax({
-                type: "post",
-                method: "post",
-                enctype: "multipart/form-data",
-                url: "/post/addPro",
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function(data) {
-                    console.log(data);
-                    alert("SUCCESS");
-                    confirm("DATA SUCCESS?");
-                    console.log(data);
-                    resolve(data); // 성공 시 Promise를 이용해 데이터 반환
-                },
-                error: function(e) {
-                    alert("포스트잇 추가 에러");
-                    console.log("포스트잇 추가 에러");
-                    console.log(e);
-                    reject(e); // 에러 발생 시 Promise를 이용해 에러 반환
-                }
-            });
-        });
-    } else {
-        // 파일이 없는 경우 에러를 반환하는 Promise를 reject합니다.
-        return Promise.reject("No file selected");
-    }
-}
+    $.ajax({
+        type: "post",
+        method: "post",
+        enctype: "multipart/form-data",
+        url: "/post/add",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function(data) {
+            postAdd(data);
+        },
+        error: function(e) {
+            alert("포스트잇 추가 에러");
+            console.log("포스트잇 추가 에러");
+            console.log(e);
+        }
+    });
+});

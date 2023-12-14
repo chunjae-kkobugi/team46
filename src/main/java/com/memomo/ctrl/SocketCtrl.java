@@ -56,17 +56,23 @@ public class SocketCtrl {
     }
 
 
-    @MessageMapping("/edit/{bno}")
-    @SendTo("/stomp-receive/{bno}")
-    public void postEdit(@DestinationVariable Integer bno, PostDTO postDTO){
-
-        System.out.println(postDTO);
-    }
-
     @MessageMapping("/remove/{bno}")
-    @SendTo("/stomp-receive/{bno}")
-    public void postRemove(@DestinationVariable Integer bno, PostDTO postDTO){
+    @SendTo("/stomp-receive/remove/{bno}")
+    public Long postRemove(@DestinationVariable Integer bno, PostDTO postDTO){
+        Long pno = postDTO.getPno();
+
+        int originIdx = plist.indexOf(pno);
+        // head, Right, 이전 노드 / tail, Left, 다음 노드
+        Long oldLeft = ((originIdx)>0)?plist.get(originIdx-1): 0;
+        // 나의 기존 다음 노드. 내가 tail 인 경우 0
+        Long oldRight = ((originIdx+1)<plist.size()) ? plist.get(originIdx+1): 0;
+        // 나의 기존 이전 노드. 내가 head 인 경우 0
+
+        postService.postRemove(pno, oldLeft, oldRight, bno);
+        plist.remove(originIdx);
+
         System.out.println(postDTO);
+        return postDTO.getPno();
     }
 
     @MessageMapping("/sort/{bno}")
@@ -95,18 +101,81 @@ public class SocketCtrl {
         return plist;
     }
 
-
-
-
     @MessageMapping("/add/{bno}")
     // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
     @SendTo("/stomp-receive/add/{bno}")
-    public PostDTO postAdd(@DestinationVariable Integer bno, Long pno){
+    public PostDTO postAdd(@DestinationVariable Integer bno, PostDTO dto){
+        Long pno = dto.getPno();
+        log.info(pno+"------pno");
+        plist.add(pno);
+        return postService.postGet(pno);
+    };
+
+    @PostMapping("/post/add")
+    @ResponseBody
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         log.info("post register start------------------------------");
+
+        if (bindingResult.hasErrors()) {
+            log.info("has error-------------------------------------------");
+            return null;
+        }
+        log.info(dto);
+        String sid = (String) session.getAttribute("sid");
+        dto.setAuthor(sid);
+        dto.setPstatus("ACTIVE");
+        // 로컬 경로
+        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+
+//        서버 경로
+//            ServletContext application = request.getSession().getServletContext();
+//            String uploadDir = application.getRealPath("/images/postImage");
+
+        Long pno;
+        if(!postFile.isPresent() || postFile.isEmpty()){
+            pno = postService.postAdd(dto, null, uploadDir);
+        } else{
+            pno = postService.postAdd(dto, postFile.orElseThrow(), uploadDir);
+        }
+
+        return pno;
+    }
+
+    @MessageMapping("/edit/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/edit/{bno}")
+    public PostDTO postEdit(@DestinationVariable Integer bno, PostDTO dto){
+        Long pno = dto.getPno();
         log.info(pno+"------pno");
         return postService.postGet(pno);
     };
 
+    @PostMapping("/post/edit")
+    @ResponseBody
+    public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        log.info("post EDIT start------------------------------");
 
+        if (bindingResult.hasErrors()) {
+            log.info("has error-------------------------------------------");
+            return null;
+        }
+        log.info(dto);
+        // 로컬 경로
+        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
 
+//        서버 경로
+//            ServletContext application = request.getSession().getServletContext();
+//            String uploadDir = application.getRealPath("/images/postImage");
+
+        Long pno;
+        if(!postFile.isPresent() || postFile.isEmpty()){
+            pno = postService.postEdit(dto, null, uploadDir);
+        } else{
+            pno = postService.postEdit(dto, postFile.orElseThrow(), uploadDir);
+        }
+
+        return pno;
+    }
 }

@@ -4,7 +4,7 @@
 <body>
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class="col-12 ui-sortable">
-        <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:id="${p.pno}" th:pno="${p.pno}">
+        <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}">
             <div th:replace="~{include/postLayout :: post-layout(p=${p})}" class="mb-0"></div>
         </li>
 
@@ -18,7 +18,7 @@
                             <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
                         </div>
                         <!-- 포스트잇 글 등록 -->
-                        <form method="post" enctype="multipart/form-data" onsubmit="postAddBtn(this)">
+                        <form id="postAddForm" method="post" enctype="multipart/form-data">
                             <div class="justify-content-center row">
                                 <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;"></textarea>
                                 <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
