@@ -54,14 +54,17 @@
 
         .xBtn i {
             position: absolute;
-            right: -12px;
-            top: -15px;
+            right: 0;
+            top: -16px;
             cursor: pointer;
         }
         .register {
             display: none;
             position: relative;
         }
+
+        textarea {resize: none; overflow: auto; height: 100px;}
+
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
     </style>
@@ -94,11 +97,73 @@
                     <div class="timeline__items">
                         <th:block th:each="p: ${postList}">
                             <div class="timeline__item" >
-                                <div class="timeline__content">
-                                    <p th:text="${p.content}"></p>
+                                <div class="timeline__content"
+                                     th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #eeeeee' } ">
+                                    <div class="original" th:id="'original' + ${p.pno}">
+                                        <div th:id="postMenuList+${p.pno}" class="pe-2"
+                                             style="position: absolute; right: 0; height: auto; z-index: 10; top: 10px;">
+                                            <ul class="p-0" style="list-style-type: none">
+                                                <!-- 수정버튼 -->
+                                                <li class="me-2" th:id="'postModifyBtn'+${p.pno}"
+                                                    th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee' }">
+                                                    <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                                                        <i class="fa-pen-to-square fa-solid"></i>
+                                                    </span>
+                                                </li>
+                                                <!-- 삭제 버튼 -->
+                                                <li th:id="'postRemoveBtn'+${p.pno}"
+                                                    th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee' }">
+                                                    <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- 내용 -->
+                                        <p class="pe-3" th:text="${p.content}" th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #eeeeee'}"></p>
+                                        <p class="text-end m-0" th:text="${p.author}" th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}"></p>
+                                    </div>
+                                    <!-- 수정 창 -->
+                                    <div class="modify register" th:id="'modify' + ${p.pno}">
+                                        <form th:action="@{/post/modify}" method="post" enctype="multipart/form-data">
+                                            <div class="justify-content-center row">
+                                                <textarea name="content" cols="30" rows="5" class="form-control" maxlength="900" style="resize: none;height: 80px;">[[${p.content}]]</textarea>
+                                                <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
+                                                <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
+                                                <div class="justify-content-between row">
+                                                    <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" th:value="${p.bgColor}">
+                                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                                </div>
+                                                <div class="btn-group d-flex">
+                                                    <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>
+                                                    <button type="submit" class="btn btn-main" th:id="'modSubmit' + ${p.pno}"> 수정 </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </th:block>
+                        <div class="timeline__item register" id="postRegister">
+                            <div class="timeline__content">
+                                <div class="xBtn">
+                                    <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
+                                </div>
+                                <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">
+                                    <div class="justify-content-center row">
+                                        <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" maxlength="900"></textarea>
+                                        <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
+                                        <div class="justify-content-between row">
+                                            <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
+                                            <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                        </div>
+                                        <div class="btn-group d-flex">
+                                            <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,6 +265,5 @@
 </body>
 <script th:src="@{/js/posts.js}"></script>
 <script th:src="@{/js/postJQ-UI.js}"></script>
-&lt;!&ndash; 타임라인 &ndash;&gt;
 <script type="text/javascript" th:src="@{/js/timeline.min.js}"></script>
 </html>

@@ -57,6 +57,7 @@
             display: none;
             position: relative;
         }
+        textarea {resize: none; overflow: auto;}
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
     </style>
@@ -96,14 +97,14 @@
                                         <ul class="p-0" style="list-style-type: none">
                                             <!-- 수정버튼 -->
                                             <li class="me-2" th:id="'postModifyBtn'+${p.pno}"
-                                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
+                                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee'}">
                                         <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
                                             <i class="fa-pen-to-square fa-solid"></i>
                                         </span>
                                             </li>
                                             <!-- 삭제 버튼 -->
                                             <li th:id="'postRemoveBtn'+${p.pno}"
-                                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
+                                                th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee'}">
                                         <span th:style="${p.bgColor eq '#ffffff' || p.bgColor eq null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
                                             <i class="fa-solid fa-trash-can"></i></span>
                                             </li>
@@ -120,7 +121,7 @@
                                 <div class="modify register" th:id="'modify' + ${p.pno}">
                                     <form th:action="@{/post/modify}" method="post" enctype="multipart/form-data">
                                         <div class="justify-content-center row">
-                                            <textarea name="content" cols="30" rows="5" class="form-control" style="resize: none;height: 104px;">[[${p.content}]]</textarea>
+                                            <textarea name="content" cols="30" rows="5" maxlength="900" class="form-control" style="resize: none;height: 104px;">[[${p.content}]]</textarea>
                                             <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
                                             <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
                                             <div class="justify-content-between row">
@@ -150,7 +151,7 @@
                                 <!-- 포스트잇 글 등록 -->
                                 <form th:action="@{/post/register}" method="post" enctype="multipart/form-data">
                                     <div class="justify-content-center row">
-                                        <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;"></textarea>
+                                        <textarea name="content" cols="30" rows="5" maxlength="900" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;"></textarea>
                                         <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
                                         <div class="justify-content-between row">
                                             <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
