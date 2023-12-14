@@ -20,4 +20,5 @@ public interface PostService {
 
     public void postSort(Long oldBefore, Long oldNext, Long newBefore, Long newNext, Long changed, Integer bno);
     public PostDTO postGet(Long pno);
+    public Long postAddFile(MultipartFile postFile, String uploadDir);
 }

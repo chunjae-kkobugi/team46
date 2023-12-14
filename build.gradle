@@ -39,8 +39,8 @@ dependencies {
     implementation 'org.webjars:sockjs-client:1.5.1'
 
     // Spring Security 일단 나중에 합시다!
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    // implementation 'org.springframework.boot:spring-boot-starter-security'
+    // implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
     // "Settings(ctrl+alt+s) > Build, Execution, Deployment > Compiler > Annotation Processors"
     // ✅Enable annotation processing ( 반드시 체크하기)

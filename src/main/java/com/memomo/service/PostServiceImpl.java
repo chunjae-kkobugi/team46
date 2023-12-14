@@ -48,6 +48,7 @@ public class PostServiceImpl implements PostService{
     @Autowired
     private BoardRepository boardRepo;
 
+    @Transactional
     @Override
     public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir){
         Post post = mapper.map(dto, Post.class);
@@ -122,10 +123,6 @@ public class PostServiceImpl implements PostService{
             post.setBgImage(image.getFno());
             postRepo.save(post);
             log.info("---------------------------------------- post : " + post);
-
-
-            System.out.println(layout);
-            layoutRepo.save(layout);
         } else {
             // 파일이 업로드 되지 않은 경우
             log.info("포스트에 업로드 된 파일이 없습니다" + dto);
@@ -228,5 +225,58 @@ public class PostServiceImpl implements PostService{
         dto.setLayout(layout);
         dto.setFile(file);
         return dto;
+    }
+
+    @Override
+    public Long postAddFile(MultipartFile postFile, String uploadDir) {
+        System.out.println(postFile);
+        MultipartFile multipartFile = postFile;
+
+        String today = new SimpleDateFormat("yyMMdd").format(new Date());
+        String saveFolder = uploadDir + today;
+        System.out.println(saveFolder);
+
+        File uploadPath = new File(saveFolder);
+        // 업로드 날짜의 폴더가 없다면 새로 생성
+        if (!uploadPath.exists()) {
+            uploadPath.mkdirs();
+        }
+
+        String originalName = postFile.getOriginalFilename();
+        String fileExtension = "";
+
+        // 파일 이름에 확장자가 있는지 확인
+        if (originalName != null) {
+            int lastIndex = originalName.lastIndexOf(".");
+            if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
+                fileExtension = originalName.substring(lastIndex + 1);
+            }
+        }
+
+        String uuid = UUID.randomUUID().toString();
+        String saveName = uuid + "_" + originalName;
+
+        Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
+
+        try {
+            multipartFile.transferTo(new File(uploadPath, saveName));
+            if (Files.probeContentType(savePath).startsWith("image")){
+                File thumbnail = new File(uploadPath, "s_" + saveName);
+                Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 300, 300);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("업로드 실패" + e.getMessage());
+        }
+
+        PostFile image = new PostFile();
+        image.setOriginName(originalName);
+        image.setSaveName(saveName);
+        image.setSavePath(today);
+        // 파일 확장자를 fileType 에 저장
+        image.setFileType(fileExtension);
+        image.setFstatus("ACTIVE");
+
+        return fileRepo.save(image).getFno();
     }
 }

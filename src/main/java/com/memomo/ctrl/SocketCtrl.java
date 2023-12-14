@@ -108,34 +108,5 @@ public class SocketCtrl {
     };
 
 
-    @PostMapping("/post/addPro")
-    @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, HttpServletRequest request, BindingResult bindingResult) {
-        HttpSession session = request.getSession();
-        log.info("post register start------------------------------");
 
-        if (bindingResult.hasErrors()) {
-            log.info("has error-------------------------------------------");
-            return null;
-        }
-        log.info(dto);
-        String sid = (String) session.getAttribute("sid");
-        dto.setAuthor(sid);
-        dto.setPstatus("ACTIVE");
-        // 로컬 경로
-        String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\postImage\\";
-
-//        서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/postImage");
-
-        Long pno;
-        if(!postFile.isPresent() || postFile.isEmpty()){
-            pno = postService.postAdd(dto, null, uploadDir);
-        } else{
-            pno = postService.postAdd(dto, postFile.orElseThrow(), uploadDir);
-        }
-
-        return pno;
-    }
 }

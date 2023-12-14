@@ -40,7 +40,7 @@
 
                 <!-- 포스트잇 수정 -->
                 <div class="modify register" th:id="'modify' + ${p.pno}">
-                    <form enctype="multipart/form-data" onsubmit="postEdit(this)">
+                    <form method="post" enctype="multipart/form-data" onsubmit="postEdit(this)">
                         <div class="justify-content-center row">
                             <textarea name="content" cols="30" rows="5" class="form-control" th:text="${p.content}" style="resize: none;height: 104px;"></textarea>
                             <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">

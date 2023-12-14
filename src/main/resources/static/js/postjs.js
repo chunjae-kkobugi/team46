@@ -15,39 +15,53 @@ $("#sortable").sortable({
 
 $("#sortable").disableSelection();
 
-function postAddBtn(form){
+/*
+$.ajax(
+    {
+        type: "POST",
+        url: "/post/hello",
+        success: function(data){
+            console.log(data);
+            alert("SUCCESS")
+        }
+    }
+)
+*/
+
+function postAddBtn(form) {
     var formData = new FormData();
 
-    formData.append('postFile', form.postFile.files[0]);
-    formData.append('bgColor', form.bgColor.value);
-    formData.append('content', form.content.value);
-    formData.append('bno', form.bno.value);
+    if (form.postFile.files[0] !== undefined) {
+        formData.append('postFile', form.postFile.files[0]);
 
-    $.ajax({
-        // type : "post",
-        method: "post",
-        enctype : "multipart/form-data",
-        url : "/post/addPro",
-        cache : false,
-        contentType : false,
-        processData : false,
-        data : formData,
-        xhrFields: {
-            withCredentials: true
-        },
-        success : function(data){
-            alert("SUCCESS");
-            console.log(data);
-            confirm("DATA SUCCESS?");
-            console.log(data);
-            // let newPost = JSON.parse(data);
-            // alert(data);
-            // alert(data.pno);
-            // postAdd(newPost.pno);
-        },
-        error : function(e){
-            console.log("포스트잇 추가 에러");
-            console.log(e);
-        }
-    });
+        // AJAX 요청을 Promise로 감싸서 처리합니다.
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+                type: "post",
+                method: "post",
+                enctype: "multipart/form-data",
+                url: "/post/addPro",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function(data) {
+                    console.log(data);
+                    alert("SUCCESS");
+                    confirm("DATA SUCCESS?");
+                    console.log(data);
+                    resolve(data); // 성공 시 Promise를 이용해 데이터 반환
+                },
+                error: function(e) {
+                    alert("포스트잇 추가 에러");
+                    console.log("포스트잇 추가 에러");
+                    console.log(e);
+                    reject(e); // 에러 발생 시 Promise를 이용해 에러 반환
+                }
+            });
+        });
+    } else {
+        // 파일이 없는 경우 에러를 반환하는 Promise를 reject합니다.
+        return Promise.reject("No file selected");
+    }
 }

@@ -18,7 +18,7 @@
                             <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
                         </div>
                         <!-- 포스트잇 글 등록 -->
-                        <form enctype="multipart/form-data" onsubmit="postAddBtn(this)">
+                        <form method="post" enctype="multipart/form-data" onsubmit="postAddBtn(this)">
                             <div class="justify-content-center row">
                                 <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;"></textarea>
                                 <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
