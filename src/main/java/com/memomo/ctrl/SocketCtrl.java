@@ -55,6 +55,15 @@ public class SocketCtrl {
         return "board/boardDetail";
     }
 
+    @RequestMapping("/post/detail2")
+    public String postEnter2(HttpServletRequest request, Model model){
+        Integer bno = Integer.valueOf(request.getParameter("bno"));
+        List<PostDTO> postList = postService.postList(bno);
+        LinkedList<Long> plist2 = new LinkedList<>();
+        for(PostDTO p:postList){
+            plist2.add(p.getPno());
+        }
+
 
     @MessageMapping("/remove/{bno}")
     @SendTo("/stomp-receive/remove/{bno}")

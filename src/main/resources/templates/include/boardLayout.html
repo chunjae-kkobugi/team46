@@ -4,13 +4,13 @@
 <body>
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class="col-12 ui-sortable">
-        <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}">
+        <li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}" style="width: 275px;">
             <div th:replace="~{include/postLayout :: post-layout(p=${p})}" class="mb-0"></div>
         </li>
 
 
         <!-- 포스트잇 등록 -->
-        <li class="col-2 mb-3 mt-2 register" id="postRegister">
+        <li class="mb-3 register" id="postRegister" style="width: 305px;">
             <div class="m-2">
                 <div class="card shadow-sm">
                     <div class="card-body" style="height: 240px;">
@@ -20,11 +20,11 @@
                         <!-- 포스트잇 글 등록 -->
                         <form id="postAddForm" method="post" enctype="multipart/form-data">
                             <div class="justify-content-center row">
-                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;"></textarea>
+                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;" maxlength="900"></textarea>
                                 <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
                                 <div class="justify-content-between row">
                                     <input type="color" class="col-2 form-control mt-1" name="bgColor" value="#ffffff">
-                                    <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
+                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                                 </div>
                                 <div class="btn-group d-flex">
                                     <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
@@ -35,7 +35,6 @@
                 </div>
             </div>
         </li>
-
     </ul>
 </th:block>
 </body>
