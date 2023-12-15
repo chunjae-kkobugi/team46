@@ -17,4 +17,6 @@ public interface MemberService {
     Member memberDetail(String id);
 
     Member saveMember(Member member);
+
+    String getLoginId();
 }

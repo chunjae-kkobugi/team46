@@ -5,6 +5,9 @@ import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,5 +84,14 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member saveMember(Member member) {
         return memberRepo.save(member);
+    }
+
+    @Override
+    public String getLoginId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            return userDetails.getUsername();
+        }
+        return "";
     }
 }

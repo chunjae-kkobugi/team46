@@ -63,11 +63,28 @@ public class MemberCtrl {
         return "redirect:/";
     }
 
-    @PostMapping("idCheckPro")
+    @PostMapping("/idCheckPro")
     public ResponseEntity<Boolean> idCheck(@RequestBody MemberFormDTO member) throws Exception {
         String id = member.getId();
         boolean result = memberService.idCheck(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage")
+    public String myPage(Model model) {
+        //String id = principal.getName();
+        String id = memberService.getLoginId();
+        System.out.println("회원 정보 : " + memberService.memberDetail(id));
+
+        //MemberDTO member = new MemberDTO();
+        //System.out.println("아이디 : " + id);
+        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
+        //String id = (String) session.getAttribute("sid");
+        //MemberDTO dto = modelMapper.map(memberService.memberDetail(id), MemberDTO.class);
+        //model.addAttribute("member", memberService.memberDetail(id));
+        //System.out.println("멤버디티오 : " + dto);
+        //model.addAttribute("member", dto);
+        return "member/mypage";
     }
 
 }

@@ -20,11 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        System.out.println("유저디테일 id : " + id);
-
+        //System.out.println("유저디테일 id : " + id);
         Optional<Member> optionalMember = memberRepository.findById(id);
-
-        System.out.println("optionalMember : " + optionalMember);
+        //System.out.println("optionalMember : " + optionalMember);
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();

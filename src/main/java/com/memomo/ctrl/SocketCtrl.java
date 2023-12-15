@@ -49,20 +49,22 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-        
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/boardDetail";
     }
 
     @RequestMapping("/post/detail2")
-    public String postEnter2(HttpServletRequest request, Model model){
+    public String postEnter2(HttpServletRequest request, Model model) {
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
-        for(PostDTO p:postList){
+        for (PostDTO p : postList) {
             plist2.add(p.getPno());
         }
+        return "board/timeline";
+    }
 
 
     @MessageMapping("/remove/{bno}")
@@ -89,7 +91,7 @@ public class SocketCtrl {
     public LinkedList<Long> postMove(@DestinationVariable Integer bno, Layout layout){
         int originIdx = plist.indexOf(layout.getPno()); // 나의 기존 정렬 순서
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
-        
+
         // head, Right, 이전 노드 / tail, Left, 다음 노드
         Long oldLeft = ((originIdx)>0)?plist.get(originIdx-1): 0;
         // 나의 기존 다음 노드. 내가 tail 인 경우 0
@@ -99,11 +101,11 @@ public class SocketCtrl {
         int changedIdx = layout.getGPriority(); // 나의 새로운 정렬 순서
         plist.remove(originIdx);
         plist.add(changedIdx, layout.getPno());
-        
+
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0
-        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0; 
+        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0;
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
