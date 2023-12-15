@@ -134,83 +134,23 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void boardEdit(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) {
 
-        // 파일 업로드
+        // file upload
         String imageOriginName = "";
         String imageSaveName = "";
 
         if (boardFile != null && !boardFile.isEmpty()) {
-            MultipartFile multipartFile = boardFile;
+            // 파일 업로드 로직은 이전과 동일
 
-//            // 서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/boardImage/");
-
-            // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
-
-            String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
-            System.out.println(saveFolder);
-
-
-            File uploadPath = new File(saveFolder);
-            // 업로드 날짜의 폴더가 없다면 새로 생성
-            if (!uploadPath.exists()) {
-                uploadPath.mkdirs();
+            BoardFile existingFile = boardDTO.getFile(); // 실제 필드 이름으로 변경
+            if (existingFile != null) {
+                existingFile.setStatus("REMOVE");
             }
-
-            String originalName = boardFile.getOriginalFilename();
-            imageOriginName = originalName;
-
-            String uuid = UUID.randomUUID().toString();
-
-            String saveName = uuid + "_" + originalName;
-            imageSaveName = saveName;
-
-            String fileExtension = "";
-
-            // 파일 이름에 확장자가 있는지 확인
-            if (originalName != null) {
-                int lastIndex = originalName.lastIndexOf(".");
-                if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
-                    fileExtension = originalName.substring(lastIndex + 1);
-                }
-            }
-
-            Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
-            try {
-                multipartFile.transferTo(new File(uploadPath, saveName));
-                if (Files.probeContentType(savePath).startsWith("image")){
-                    File thumbnail = new File(uploadPath, "s_" + saveName);
-                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 411, 255);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("업로드 실패" + e.getMessage());
-            }
-
-            BoardFile fileResult = boardFileRepo.findBoardFileByFno(boardDTO.getBgImage());
-            fileResult.change("REMOVE");
 
             BoardFile image = new BoardFile();
-            image.setBno(boardDTO.getBno());
-            image.setOriginName(imageOriginName);
-            image.setSaveName(imageSaveName);
-            image.setSavePath(today);
-            // 파일 확장자를 fileType 에 저장
-            image.setFileType(fileExtension);
-            image.setStatus("ACTIVE");
+            // 새로운 파일 정보 설정
 
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
-
-            BoardFile existingFile = boardDTO.getFile(); // 실제 필드명으로 변경
-            if (existingFile != null) {
-                existingFile.setStatus("REMOVE");
-            } else {
-                // 이미지가 첨부되지 않은 경우, 이미지 정보는 변경되지 않음
-                image = null;
-            }
 
             board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
 
@@ -218,21 +158,21 @@ public class BoardServiceImpl implements BoardService{
                 boardDTO.setFile(image);
             }
 
-            // 파일 저장
             boardFileRepo.save(image);
             board.setBgImage(image.getFno());
             boardRepo.save(board);
-            log.info("-------------------------------------------------------------------------------" + image.getFno());
-            log.info("---------------------------------------------board : " + board);
+            log.info("이미지 fno: " + image.getFno());
+            log.info("게시판: " + board);
         } else {
-            // 파일이 업로드되지 않은 경우 처리
+            // 파일이 업로드되지 않은 경우의 로직
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
             board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
-            log.info("사진수정X " + boardDTO);
+            log.info("사진 수정X " + boardDTO);
         }
-
     }
+
+
 
     @Override
     public Integer boardRemove(Integer bno) {
@@ -240,7 +180,7 @@ public class BoardServiceImpl implements BoardService{
         Board board = result.orElseThrow();
         board.remove("REMOVE");
 
-        boardFileRepo.boardFileRemove(board.getBgImage());
+        boardFileRepo.boardFileRemove(bno);
         postRepo.boardPostRemove(bno);
 
         return boardRepo.save(board).getBno();

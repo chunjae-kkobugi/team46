@@ -3,6 +3,20 @@
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
     <title>게시판 목록</title>
+    <style>
+        .boardMenuList {
+            position: absolute;
+            top: 230px;
+            right: 15px;
+            z-index: 10;
+        }
+
+        .boardMenuList li {
+            float: left;
+            list-style-type: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <th:block th:replace="~{include/header :: header}"></th:block>
@@ -32,13 +46,62 @@
                                 </div>
                                 <!-- 배경이미지O -->
                                 <div th:if="${list.bgImage ne null}" class="bd-placeholder-img card-img-top" style="width: 100%; height: 225px;">
-                                    <img th:if="${list.bgImage ne null}" th:src="@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}">
+                                    <div th:style="'background-image : url(' + |@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}| + ');'"></div>
+<!--                                    <img th:if="${list.bgImage ne null}" th:src="@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}">-->
                                 </div>
                             </a>
                             <div class="card-body">
+                                <div class="boardMenuList">
+                                    <ul class="p-0">
+                                        <!-- 수정버튼 -->
+                                        <li class="me-2" th:id="'boardModifyBtn'+${list.bno}">
+                                            <span data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-pen-to-square fa-solid"></i></span>
+                                        </li>
+                                        <!-- 삭제 버튼 -->
+                                        <li class="boardRemoveBtn" th:id="'boardRemoveBtn'+${list.bno}" th:bno="${list.bno}" onclick="postRemove(this.getAttribute('bno'))">
+                                            <a th:href="@{/board/remove(bno=${list.bno})}"><i class="fa-solid fa-trash-can"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <a th:href="@{/post/detail(bno=${list.bno})}"><p class="card-text" th:text="${list.title}"></p></a>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-body-secondary" th:text="${#temporals.format(list.createAt, 'yyyy-MM-dd')}"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 게시판 정보 수정 모달창-->
+                    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modifyModalLabel">게시판 정보 수정</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form th:action="@{/board/modify}" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="bno" id="bno" th:value="${list.bno}">
+                                        <input type="hidden" name="bgImage" id="bgImage" th:value="${list.bgImage}">
+                                        <div class="mb-3">
+                                            <label for="title" class="col-form-label">게시판 이름</label>
+                                            <input type="text" name="title" class="form-control" id="title" th:value="${list.title}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="maxStudent" class="col-form-label">최대 인원 수</label>
+                                            <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${list.maxStudent}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="bgColor" class="col-form-label">배경색</label>
+                                            <input type="color" name="bgColor" class="form-control" id="bgColor" th:value="${list.bgColor}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="boardFile" class="col-form-label">배경이미지</label>
+                                            <input type="file" name="boardFile" class="form-control" id="boardFile" th:value="${list.bgColor}" style="height: auto">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">수정</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -55,5 +118,9 @@
     </th:block>
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
+
+<script th:inline="javascript">
+
+</script>
 </body>
 </html>

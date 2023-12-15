@@ -15,6 +15,6 @@ public interface BoardFileRepository extends JpaRepository<BoardFile, Integer> {
     // 게시판 삭제 시 file 도 삭제
     @Transactional
     @Modifying
-    @Query("UPDATE BoardFile f SET f.status = 'REMOVE' WHERE f.fno = :fno")
-    public void boardFileRemove(@Param("fno") Integer fno);
+    @Query("UPDATE BoardFile f SET f.status = 'REMOVE' WHERE f.bno = :bno")
+    public void boardFileRemove(@Param("bno") Integer bno);
 }
