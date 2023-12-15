@@ -115,7 +115,7 @@ function receiveAdd(newPost){
     // 문자열로 정의된 HTML 코드를 HTML 엘리먼트로 변환
 
     let postT = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" id="${p.pno}" data-pno="${p.pno}">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
@@ -158,7 +158,7 @@ function receiveAdd(newPost){
                             <input type="hidden" name="bno" id="${p.bno}" value="${p.bno}">
                             <div class="justify-content-between row">
                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" value="${p.bgColor}">
-                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
+                                <input type="file" class="col-8 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                             </div>
                             <div class="btn-group d-flex">
                                 <button type="button" class="btn btn-main" id="reset${p.pno}"> 취소 </button>
@@ -171,7 +171,7 @@ function receiveAdd(newPost){
             </div>
         </div>
     </div>
-</li>`;;
+</li>`;
     console.log(postT)
     if(layoutNow === 'GRID'){
         $("#sortable").append(postT);
@@ -198,3 +198,5 @@ window.BeforeUnloadEvent = function (){
     disconnect();
 
 }
+
+

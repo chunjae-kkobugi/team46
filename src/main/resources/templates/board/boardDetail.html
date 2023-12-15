@@ -108,7 +108,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="@{/post/modify(bno=${detail.bno})}" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/board/modify}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                            <input type="hidden" name="bgImage" id="bgImage" th:value="${detail.bgImage}">
                             <div class="mb-3">
                                 <label for="title" class="col-form-label">게시판 이름</label>
                                 <input type="text" name="title" class="form-control" id="title" th:value="${detail.title}">
@@ -201,6 +203,7 @@
             var modify = $("#modify" + index);
             var original = $("#original" + index);
 
+            alert(this + index + "의 수정버튼")
             $(original).addClass('register');
             $(modify).removeClass('register');
         })

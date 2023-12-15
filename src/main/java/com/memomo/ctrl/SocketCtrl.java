@@ -34,35 +34,37 @@ public class SocketCtrl {
     @Autowired
     private ModelMapper mappper;
 
-    private static LinkedList<Long>  plist = new LinkedList<>();
+    private static LinkedList<Long> plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
-    public String postEnter(HttpServletRequest request, Model model){
+    public String postEnter(HttpServletRequest request, Model model) {
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
-        for(PostDTO p:postList){
+        for (PostDTO p : postList) {
             plist2.add(p.getPno());
         }
 
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-        
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/boardDetail";
     }
 
     @RequestMapping("/post/detail2")
-    public String postEnter2(HttpServletRequest request, Model model){
+    public String postEnter2(HttpServletRequest request, Model model) {
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
-        for(PostDTO p:postList){
+        for (PostDTO p : postList) {
             plist2.add(p.getPno());
         }
+        return "board/timeline";
+    }
 
 
     @MessageMapping("/remove/{bno}")

@@ -1,39 +1,25 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.BoardDTO;
-import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
-import com.memomo.entity.Post;
 import com.memomo.service.BoardService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @Log4j2
@@ -61,7 +47,7 @@ public class BoardCtrl {
         List<BoardDTO> boardList = pageDTO.getListDTO();
 
         for(BoardDTO board : boardList) {
-            BoardFile boardFile = boardService.getBoardFile(board.getBno());
+            BoardFile boardFile = boardService.getBoardFile(board.getBgImage());
             board.setFile(boardFile);
         }
 
@@ -99,6 +85,7 @@ public class BoardCtrl {
             redirectAttributes.addFlashAttribute("error", bindingResult);
             return "redirect:/board/register";
         }
+
         log.info(boardDTO);
         String sid = (String) session.getAttribute("sid");
         boardDTO.setTeacher(sid);
@@ -106,5 +93,21 @@ public class BoardCtrl {
         int bno = boardService.boardAdd(boardDTO, boardFile, request);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";
+    }
+
+    @PostMapping("modify")
+    public String boardModify(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.info("board modify-----------" + boardDTO);
+        if (bindingResult.hasErrors()) {
+            log.info("----------------has error");
+            String link = "bno = " + boardDTO.getBno();
+            redirectAttributes.addFlashAttribute("error", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("bno", boardDTO.getBno());
+            return "redirect:/post/detail";
+        }
+        boardService.boardEdit(boardDTO, boardFile, request);
+        redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addAttribute("bno", boardDTO.getBno());
+        return "redirect:/post/detail";
     }
 }
