@@ -36,6 +36,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> maxStudent = createNumber("maxStudent", Integer.class);
 
+    public final NumberPath<Long> postHead = createNumber("postHead", Long.class);
+
     public final StringPath status = createString("status");
 
     public final StringPath teacher = createString("teacher");

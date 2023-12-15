@@ -2,9 +2,11 @@ package com.memomo.service;
 
 import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
+import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
 import com.memomo.entity.PostFile;
+import com.memomo.repository.BoardRepository;
 import com.memomo.repository.LayoutRepository;
 import com.memomo.repository.PostFileRepository;
 import com.memomo.repository.PostRepository;
@@ -43,38 +45,27 @@ public class PostServiceImpl implements PostService{
     private LayoutRepository layoutRepo;
     @Autowired
     private PostFileRepository fileRepo;
+    @Autowired
+    private BoardRepository boardRepo;
 
+    @Transactional
     @Override
-    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir, Long oldTail){
+    public Long postAdd(PostDTO dto, MultipartFile postFile, String uploadDir){
         Post post = mapper.map(dto, Post.class);
-
-        if(oldTail == null || oldTail == 1) {
-            // 아예 하나도 없는 경우 내가 head
-            Post head = postRepo.postHeadGet(dto.getBno());
-            if(head==null){
-                head = new Post();
-                head.setBno(dto.getBno());
-                head.setPstatus("HEAD");
-                head.setAuthor("admin");
-                head.setContent("This is Head");
-                Long p = postRepo.save(head).getPno();
-                head.setPno(p);
-
-                Layout layout = new Layout();
-                layout.setPno(p);
-                layoutRepo.save(layout);
-            }
-            oldTail = head.getPno();
-            System.out.println("=====oldTail"+oldTail);
-        }
-
-        // 마지막 꼬리에 현재 추가한 포스트 추가
         Long pno = postRepo.save(post).getPno();
-        System.out.println(pno+"========"+oldTail);
-        layoutRepo.layoutPriority(pno, oldTail);
+
+        // 새로운 포스트 가장 앞에 추가됨
+        Board head = boardRepo.findById(dto.getBno()).orElseThrow();
+        Long beforeHead = head.getPostHead(); // 이전 head
+        head.setPostHead(pno);
+        boardRepo.save(head);
 
         // 내 위치 저장
-        Layout layout = mapper.map(dto.getLayout(), Layout.class);
+        Layout layout = new Layout();
+        if(dto.getLayout()!=null){
+            layout = mapper.map(dto.getLayout(), Layout.class);
+        }
+        layout.setPriority(beforeHead); // 나는 이전 head 를 다음 노드로 함
         layout.setPno(pno);
         layoutRepo.save(layout);
 
@@ -132,10 +123,6 @@ public class PostServiceImpl implements PostService{
             post.setBgImage(image.getFno());
             postRepo.save(post);
             log.info("---------------------------------------- post : " + post);
-
-
-            System.out.println(layout);
-            layoutRepo.save(layout);
         } else {
             // 파일이 업로드 되지 않은 경우
             log.info("포스트에 업로드 된 파일이 없습니다" + dto);
@@ -145,14 +132,89 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Long postEdit(Post post) {
-        return postRepo.save(post).getPno();
+    public Long postEdit(PostDTO dto, MultipartFile postFile, String uploadDir) {
+        Post post = postRepo.findById(dto.getPno()).orElseThrow();
+        Post newPost= mapper.map(dto, Post.class);
+        post.setContent(newPost.getContent());
+        post.setBgColor(newPost.getBgColor());
+
+        Long pno = postRepo.save(post).getPno();
+
+        if (postFile != null && ! postFile.isEmpty()) {
+            MultipartFile multipartFile = postFile;
+
+            String today = new SimpleDateFormat("yyMMdd").format(new Date());
+            String saveFolder = uploadDir + today;
+            System.out.println(saveFolder);
+
+            File uploadPath = new File(saveFolder);
+            // 업로드 날짜의 폴더가 없다면 새로 생성
+            if (!uploadPath.exists()) {
+                uploadPath.mkdirs();
+            }
+
+            String originalName = postFile.getOriginalFilename();
+            String fileExtension = "";
+
+            // 파일 이름에 확장자가 있는지 확인
+            if (originalName != null) {
+                int lastIndex = originalName.lastIndexOf(".");
+                if (lastIndex != -1 && lastIndex < originalName.length() - 1) {
+                    fileExtension = originalName.substring(lastIndex + 1);
+                }
+            }
+
+            String uuid = UUID.randomUUID().toString();
+            String saveName = uuid + "_" + originalName;
+
+            Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
+
+            try {
+                multipartFile.transferTo(new File(uploadPath, saveName));
+                if (Files.probeContentType(savePath).startsWith("image")){
+                    File thumbnail = new File(uploadPath, "s_" + saveName);
+                    Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 300, 300);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("업로드 실패" + e.getMessage());
+            }
+
+            PostFile image = new PostFile();
+            image.setOriginName(originalName);
+            image.setSaveName(saveName);
+            image.setSavePath(today);
+            // 파일 확장자를 fileType 에 저장
+            image.setFileType(fileExtension);
+            image.setFstatus("ACTIVE");
+
+            image.setPno(pno);
+            fileRepo.save(image);
+
+            post.setBgImage(image.getFno());
+            postRepo.save(post);
+            log.info("---------------------------------------- post : " + post);
+        } else {
+            // 파일이 업로드 되지 않은 경우
+            log.info("포스트에 업로드 된 파일이 없습니다" + dto);
+        }
+
+        return pno;
     }
 
     @Override
-    public Long postRemove(Long pno) {
+    public Long postRemove(Long pno, Long oldLeft, Long oldRight, Integer bno) {
         Post post = postRepo.findById(pno).orElseThrow();
         post.setPstatus("REMOVE");
+
+        if(oldRight==0){
+            // 내가 head 였다면 head 값을 바꿔야 함
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(oldLeft);
+            boardRepo.save(head);
+        } else {
+            layoutRepo.layoutPriority(oldLeft, oldRight);
+        }
 
         return postRepo.save(post).getPno();
     }
@@ -175,6 +237,10 @@ public class PostServiceImpl implements PostService{
         List<PostDTO> sortedDTO = new ArrayList<>();
 
         List<Object[]> objects = postRepo.postDTOList(bno);
+        if(objects.isEmpty()){
+            return sortedDTO;
+        }
+
         for(Object[] o: objects){
             Post p = (Post) o[0];
             Layout l = (Layout) o[1];
@@ -184,8 +250,8 @@ public class PostServiceImpl implements PostService{
             postDTOS.add(dto);
         }
 
-        PostDTO head = postDTOS.stream().filter(p->p.getPstatus().equals("HEAD")).findFirst().orElseThrow();
-        Long headP = head.getLayout().getPriority();
+        Board head = boardRepo.findById(bno).orElseThrow();
+        Long headP = head.getPostHead();
         while(headP!= 0){
             Long finalHeadP = headP;
             PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
@@ -193,6 +259,7 @@ public class PostServiceImpl implements PostService{
             headP = post.getLayout().getPriority();
         }
 
+        Collections.reverse(sortedDTO); // head 가 마지막에 오도록 뒤집기
         return sortedDTO;
     }
 
@@ -202,8 +269,9 @@ public class PostServiceImpl implements PostService{
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
         if(oldBefore==0){
             // 내가 head 였다면 head 값을 바꿔야 함
-            Post head = postRepo.postHeadGet(bno);
-            layoutRepo.layoutPriority(oldNext, head.getPno());
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(oldNext);
+            boardRepo.save(head);
         } else {
             layoutRepo.layoutPriority(oldNext, oldBefore);
         }
@@ -211,8 +279,9 @@ public class PostServiceImpl implements PostService{
         // 나의 새로운 이전 노드
         if(newBefore==0){
             // 내가 새로운 head 가 될 때, head 에 나를 넣어줌
-            Post head = postRepo.postHeadGet(bno);
-            layoutRepo.layoutPriority(changed, head.getPno());
+            Board head = boardRepo.findById(bno).orElseThrow();
+            head.setPostHead(changed);
+            boardRepo.save(head);
         } else {
             layoutRepo.layoutPriority(changed, newBefore);
         }
@@ -231,5 +300,10 @@ public class PostServiceImpl implements PostService{
         dto.setLayout(layout);
         dto.setFile(file);
         return dto;
+    }
+
+    @Override
+    public Long postAddFile(PostFile image) {
+        return fileRepo.save(image).getFno();
     }
 }
