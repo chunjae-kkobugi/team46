@@ -41,7 +41,7 @@ public class BoardCtrl {
         pageDTO.setType(type);
         pageDTO.setKeyword(keyword);
         pageDTO.setPageNow(pageNow);
-        pageDTO.setTeacher(teacher);
+        pageDTO.setStatus("ACTIVE");
 
         pageDTO = boardService.boardList(pageDTO);
         List<BoardDTO> boardList = pageDTO.getListDTO();

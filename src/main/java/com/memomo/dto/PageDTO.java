@@ -30,6 +30,7 @@ public class PageDTO<E, T> {
     private String keyword; // 검색어
 
     private String teacher = "";
+    private String status = "";
 
     private List<T> listDTO; // 페이지 결과
 

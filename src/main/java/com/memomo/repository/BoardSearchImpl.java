@@ -48,6 +48,10 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
             booleanBuilder.or(board.teacher.contains(pageDTO.getTeacher()));
         }
 
+        if(pageDTO.getStatus() != "") {
+            booleanBuilder.or(board.status.contains(pageDTO.getStatus()));
+        }
+
         query.where(booleanBuilder);
 
         // 부모 클래스인 QuerydslRepositorySupport 를 상속하면서 BoardSearchImpl(this)에  querydsl 필드가 있음
