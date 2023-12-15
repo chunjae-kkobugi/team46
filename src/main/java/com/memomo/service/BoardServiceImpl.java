@@ -188,6 +188,7 @@ public class BoardServiceImpl implements BoardService{
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
             }
+
             BoardFile fileResult = boardFileRepo.findBoardFileByFno(boardDTO.getBgImage());
             fileResult.change("REMOVE");
 
@@ -206,12 +207,16 @@ public class BoardServiceImpl implements BoardService{
             BoardFile existingFile = boardDTO.getFile(); // 실제 필드명으로 변경
             if (existingFile != null) {
                 existingFile.setStatus("REMOVE");
+            } else {
+                // 이미지가 첨부되지 않은 경우, 이미지 정보는 변경되지 않음
+                image = null;
             }
 
             board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
-            // 이미지 정보를 게시판 정보에 연결
-            boardDTO.setFile(image);
-            boardRepo.save(board);
+
+            if (image != null) {
+                boardDTO.setFile(image);
+            }
 
             // 파일 저장
             boardFileRepo.save(image);
@@ -219,7 +224,14 @@ public class BoardServiceImpl implements BoardService{
             boardRepo.save(board);
             log.info("-------------------------------------------------------------------------------" + image.getFno());
             log.info("---------------------------------------------board : " + board);
+        } else {
+            // 파일이 업로드되지 않은 경우 처리
+            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
+            Board board = result.orElseThrow();
+            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
+            log.info("사진수정X " + boardDTO);
         }
+
     }
 
     @Override
