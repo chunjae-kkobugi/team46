@@ -51,4 +51,8 @@ public class Board extends BaseEntity {
         this.bgImage = bgImage;
         this. status = status;
     }
+
+    public void remove(String status){
+        this.status = status;
+    }
 }

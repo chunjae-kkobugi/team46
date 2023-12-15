@@ -226,8 +226,9 @@ public class BoardServiceImpl implements BoardService{
     public Integer boardRemove(Integer bno) {
         Optional<Board> result = boardRepo.findById(bno);
         Board board = result.orElseThrow();
-        board.setStatus("REMOVE");
+        board.remove("REMOVE");
 
+        boardFileRepo.boardFileRemove(board.getBgImage());
         postRepo.boardPostRemove(bno);
 
         return boardRepo.save(board).getBno();
