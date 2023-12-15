@@ -41,7 +41,7 @@ public class PostTest {
             dto.setLayout(layout);
 
             Long oldTail = (long) i-1;
-            postService.postAdd(dto, null, uploadDir, oldTail);
+            postService.postAdd(dto, null, uploadDir);
         }
     }
 
@@ -57,4 +57,5 @@ public class PostTest {
     public void postSelect(){
         List<PostDTO> postDTOs = postService.postList(1);
     }
+
 }

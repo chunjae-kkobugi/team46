@@ -18,7 +18,9 @@ public interface BoardService {
     public void boardDelete(Integer bno);
 
     public PageDTO<Board, BoardDTO> boardList(PageDTO<Board, BoardDTO> pageDTO);
+
     public Board boardDetail(Integer bno); // 굳이 BoardPostDTO 로 받을 필요 없어서 Board 로 변경
+
 
     public BoardFile getBoardFile(Integer bno);
 }
