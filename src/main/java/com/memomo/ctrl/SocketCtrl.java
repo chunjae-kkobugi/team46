@@ -4,7 +4,6 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
-import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -33,11 +32,9 @@ public class SocketCtrl {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private MemberService memberService;
-    @Autowired
     private ModelMapper mappper;
 
-    private static LinkedList<Long> plist = new LinkedList<>();
+    private static LinkedList<Long>  plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
     public String postEnter(HttpServletRequest request, Model model){
@@ -52,20 +49,27 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-
+        
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/boardDetail";
     }
 
+    // 타임라인 테스트용
     @RequestMapping("/post/detail2")
-    public String postEnter2(HttpServletRequest request, Model model) {
+    public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
-        for (PostDTO p : postList) {
+        for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
+
+        plist = plist2;
+
+        Board board = boardService.boardDetail(bno);
+        model.addAttribute("detail", board);
+        model.addAttribute("postList", postList);
         return "board/timeline";
     }
 
@@ -94,7 +98,7 @@ public class SocketCtrl {
     public LinkedList<Long> postMove(@DestinationVariable Integer bno, Layout layout){
         int originIdx = plist.indexOf(layout.getPno()); // 나의 기존 정렬 순서
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
-
+        
         // head, Right, 이전 노드 / tail, Left, 다음 노드
         Long oldLeft = ((originIdx)>0)?plist.get(originIdx-1): 0;
         // 나의 기존 다음 노드. 내가 tail 인 경우 0
@@ -104,11 +108,11 @@ public class SocketCtrl {
         int changedIdx = layout.getGPriority(); // 나의 새로운 정렬 순서
         plist.remove(originIdx);
         plist.add(changedIdx, layout.getPno());
-
+        
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0
-        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0;
+        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0; 
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
@@ -128,7 +132,7 @@ public class SocketCtrl {
     @PostMapping("/post/add")
     @ResponseBody
     public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        //HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -136,9 +140,8 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        //String sid = (String) session.getAttribute("sid");
-        String id = memberService.getLoginId();
-        dto.setAuthor(id);
+        String sid = (String) session.getAttribute("sid");
+        dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
         String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
