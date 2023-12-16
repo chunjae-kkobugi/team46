@@ -33,6 +33,8 @@ public class SocketCtrl {
     private BoardService boardService;
     @Autowired
     private ModelMapper mappper;
+    @Autowired
+    private MemberService memberService;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -98,7 +100,7 @@ public class SocketCtrl {
     public LinkedList<Long> postMove(@DestinationVariable Integer bno, Layout layout){
         int originIdx = plist.indexOf(layout.getPno()); // 나의 기존 정렬 순서
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
-        
+
         // head, Right, 이전 노드 / tail, Left, 다음 노드
         Long oldLeft = ((originIdx)>0)?plist.get(originIdx-1): 0;
         // 나의 기존 다음 노드. 내가 tail 인 경우 0
@@ -112,7 +114,7 @@ public class SocketCtrl {
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0
-        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0; 
+        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0;
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
@@ -131,8 +133,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/add")
     @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult) {
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -140,7 +141,8 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        String sid = (String) session.getAttribute("sid");
+        String sid = memberService.getLoginId();
+        log.info("---------- sid: "+sid);
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로

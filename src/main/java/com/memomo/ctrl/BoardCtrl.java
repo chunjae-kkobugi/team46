@@ -103,7 +103,7 @@ public class BoardCtrl {
             return "redirect:/board/register";
         }
         log.info(boardDTO);
-        //String sid = (String) session.getAttribute("sid");
+        //String sid = memberService.getLoginId();
         String id = memberService.getLoginId();
         boardDTO.setTeacher(id);
 //        boardDTO.setBgImage(boardDTO.getFile().getFno());
