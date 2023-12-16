@@ -51,12 +51,14 @@ public class MemberCtrl {
     @GetMapping("/join")
     public String join(Model model) {
         MemberFormDTO member = new MemberFormDTO();
+        System.out.println("MemberFormDTO : " + member);
         model.addAttribute("member", member);
         return "member/join";
     }
 
     @PostMapping("/joinPro")
-    public String joinPro(@Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
+    public String joinPro(@ModelAttribute("member") @Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
+        System.out.println("bindingResult : " + bindingResult);
         if (bindingResult.hasErrors()) {
             return "member/join";
         }
@@ -65,6 +67,7 @@ public class MemberCtrl {
             memberService.saveMember(member);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            System.out.println("e.getMessage() : " + e.getMessage());
             return "member/join";
         }
         return "redirect:/";

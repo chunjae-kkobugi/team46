@@ -16,14 +16,12 @@
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mt-3 mb-5">회원가입</h2>
 
-                            <form name="frm1" id="frm1" th:action="@{/member/joinPro}" th:object="${member}"
-                                  method="post" onsubmit="return joinCheck(this)">
+                            <form th:action="@{/member/joinPro}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="name">이름</label>
                                     <input type="text" th:field="*{name}" id="name" placeholder="이름 입력"
                                            class="form-control" required="">
                                 </div>
-
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="id">아이디</label>
@@ -229,6 +227,8 @@
                                         success: function (data) {
                                             alert("인증번호가 발송되었습니다.");
                                             $("#confirm").attr("value", data);
+                                        }, error: function (request, status, error) {
+                                            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                                         }
                                     });
                                 }

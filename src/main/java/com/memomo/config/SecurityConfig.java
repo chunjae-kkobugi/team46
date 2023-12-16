@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/plugins/**").permitAll()
                 //.requestMatchers("/admin/**", "/lecture/**", "/teacher/**").permitAll()
                 //.requestMatchers("/", "/**", "/login", "/join_frm", "join_frm_u", "join_frm_t").permitAll()
-                .requestMatchers("/", "/member/**", "/board/list", "/post/**").permitAll()
+                .requestMatchers("/", "/member/**", "/board/list", "/post/**", "/send-mail", "/confirm").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin((formLogin) -> formLogin
