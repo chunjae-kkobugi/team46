@@ -23,6 +23,6 @@ public class RootConfig {
         return modelMapper;
     }
 
-    @Bean
-    public BCryptPasswordEncoder pwEncoder(){return new BCryptPasswordEncoder();}
+//    @Bean
+//    public BCryptPasswordEncoder pwEncoder(){return new BCryptPasswordEncoder();}
 }

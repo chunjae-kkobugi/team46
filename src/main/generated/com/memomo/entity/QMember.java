@@ -38,6 +38,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath pw = createString("pw");
 
+    public final EnumPath<com.memomo.dto.Role> role = createEnum("role", com.memomo.dto.Role.class);
+
     public final StringPath school = createString("school");
 
     public final StringPath status = createString("status");
