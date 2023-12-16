@@ -4,6 +4,7 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
+import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +34,8 @@ public class SocketCtrl {
     private BoardService boardService;
     @Autowired
     private ModelMapper mappper;
+    @Autowired
+    private MemberService memberService;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -131,8 +134,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/add")
     @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult) {
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -140,7 +142,8 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        String sid = (String) session.getAttribute("sid");
+        String sid = memberService.getLoginId();
+        log.info("---------- sid: "+sid);
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
