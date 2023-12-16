@@ -18,10 +18,10 @@
                                 <h3 class="tit">마이페이지</h3>
                             </div>
                             <h4 class="tit blt-gray">내 정보</h4>
-                            <form th:action="@{/member/edit}" th:object="${member}" method="post">
+                            <!--<form th:action="@{/member/edit}" th:object="${member}" method="post">-->
                             <div class="tbl-write th-gray">
                                 <!--<form th:action="@{/member/edit}" method="post">-->
-                                <table class="table table-bordered align-middle" >
+                                <table class="table table-bordered align-middle">
                                     <colgroup>
                                         <col style="width:20%;">
                                         <col style="width:auto;">
@@ -29,39 +29,52 @@
                                     <tbody>
                                     <tr>
                                         <th class="text-center">이름</th>
-                                        <td><span th:text="${member.name}"></span></td>
-                                        <input type="hidden" name="name" id="name" th:field="*{name}" th:value="*{name}">
+                                        <td><input type="text" name="name" id="name" class="form-control"
+                                                   th:value="${member.name}"></td>
+                                        <!--<input type="text" name="name" id="name" class="form-control" th:value="${member.name}">-->
                                     </tr>
                                     <tr>
                                         <th class="text-center">아이디</th>
-                                        <td><span th:text="${member.id}"></span></td>
-                                        <input type="hidden" name="id" id="id" th:field="*{id}" th:value="${member.id}">
+                                        <td><input type="text" name="id" id="id" class="form-control"
+                                                   th:value="${member.id}"></td>
                                     </tr>
                                     <tr>
                                         <th class="text-center pwd">비밀번호</th>
-                                        <td><button type="button" class="btn btn-main btn-sm" onclick="reco()">변경</button></td>
-                                        <input type="hidden" name="pw" id="pw" th:field="*{pw}" th:value="${member.pw}">
+                                        <td>
+                                            <button type="button" class="btn btn-main btn-sm" onclick="reco()">변경
+                                            </button>
+                                        </td>
+                                        <input type="hidden" name="pw" id="pw" class="form-control"
+                                               th:value="${member.pw}">
                                     </tr>
                                     <tr>
                                         <th class="text-center">전화번호</th>
-                                        <td><input type="text" name="tel" id="tel" class="form-control" th:field="*{tel}" th:value="${member.tel}"></td>
+                                        <td><input type="text" name="tel" id="tel" class="form-control"
+                                                   th:value="${member.tel}"></td>
                                     </tr>
                                     <tr>
                                         <th class="text-center">이메일</th>
-                                        <td><input type="email" name="email" id="email" class="form-control" th:field="*{email}" th:value="${member.email}"></td>
+                                        <td><input type="email" name="email" id="email" class="form-control"
+                                                   th:value="${member.email}"></td>
                                     </tr>
                                     <tr>
                                         <th class="text-center">학교</th>
-                                        <td><input type="text" name="school" id="school" class="form-control" th:field="*{school}" th:value="${member.school}"></td>
+                                        <td><input type="text" name="school" id="school" class="form-control"
+                                                   th:value="${member.school}"></td>
                                     </tr>
 
                                     <tr>
                                         <th class="text-center">주소</th>
                                         <td>
-                                            <input type="text" name="addr1" id="address1" th:field="*{addr1}" th:value="${member.addr1}" class="form-control mb-1">
-                                            <input type="text" name="addr2" id="address2" th:field="*{addr2}" th:value="${member.addr2}" class="form-control mb-1">
-                                            <input type="text" name="postcode" id="postcode" th:field="*{postcode}" th:value="${member.postcode}" class="form-control">
-                                            <button type="button" id="post_btn" onclick="findAddr()" class="ms-1 btn btn-main btn-sm">우편번호 검색</button>
+                                            <input type="text" name="addr1" id="address1" th:value="${member.addr1}"
+                                                   class="form-control mb-1">
+                                            <input type="text" name="addr2" id="address2" th:value="${member.addr2}"
+                                                   class="form-control mb-1">
+                                            <input type="text" name="postcode" id="postcode"
+                                                   th:value="${member.postcode}" class="form-control">
+                                            <button type="button" id="post_btn" onclick="findAddr()"
+                                                    class="ms-1 btn btn-main btn-sm">우편번호 검색
+                                            </button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -73,8 +86,6 @@
                                 <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
                                 <a th:href="@{/member/mypage}" class="btn btn-outline-main mx-1">취소</a>
                             </div>
-                            </form>
-
 
                             <div class="border-bottom mb-4"></div>
 
@@ -84,7 +95,8 @@
                                     <tbody>
                                     <tr>
                                         <td>
-                                            <button type="button" class="btn btn-outline-main" onclick="">회원탈퇴</button>
+                                            <button type="button" class="btn btn-outline-main" onclick="leave()">회원탈퇴
+                                            </button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -100,5 +112,14 @@
 </section>
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    let realpath = /*[[@{'/'}]]*/ 'default';
+
+    function leave() {
+        if (confirm("탈퇴하시겠습니까?")) {
+            location.href = realpath + "member/remove?id=" + [[${member.id}]];
+        }
+    }
+</script>
 </body>
 </html>

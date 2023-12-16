@@ -26,6 +26,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
+            if (!member.getStatus().equals("ACTIVE")) {
+                throw new IllegalStateException("User is not active");
+            }
             return User.builder()
                     .username(member.getId())
                     .password(member.getPw())
@@ -34,5 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("User not found with id: " + id);
         }
+
+
     }
 }

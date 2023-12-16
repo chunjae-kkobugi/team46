@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .usernameParameter("id")
                 .passwordParameter("pw")
                 .failureUrl("/member/login/error")
-                .defaultSuccessUrl("/member/loginPro")
+                .defaultSuccessUrl("/member/loginPro", true)
         );
 
         http.csrf((csrf) -> csrf.disable());
