@@ -55,6 +55,7 @@ public class SocketCtrl {
         return "board/boardDetail";
     }
 
+    // 타임라인 테스트용
     @RequestMapping("/post/detail2")
     public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
@@ -63,6 +64,14 @@ public class SocketCtrl {
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
+
+        plist = plist2;
+
+        Board board = boardService.boardDetail(bno);
+        model.addAttribute("detail", board);
+        model.addAttribute("postList", postList);
+        return "board/timeline";
+    }
 
 
     @MessageMapping("/remove/{bno}")
