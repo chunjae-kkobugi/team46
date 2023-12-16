@@ -4,6 +4,7 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
+import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -32,9 +33,11 @@ public class SocketCtrl {
     @Autowired
     private BoardService boardService;
     @Autowired
+    private MemberService memberService;
+    @Autowired
     private ModelMapper mappper;
 
-    private static LinkedList<Long>  plist = new LinkedList<>();
+    private static LinkedList<Long> plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
     public String postEnter(HttpServletRequest request, Model model){
@@ -125,7 +128,7 @@ public class SocketCtrl {
     @PostMapping("/post/add")
     @ResponseBody
     public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+        //HttpSession session = request.getSession();
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -133,8 +136,9 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        String sid = (String) session.getAttribute("sid");
-        dto.setAuthor(sid);
+        //String sid = (String) session.getAttribute("sid");
+        String id = memberService.getLoginId();
+        dto.setAuthor(id);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
         String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
