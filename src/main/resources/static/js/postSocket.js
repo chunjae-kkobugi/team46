@@ -115,7 +115,7 @@ function receiveAdd(newPost){
     // 문자열로 정의된 HTML 코드를 HTML 엘리먼트로 변환
 
     let postT = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" id="${p.pno}" data-pno="${p.pno}">    
+<li class="mb-3 mt-2 ui-sortable-handle ui-state-default" id="${p.pno}" data-pno="${p.pno}" style="width: 305px;">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
