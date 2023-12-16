@@ -4,7 +4,6 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
-import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -101,7 +100,7 @@ public class SocketCtrl {
     public LinkedList<Long> postMove(@DestinationVariable Integer bno, Layout layout){
         int originIdx = plist.indexOf(layout.getPno()); // 나의 기존 정렬 순서
         // 나의 기존 이전 노드에 나의 기존 다음 노드의 값을 넣어야 함
-        
+
         // head, Right, 이전 노드 / tail, Left, 다음 노드
         Long oldLeft = ((originIdx)>0)?plist.get(originIdx-1): 0;
         // 나의 기존 다음 노드. 내가 tail 인 경우 0
@@ -115,7 +114,7 @@ public class SocketCtrl {
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0
-        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0; 
+        Long newRight = (changedIdx<(plist.size()-1)) ? plist.get(changedIdx+1) : 0;
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
