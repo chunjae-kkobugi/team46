@@ -16,48 +16,62 @@
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mt-3 mb-5">회원가입</h2>
 
-                            <form name="frm1" id="frm1" th:action="@{/member/joinPro}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
+                            <form name="frm1" id="frm1" th:action="@{/member/joinPro}" th:object="${member}"
+                                  method="post" onsubmit="return joinCheck(this)">
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="name">이름</label>
-                                    <input type="text" th:field="*{name}" id="name" placeholder="이름 입력" class="form-control" required="">
+                                    <input type="text" th:field="*{name}" id="name" placeholder="이름 입력"
+                                           class="form-control" required="">
                                 </div>
 
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="id">아이디</label>
                                     <br>
-                                    <input type="text" th:field="*{id}" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력" class="form-control" maxlength="16" autofocus="" required="">
+                                    <input type="text" th:field="*{id}" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력"
+                                           class="form-control" maxlength="16" autofocus="" required="">
                                     <input type="button" class="btn btn-main ms-1" value="중복확인" onclick="idCheck()">
-                                    <input type="hidden" name="idCk" id="idCk" value="no">
-                                    <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.</p>
+                                    <input type="hidden" name="idCk" id="idCk" value="neu">
+                                    <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지
+                                        않으셨습니다.</p>
                                 </div>
 
                                 <div class="form-outline mb-1">
                                     <label class="form-label blind" for="pw">비밀번호</label>
-                                    <input type="password" th:field="*{pw}" id="pw" placeholder="비밀번호 입력" class="form-control" maxlength="16" required="">
-                                    <p class="info mb-0"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각 1개 이상 포함</p>
+                                    <input type="password" th:field="*{pw}" id="pw" placeholder="비밀번호 입력"
+                                           class="form-control" maxlength="16" required="">
+                                    <p class="info"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각
+                                        1개 이상 포함</p>
                                 </div>
                                 <!-- pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" -->
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="pw2">비밀번호 확인</label>
-                                    <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인 입력" class="form-control" maxlength="16" required="">
+                                    <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인 입력"
+                                           class="form-control" maxlength="16" required="">
+                                    <div class="info" id="alert-success">비밀번호가 일치합니다.</div>
+                                    <div class="info text-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
                                 </div>
-
 
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="tel">전화번호</label>
-                                    <input type="tel" th:field="*{tel}" id="tel" maxlength="13" placeholder="전화번호 숫자만 입력 000-0000-0000" class="form-control text-black" required="">
+                                    <input type="tel" th:field="*{tel}" id="tel" maxlength="13"
+                                           placeholder="전화번호 숫자만 입력 000-0000-0000" class="form-control text-black"
+                                           required="">
                                 </div>
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="email">이메일</label><br>
-                                    <input type="email" th:field="*{email}" id="email" placeholder="이메일 입력" class="form-control" required="">
+                                    <input type="email" th:field="*{email}" id="email" placeholder="이메일 입력"
+                                           class="form-control" required="">
                                     <input type="button" class="btn btn-main ms-1" value="인증요청" onclick="sendNumber()">
 
                                     <div id="mail_number" name="mail_number" style="display: none" class="mt-1">
-                                        <input type="text" name="number" id="cert-num" placeholder="인증번호 입력" class="form-control">
-                                        <button type="button" class="btn btn-main ms-1" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">인증확인</button>
+                                        <input type="text" name="number" id="cert-num" placeholder="인증번호 입력"
+                                               class="form-control">
+                                        <button type="button" class="btn btn-main ms-1" name="confirmBtn"
+                                                id="confirmBtn" onclick="confirmNumber()">인증확인
+                                        </button>
                                         <input type="hidden" name="emailCk" id="emailCk" value="no">
                                         <input type="text" id="confirm" name="confirm" style="display: none" value="">
                                     </div>
@@ -66,19 +80,27 @@
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="school">학교</label>
-                                    <input type="text" th:field="*{school}" id="school" placeholder="학교 입력" class="form-control" required="">
+                                    <input type="text" th:field="*{school}" id="school" placeholder="학교 입력"
+                                           class="form-control" required="">
                                 </div>
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="addr1">주소</label>
-                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소 입력" class="form-control mb-1" required="">
-                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소 입력" class="form-control mb-1" required="">
-                                    <input type="text" name="postcode" id="postcode" placeholder="우편번호" class="form-control">
-                                    <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-main ms-1">우편번호 검색</button>
+                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소 입력"
+                                           class="form-control mb-1" required="">
+                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소 입력"
+                                           class="form-control mb-1" required="">
+                                    <input type="text" name="postcode" id="postcode" placeholder="우편번호"
+                                           class="form-control">
+                                    <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-main ms-1">
+                                        우편번호 검색
+                                    </button>
                                 </div>
 
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-main px-5 py-2 mt-4" style="font-size:20px">회원가입</button>
+                                    <button type="submit" class="btn btn-main px-5 py-2 mt-4" style="font-size:20px">
+                                        회원가입
+                                    </button>
                                 </div>
                             </form>
 
@@ -87,113 +109,144 @@
                                 let realpath = "\/";
                                 var confirm = "";
 
-                                $(document).ready(function(){
-                                    $("#id").keyup(function(){
-                                        $("#idCk").val("no");
-                                        if($(this).val()!=""){
-                                            if($("#msg").hasClass("no_check")) {
+                                $(document).ready(function () {
+                                    $("#alert-success").hide();
+                                    $("#alert-danger").hide();
+
+
+                                    $("#id").keyup(function () {
+                                        $("#idCk").val("neu");
+                                        if ($(this).val() != "") {
+                                            if ($("#msg").hasClass("no_check")) {
                                                 $("#msg").removeClass("no_check");
                                             }
                                             $("#msg").html("아이디 입력중입니다.");
-                                            $("#id").focus();
                                         } else {
                                             $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
                                         }
                                     });
-                                });
 
-                                $(document).ready(function() {
-                                    $('#cert-num').on('keypress', function(e) {
+                                    $("#id").focusout(function () {
+                                        var ck = $("#idCk").val();
+                                        if (ck == "yes") {
+                                            if ($("#msg").hasClass("no_check")) {
+                                                $("#msg").removeClass("no_check");
+                                            }
+                                            $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
+                                        } else if (ck == "no") {
+                                            $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
+                                        } else {
+                                            $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아직 아이디 중복 체크를 하지 않으셨습니다.");
+                                        }
+                                    })
+
+                                    $('#cert-num').on('keypress', function (e) {
                                         var key = e.which; // 입력된 키 코드 가져오기
                                         // 숫자(0-9) 허용 (숫자 키, 백스페이스, 화살표 키)
                                         if (!(key >= 48 && key <= 57) && key !== 8 && key !== 37 && key !== 39 && key !== 46) {
                                             e.preventDefault(); // 입력 방지
                                         }
                                     });
+
+                                    $("#pw2").keyup(function () {
+                                        var pw = $("#pw").val();
+                                        var pw2 = $("#pw2").val();
+                                        if (pw != "" || pw2 != "") {
+                                            if (pw == pw2) {
+                                                $("#alert-success").show();
+                                                $("#alert-danger").hide();
+                                            } else {
+                                                $("#alert-success").hide();
+                                                $("#alert-danger").show();
+                                            }
+                                        }
+                                    });
                                 });
 
-                                function idCheck(){
-                                    if($("#id").val()==""){
+
+                                function idCheck() {
+                                    if ($("#id").val() == "") {
                                         alert("아이디를 입력하지 않았습니다.");
                                         $("#id").focus();
                                         return false;
                                     }
 
-                                    var params = {"id" : $("#id").val()};
+                                    var params = {"id": $("#id").val()};
                                     $.ajax({
-                                        url: realpath+"member/idCheckPro",	//아이디가 전송되어질 곳
-                                        type:"post",
-                                        data:JSON.stringify(params),
-                                        dataType:"json",
-                                        contentType:"application/json",
-                                        success : function(result) {
+                                        url: realpath + "member/idCheckPro",	//아이디가 전송되어질 곳
+                                        type: "post",
+                                        data: JSON.stringify(params),
+                                        dataType: "json",
+                                        contentType: "application/json",
+                                        success: function (result) {
                                             var idPass = result;
-                                            if(idPass == false){
+                                            if (idPass == false) {
                                                 $("#idCk").val("no");
                                                 $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
                                                 $("#id").focus();
-                                            } else if(idPass == true){
+                                            } else if (idPass == true) {
                                                 $("#idCk").val("yes");
-                                                if($("#msg").hasClass("no_check")) {
+                                                if ($("#msg").hasClass("no_check")) {
                                                     $("#msg").removeClass("no_check");
                                                 }
                                                 $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
-                                            } else if(idPass==""){
+                                            } else {
                                                 $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
                                             }
                                         }
                                     });
                                 }
 
-                                function joinCheck(f){
-                                    if(f.pw.value!=f.pw2.value){
+                                function joinCheck(f) {
+                                    if (f.pw.value != f.pw2.value) {
                                         alert("비밀번호와 비밀번호 확인이 서로 다릅니다.");
                                         f.pw.focus();
                                         return false;
                                     }
-                                    if(f.idCk.value!="yes"){
+                                    if (f.idCk.value != "yes") {
                                         alert("아이디 중복 체크를 하지 않으셨습니다.");
                                         return false;
                                     }
-                                    if(f.emailCk.value!="yes"){
+                                    if (f.emailCk.value != "yes") {
                                         alert("이메일 인증을 하지 않으셨습니다.");
                                         return false;
                                     }
                                 }
 
-                                function sendNumber(){
-                                    if($("#email").val()===""){
+                                function sendNumber() {
+                                    if ($("#email").val() === "") {
                                         alert("이메일을 입력하지 않았습니다.");
                                         $("#email").focus();
                                         return;
                                     }
 
-                                    $("#mail_number").css("display","block");
+                                    $("#mail_number").css("display", "block");
                                     $.ajax({
-                                        url:"/send-mail",
-                                        type:"post",
-                                        dataType:"json",
-                                        data:{"mail" : $("#email").val()},
-                                        success: function(data){
+                                        url: "/send-mail",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {"mail": $("#email").val()},
+                                        success: function (data) {
                                             alert("인증번호가 발송되었습니다.");
-                                            $("#confirm").attr("value",data);
+                                            $("#confirm").attr("value", data);
                                         }
                                     });
                                 }
-                                function confirmNumber(){
+
+                                function confirmNumber() {
                                     var inputNum = $("#cert-num").val();
-                                    if(inputNum==="") {
+                                    if (inputNum === "") {
                                         alert("인증번호를 입력해주세요");
                                         $("#cert-num").focus();
                                         return;
                                     }
                                     $.ajax({
-                                        url:"/confirm",
-                                        type:"post",
-                                        dataType:"json",
-                                        data:{"inputNum" : inputNum},
-                                        success: function(data){
-                                            if(data) {
+                                        url: "/confirm",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {"inputNum": inputNum},
+                                        success: function (data) {
+                                            if (data) {
                                                 $("#emailCk").val("yes");
                                                 alert("인증되었습니다.");
                                             } else {
@@ -207,16 +260,16 @@
 
                             <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
                             <script>
-                                function findAddr(){
+                                function findAddr() {
                                     new daum.Postcode({
-                                        oncomplete:function(data){
+                                        oncomplete: function (data) {
                                             var roadAddr = data.roadAddress;
                                             var jibunAddr = data.jibunAddress;
                                             var bname = data.bname;
                                             document.getElementById("postcode").value = data.zonecode;
-                                            if(roadAddr !== ''){
+                                            if (roadAddr !== '') {
                                                 document.getElementById("addr1").value = roadAddr;
-                                            } else if(jibunAddr !== ''){
+                                            } else if (jibunAddr !== '') {
                                                 document.getElementById("addr1").value = jibunAddr;
                                             }
                                             document.getElementById("addr2").focus();

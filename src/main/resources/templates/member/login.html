@@ -13,13 +13,14 @@
             <div class="col-lg-5 col-md-8 align-item-center">
                 <div class="border border-2 mx-5">
                     <!-- <h3 class="bg-gray p-4 text-center">로그인</h3> -->
-                    <form th:action="@{/member/loginPro}" method="post">
+                    <form th:action="@{/login_proc}" method="post">
                         <fieldset class="p-4">
                             <input class="form-control mb-3" name="id" type="text" placeholder="아이디" required="">
                             <input class="form-control mb-3" name="pw" type="password" placeholder="비밀번호" required="">
-
-                            <p class="text-danger">[[${msg}]]</p>
-                            <button type="submit" class="form-control btn btn-main font-weight-bold" style="color: #ffffff !important">로그인</button>
+                            <p th:if="${loginErrorMsg}" class="text-danger" th:text="${loginErrorMsg}"></p>
+                            <button type="submit" class="form-control btn btn-main font-weight-bold"
+                                    style="color: #ffffff !important">로그인
+                            </button>
 
                             <div class="sign_area">
                                 <span class="save_box">

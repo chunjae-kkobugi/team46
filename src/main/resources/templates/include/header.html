@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">>
 
 <body>
 <th:block th:fragment="header">
@@ -9,18 +10,20 @@
                 <a class="navbar-brand" th:href="@{/}">
                     <img class="img-fluid" width="130" th:src="@{/images/classboard.png}" alt="메모모">
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation"> <span
                         class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     </ul>
-                    <th:block th:if="${session.sid == null}">
+                    <th:block sec:authorize="!isAuthenticated()">
                         <a th:href="@{/member/login}" class="btn btn-outline-main">로그인</a>
                         <a th:href="@{/member/join}" class="btn btn-main ms-2 ms-lg-3">회원가입</a>
                     </th:block>
-                    <th:block th:if="${session.sid != null}">
+                    <th:block sec:authorize="isAuthenticated()">
                         <a th:href="@{/board/list}" class="btn btn-main">게시판</a>
                         <a th:href="@{/member/mypage}" class="btn btn-outline-main ms-2 ms-lg-3">마이페이지</a>
                         <a th:href="@{/member/logout}" class="btn btn-main ms-2 ms-lg-3">로그아웃</a>
