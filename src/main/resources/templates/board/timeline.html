@@ -65,6 +65,9 @@
 
         textarea {resize: none; overflow: auto; height: 100px;}
 
+        .original li {
+            float: left;
+        }
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
     </style>
@@ -104,7 +107,7 @@
                                 <div class="timeline__content"
                                      th:style="${ p.bgImage eq null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #eeeeee' } ">
                                     <div class="original" th:id="'original' + ${p.pno}">
-                                        <div th:id="postMenuList+${p.pno}" class="pe-2"
+                                        <div th:id="postMenuList+${p.pno}" class="pe-3"
                                              style="position: absolute; right: 0; height: auto; z-index: 10; top: 10px;">
                                             <ul class="p-0" style="list-style-type: none">
                                                 <!-- 수정버튼 -->

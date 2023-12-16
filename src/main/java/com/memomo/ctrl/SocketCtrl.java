@@ -63,6 +63,12 @@ public class SocketCtrl {
         for (PostDTO p : postList) {
             plist2.add(p.getPno());
         }
+        plist = plist2;
+
+        Board board = boardService.boardDetail(bno);
+
+        model.addAttribute("detail", board);
+        model.addAttribute("postList", postList);
         return "board/timeline";
     }
 
