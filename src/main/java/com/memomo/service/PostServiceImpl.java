@@ -252,7 +252,7 @@ public class PostServiceImpl implements PostService{
 
         Board head = boardRepo.findById(bno).orElseThrow();
         Long headP = head.getPostHead();
-        while(headP!= 0){
+        while(headP!= postDTOS.size()){
             Long finalHeadP = headP;
             PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
             sortedDTO.add(post);

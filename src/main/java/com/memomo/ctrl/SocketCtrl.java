@@ -4,6 +4,7 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
+import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -75,13 +76,6 @@ public class SocketCtrl {
         return "board/timeline";
     }
 
-        plist = plist2;
-
-        Board board = boardService.boardDetail(bno);
-        model.addAttribute("detail", board);
-        model.addAttribute("postList", postList);
-        return "board/timeline";
-    }
 
 
     @MessageMapping("/remove/{bno}")
