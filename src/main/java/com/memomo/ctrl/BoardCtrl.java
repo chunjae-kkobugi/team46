@@ -5,6 +5,7 @@ import com.memomo.dto.PageDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
 import com.memomo.service.BoardService;
+import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +30,8 @@ public class BoardCtrl {
     private BoardService boardService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private MemberService memberService;
 
     @RequestMapping("list")
     public String boardList(Model model, HttpServletRequest request){
@@ -78,7 +81,7 @@ public class BoardCtrl {
 
     @PostMapping("register")
     public String boardRegister(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
-        HttpSession session = request.getSession();
+        //HttpSession session = request.getSession();
         log.info("board register start=====================");
 
         if (bindingResult.hasErrors()){
@@ -88,8 +91,9 @@ public class BoardCtrl {
         }
 
         log.info(boardDTO);
-        String sid = (String) session.getAttribute("sid");
-        boardDTO.setTeacher(sid);
+        //String sid = memberService.getLoginId();
+        String id = memberService.getLoginId();
+        boardDTO.setTeacher(id);
 //        boardDTO.setBgImage(boardDTO.getFile().getFno());
         int bno = boardService.boardAdd(boardDTO, boardFile, request);
         redirectAttributes.addFlashAttribute("result", bno);

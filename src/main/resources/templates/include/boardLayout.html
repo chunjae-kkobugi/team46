@@ -4,9 +4,9 @@
 <body>
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class=" ui-sortable">
-        <li class="mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}" style="width: 305px;">
-            <div th:replace="~{include/postLayout :: post-layout(p=${p})}" class="mb-0"></div>
-        </li>
+<!--        <li class="mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}" style="width: 305px;">-->
+<!--            <div th:replace="~{include/postLayout :: post-layout(p=${p})}" class="mb-0"></div>-->
+<!--        </li>-->
 
 
         <!-- 포스트잇 등록 -->
@@ -36,6 +36,14 @@
             </div>
         </li>
     </ul>
+
+    <script th:inline="javascript">
+        let postList = /*[[${postList}]]*/ 'default';
+        postList.forEach(function(p){
+            let newPost = postLayout(p);
+            $("#sortable").append(newPost);
+        })
+    </script>
 </th:block>
 </body>
 </html>

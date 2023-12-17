@@ -21,14 +21,16 @@ function connect() {
         stompClient.subscribe(
             '/stomp-receive/add/'+bno, // destination (String 필수)
             function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
-                receiveAdd(message.body);
+                let newPost = JSON.parse(message.body);
+                receiveAdd(newPost);
             },
             {}  // 헤더 (Object 선택)
         );
         stompClient.subscribe(
             '/stomp-receive/edit/'+bno, // destination (String 필수)
             function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
-                receiveEdit(message.body);
+                let newPost = JSON.parse(message.body);
+                receiveEdit(newPost);
             },
             {}  // 헤더 (Object 선택)
         );
@@ -73,15 +75,17 @@ function postEdit(pno){
 }
 
 function postRemove(pno){
-    let sendUrl = "/stomp-send/remove/"+bno;
-    stompClient.send(
-        sendUrl, // destination (String 필수)
-        {}, // 헤더 (Object 선택)
-        JSON.stringify({ // body (String 선택)
-            'pno' : pno
-        })
-    );
-
+    if(confirm("정말로 삭제하시겠습니까?")){
+        let sendUrl = "/stomp-send/remove/"+bno;
+        stompClient.send(
+            sendUrl, // destination (String 필수)
+            {}, // 헤더 (Object 선택)
+            JSON.stringify({ // body (String 선택)
+                'pno' : pno
+            })
+        );
+    }
+    return false;
 }
 
 function layoutSort(pno, priority){
@@ -110,6 +114,7 @@ function receiveSort(newOrder){
     }
 
 }
+
 function receiveAdd(newPost){
     let p = JSON.parse(newPost);
     // 문자열로 정의된 HTML 코드를 HTML 엘리먼트로 변환
@@ -180,12 +185,12 @@ function receiveAdd(newPost){
 }
 
 function receiveEdit(newPost){
-    let p = JSON.parse(newPost);
-    alert(p.content+" 이 부분은 구현 예정입니다. 소켓연결은 되고 있습니다.");
+    let postT = postLayout(newPost);
+    $(`li[data-pno=${newPost.pno}]`).replaceWith(postT);
 }
 
 function receiveRemove(pno){
-    alert(pno+"번 포스트 삭제. 구현 예정. 소켓 연결 성공")
+    $(`li[data-pno=${pno}]`).remove();
 }
 
 //창 키면 바로 연결
@@ -196,7 +201,6 @@ window.onload = function (){
 }
 window.BeforeUnloadEvent = function (){
     disconnect();
-
 }
 
 

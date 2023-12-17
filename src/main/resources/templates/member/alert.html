@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>알림창</title>
+</head>
+<body>
+<script th:inline="javascript">
+  var msg = [[${msg}]]
+  var url = [[${url}]]
+
+  let realpath = /*[[@{'/'}]]*/ 'default';
+  console.log("realPath 아래");
+  console.log(realpath);
+
+  alert(msg);
+  //window.close();
+  location.href = realpath+url;
+</script>
+</body>
+</html>

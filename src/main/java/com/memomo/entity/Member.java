@@ -1,10 +1,11 @@
 package com.memomo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.memomo.dto.MemberFormDTO;
+import com.memomo.dto.Role;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -32,4 +33,23 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String status;      // 회원 상태
     // 'REMOVE' 탈퇴
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public static Member createMember(MemberFormDTO memberFormDto, PasswordEncoder passwordEncoder) {
+        Member member = new Member();
+        member.setId(memberFormDto.getId());
+        String password = passwordEncoder.encode(memberFormDto.getPw());
+        member.setPw(password);
+        member.setName(memberFormDto.getName());
+        member.setEmail(memberFormDto.getEmail());
+        member.setTel(memberFormDto.getTel());
+        member.setAddr1(memberFormDto.getAddr1());
+        member.setAddr2(memberFormDto.getAddr2());
+        member.setPostcode(memberFormDto.getPostcode());
+        member.setSchool(memberFormDto.getSchool());
+        member.setStatus("ACTIVE");
+        member.setRole(Role.TEACHER);
+        return member;
+    }
 }

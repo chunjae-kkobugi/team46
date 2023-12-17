@@ -13,6 +13,8 @@
     <script th:src="@{/js/stomp.min.js}"></script>
     <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
 
+
+
     <style>
         /* 겉부분의 디자인 변경 */
         input[type=color] {
@@ -61,11 +63,16 @@
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
     </style>
+
+    <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
 </head>
+
 
 <body class="d-flex flex-column min-vh-100">
 
+
 <th:block th:replace="~{include/header :: header}" class="mb-0"></th:block>
+
 
 <section class="section pb-5" th:style="'background-color : '+ ${detail.bgColor}">
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
@@ -92,14 +99,16 @@
         </div>
     </div>
 
-
-
     <div class="post" style="min-height: 700px;">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
             </th:block>
+            <th:block th:if="${detail.layout eq 'GRID'}">
+                <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
+            </th:block>
         </div>
+        
         <!-- 게시판 정보 수정 모달창-->
         <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -143,6 +152,7 @@
     const bno = /*[[${detail.bno}]]*/ 1;
     let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
 
+    // 게시판 메뉴
     // 게시판 메뉴
     $(document).ready(function(){
         var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수
@@ -230,6 +240,6 @@
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
-<script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 <script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
+<script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 </html>
