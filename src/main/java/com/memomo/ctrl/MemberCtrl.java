@@ -1,8 +1,10 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.MemberFormDTO;
+import com.memomo.dto.MemberUpdateDto;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
+import com.memomo.service.CustomUserDetailsService;
 import com.memomo.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberCtrl {
 
     private final MemberService memberService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -51,12 +54,14 @@ public class MemberCtrl {
     @GetMapping("/join")
     public String join(Model model) {
         MemberFormDTO member = new MemberFormDTO();
+        //System.out.println("MemberFormDTO : " + member);
         model.addAttribute("member", member);
         return "member/join";
     }
 
     @PostMapping("/joinPro")
-    public String joinPro(@Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
+    public String joinPro(@ModelAttribute("member") @Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
+        System.out.println("bindingResult : " + bindingResult);
         if (bindingResult.hasErrors()) {
             return "member/join";
         }
@@ -65,6 +70,7 @@ public class MemberCtrl {
             memberService.saveMember(member);
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            System.out.println("e.getMessage() : " + e.getMessage());
             return "member/join";
         }
         return "redirect:/";
@@ -79,15 +85,22 @@ public class MemberCtrl {
 
     @GetMapping("/mypage")
     public String myPage(Model model) {
-        //String id = principal.getName();
         String id = memberService.getLoginId();
         //System.out.println("회원 정보 : " + memberService.memberDetail(id));
-        //Optional<Member> optionalMember = memberRepository.findById(id);
         Member member = memberService.memberDetail(id);
         model.addAttribute("member", member);
-        //System.out.println("멤버 : " + member);
-
         return "member/mypage";
+    }
+
+    @PostMapping("/mypage")
+    public String updateMember(@Valid MemberUpdateDto memberUpdateDto, Model model) {
+        //String id = memberService.getLoginId();
+        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
+        //Member member = memberService.memberDetail(id);
+        //model.addAttribute("member", member);
+        model.addAttribute("member", memberUpdateDto);
+        customUserDetailsService.updateMember(memberUpdateDto);
+        return "redirect:/member/mypage";
     }
 
     @GetMapping("/remove")

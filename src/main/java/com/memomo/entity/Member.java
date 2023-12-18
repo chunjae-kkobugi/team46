@@ -52,4 +52,36 @@ public class Member extends BaseEntity {
         member.setRole(Role.TEACHER);
         return member;
     }
+
+    public void updatePw(String pw) {
+        this.pw = pw;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updateTel(String tel) {
+        this.tel = tel;
+    }
+
+    public void updateAddr1(String addr1) {
+        this.addr1 = addr1;
+    }
+
+    public void updateAddr2(String addr2) {
+        this.addr2 = addr2;
+    }
+
+    public void updatePostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public void updateSchool(String school) {
+        this.school = school;
+    }
 }
