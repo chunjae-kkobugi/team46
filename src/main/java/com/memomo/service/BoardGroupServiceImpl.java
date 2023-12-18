@@ -17,7 +17,7 @@ public class BoardGroupServiceImpl implements BoardGroupService{
 
     @Override
     public List<BoardGroup> groupList(Integer bno) {
-        List<BoardGroup> boardGroupList = groupRepository.findBoardGroupByBno();
+        List<BoardGroup> boardGroupList = groupRepository.findBoardGroupByBno(bno);
         return boardGroupList;
     }
 
