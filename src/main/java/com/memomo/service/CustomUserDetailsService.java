@@ -1,5 +1,6 @@
 package com.memomo.service;
 
+import com.memomo.dto.MemberUpdateDto;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
+
+    public String updateMember(MemberUpdateDto memberUpdateDto) {
+        Optional<Member> optionalMember = memberRepository.findById(memberUpdateDto.getId());
+        Member member = optionalMember.orElseThrow();
+        member.updateName(memberUpdateDto.getName());
+        member.updatePw(memberUpdateDto.getPw());
+        member.updateTel(memberUpdateDto.getTel());
+        member.updateEmail(memberUpdateDto.getEmail());
+        member.updateSchool(memberUpdateDto.getSchool());
+        member.updateAddr1(memberUpdateDto.getAddr1());
+        member.updateAddr2(memberUpdateDto.getAddr2());
+        member.updatePostcode(memberUpdateDto.getPostcode());
+
+        // 회원 비밀번호 수정을 위한 패스워드 암호화
+        //BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        //String encodePw = encoder.encode(memberUpdateDto.getPw());
+        //member.updatePw(encodePw);
+
+        memberRepository.save(member);
+
+        return member.getId();
+    }
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {

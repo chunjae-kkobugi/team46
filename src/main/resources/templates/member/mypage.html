@@ -18,9 +18,8 @@
                                 <h3 class="tit">마이페이지</h3>
                             </div>
                             <h4 class="tit blt-gray">내 정보</h4>
-                            <!--<form th:action="@{/member/edit}" th:object="${member}" method="post">-->
+                            <form method="post" role="form" th:object="${memberUpdateDto}">
                             <div class="tbl-write th-gray">
-                                <!--<form th:action="@{/member/edit}" method="post">-->
                                 <table class="table table-bordered align-middle">
                                     <colgroup>
                                         <col style="width:20%;">
@@ -35,8 +34,7 @@
                                     </tr>
                                     <tr>
                                         <th class="text-center">아이디</th>
-                                        <td><input type="text" name="id" id="id" class="form-control"
-                                                   th:value="${member.id}"></td>
+                                        <td><input type="text" name="id" id="id" class="form-control" th:value="${member.id}" readonly></td>
                                     </tr>
                                     <tr>
                                         <th class="text-center pwd">비밀번호</th>
@@ -66,9 +64,9 @@
                                     <tr>
                                         <th class="text-center">주소</th>
                                         <td>
-                                            <input type="text" name="addr1" id="address1" th:value="${member.addr1}"
+                                            <input type="text" name="addr1" id="addr1" th:value="${member.addr1}"
                                                    class="form-control mb-1">
-                                            <input type="text" name="addr2" id="address2" th:value="${member.addr2}"
+                                            <input type="text" name="addr2" id="addr2" th:value="${member.addr2}"
                                                    class="form-control mb-1">
                                             <input type="text" name="postcode" id="postcode"
                                                    th:value="${member.postcode}" class="form-control">
@@ -86,6 +84,7 @@
                                 <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
                                 <a th:href="@{/member/mypage}" class="btn btn-outline-main mx-1">취소</a>
                             </div>
+                            </form>
 
                             <div class="border-bottom mb-4"></div>
 
@@ -101,6 +100,140 @@
                                     </tr>
                                     </tbody>
                                 </table>
+                                <script>
+                                    let realpath = "\/";
+                                    var confirm = "";
+
+                                    $(document).ready(function () {
+                                        $('#cert-num').on('keypress', function (e) {
+                                            var key = e.which; // 입력된 키 코드 가져오기
+                                            // 숫자(0-9) 허용 (숫자 키, 백스페이스, 화살표 키)
+                                            if (!(key >= 48 && key <= 57) && key !== 8 && key !== 37 && key !== 39 && key !== 46) {
+                                                e.preventDefault(); // 입력 방지
+                                            }
+                                        });
+                                    });
+
+                                    function idCheck() {
+                                        if ($("#id").val() == "") {
+                                            alert("아이디를 입력하지 않았습니다.");
+                                            $("#id").focus();
+                                            return false;
+                                        }
+
+                                        var params = {"id": $("#id").val()};
+                                        $.ajax({
+                                            url: realpath + "member/idCheckPro",	//아이디가 전송되어질 곳
+                                            type: "post",
+                                            data: JSON.stringify(params),
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            success: function (result) {
+                                                var idPass = result;
+                                                if (idPass == false) {
+                                                    $("#idCk").val("no");
+                                                    $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
+                                                    $("#id").focus();
+                                                } else if (idPass == true) {
+                                                    $("#idCk").val("yes");
+                                                    if ($("#msg").hasClass("no_check")) {
+                                                        $("#msg").removeClass("no_check");
+                                                    }
+                                                    $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
+                                                } else {
+                                                    $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    function joinCheck(f) {
+                                        if (f.pw.value != f.pw2.value) {
+                                            alert("비밀번호와 비밀번호 확인이 서로 다릅니다.");
+                                            f.pw.focus();
+                                            return false;
+                                        }
+                                        if (f.idCk.value != "yes") {
+                                            alert("아이디 중복 체크를 하지 않으셨습니다.");
+                                            return false;
+                                        }
+                                        if (f.emailCk.value != "yes") {
+                                            alert("이메일 인증을 하지 않으셨습니다.");
+                                            return false;
+                                        }
+                                    }
+
+                                    function sendNumber() {
+                                        if ($("#email").val() === "") {
+                                            alert("이메일을 입력하지 않았습니다.");
+                                            $("#email").focus();
+                                            return;
+                                        }
+
+                                        $("#mail_number").css("display", "block");
+                                        $.ajax({
+                                            url: "/send-mail",
+                                            type: "post",
+                                            dataType: "json",
+                                            data: {"mail": $("#email").val()},
+                                            success: function (data) {
+                                                alert("인증번호가 발송되었습니다.");
+                                                $("#confirm").attr("value", data);
+                                            }, error: function (request, status, error) {
+                                                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                                            }
+                                        });
+                                    }
+
+                                    function confirmNumber() {
+                                        var inputNum = $("#cert-num").val();
+                                        if (inputNum === "") {
+                                            alert("인증번호를 입력해주세요");
+                                            $("#cert-num").focus();
+                                            return;
+                                        }
+                                        $.ajax({
+                                            url: "/confirm",
+                                            type: "post",
+                                            dataType: "json",
+                                            data: {"inputNum": inputNum},
+                                            success: function (data) {
+                                                if (data) {
+                                                    $("#emailCk").val("yes");
+                                                    alert("인증되었습니다.");
+                                                } else {
+                                                    alert("번호가 다릅니다.");
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                </script>
+
+                                <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                                <script>
+                                    function findAddr() {
+                                        new daum.Postcode({
+                                            oncomplete: function (data) {
+                                                console.log(data);
+                                                var roadAddr = data.roadAddress;
+                                                var jibunAddr = data.jibunAddress;
+                                                var bname = data.bname;
+                                                document.getElementById("postcode").value = data.zonecode;
+                                                if (roadAddr !== '') {
+                                                    document.getElementById("addr1").value = roadAddr;
+                                                } else if (jibunAddr !== '') {
+                                                    document.getElementById("addr1").value = jibunAddr;
+                                                }
+                                                var addr2Input = document.getElementById('addr2');
+                                                if (addr2Input && addr2Input.value.trim() !== '') {
+                                                    addr2Input.value = '';
+                                                }
+                                                document.getElementById("addr2").focus();
+                                            }
+                                        }).open();
+                                    }
+                                </script>
                             </div>
                             <!-- <div class="border-bottom mt-4"></div> -->
                         </div>
@@ -120,6 +253,8 @@
             location.href = realpath + "member/remove?id=" + [[${member.id}]];
         }
     }
+
+
 </script>
 </body>
 </html>

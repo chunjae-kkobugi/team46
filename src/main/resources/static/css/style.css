@@ -362,7 +362,7 @@ hr.dashed-dark {
 .my_area .no_check {color:red;}
 .my_area .info {font-size:14px;}
 .my_area #msg {font-size:14px;}
-.my_area #id { width:calc(100% - 124px); float: left; }
+/*.my_area #id { width:calc(100% - 124px); float: left; }*/
 .my_area .check_btn {line-height:36px;padding-top:0;padding-bottom:0;vertical-align:top;}
 .my_area #address1, .my_area #address2 {margin-bottom:5px;}
 .my_area #postcode {width:calc(100% - 138px); float: left; }
