@@ -111,10 +111,9 @@
 
 
         <div class="row">
-            <div class="col-4 mb-2">
-            <span>
-
-            </span>
+            <div class="col-4 mb-2" th:each="g : ${groupList}">
+            <span th:text="${g.title}"></span>
+                <div th:></div>
             </div>
         </div>
         

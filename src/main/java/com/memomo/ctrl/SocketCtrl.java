@@ -2,7 +2,9 @@ package com.memomo.ctrl;
 
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
+import com.memomo.entity.BoardGroup;
 import com.memomo.entity.Layout;
+import com.memomo.service.BoardGroupService;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
@@ -36,6 +38,8 @@ public class SocketCtrl {
     private ModelMapper mappper;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private BoardGroupService boardGroupService;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -58,12 +62,13 @@ public class SocketCtrl {
         return "board/boardDetail";
     }
 
-    // 타임라인 테스트용
+    // 그룹 테스트용
     @RequestMapping("/post/detail2")
     public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
+        List<BoardGroup> groupList = boardGroupService.groupList(bno);
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
@@ -73,7 +78,8 @@ public class SocketCtrl {
         Board board = boardService.boardDetail(bno);
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
-        return "board/timeline";
+        model.addAttribute("groupList", groupList);
+        return "board/groupBoard";
     }
 
 
