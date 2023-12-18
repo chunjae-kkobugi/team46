@@ -271,6 +271,10 @@
                                             } else if (jibunAddr !== '') {
                                                 document.getElementById("addr1").value = jibunAddr;
                                             }
+                                            var addr2Input = document.getElementById('addr2');
+                                            if (addr2Input && addr2Input.value.trim() !== '') {
+                                                addr2Input.value = '';
+                                            }
                                             document.getElementById("addr2").focus();
                                         }
                                     }).open();
