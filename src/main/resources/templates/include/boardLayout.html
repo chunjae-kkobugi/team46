@@ -46,12 +46,44 @@
     </script>
 </th:block>
 
-<!--&lt;!&ndash; 그룹 레이아웃 &ndash;&gt;-->
-<!--<th:block th:fragment="group-layout">-->
+<!-- 타임라인 레이아웃 -->
+<th:block th:fragment="timeline-layout">
+    <div class="timeline">
+        <div class="timeline__wrap">
+            <div class="timeline__items">
 
-<!--    <script th:inline="javascript">-->
+                <div class="timeline__item register" id="postRegister">
+                    <div class="timeline__content">
+                        <div class="xBtn">
+                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
+                        </div>
+                        <form id="postAddForm" method="post" enctype="multipart/form-data">
+                            <div class="justify-content-center row">
+                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" maxlength="900"></textarea>
+                                <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
+                                <div class="justify-content-between row">
+                                    <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
+                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                </div>
+                                <div class="btn-group d-flex">
+                                    <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!--    </script>-->
-<!--</th:block>-->
+
+    <script th:inline="javascript">
+        let postList = /*[[${postList}]]*/ 'default';
+        postList.forEach(function(p){
+            let newPost = timelineLayout(p);
+            $(".timeline__items").append(newPost);
+        })
+    </script>
+</th:block>
 </body>
 </html>

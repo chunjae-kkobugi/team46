@@ -37,15 +37,15 @@ public class SocketCtrl {
     @Autowired
     private MemberService memberService;
 
-    private static LinkedList<Long> plist = new LinkedList<>();
+    private static LinkedList<Long>  plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
-    public String postEnter(HttpServletRequest request, Model model) {
+    public String postEnter(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
-        for (PostDTO p : postList) {
+        for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
 
@@ -60,40 +60,21 @@ public class SocketCtrl {
 
     // 타임라인 테스트용
     @RequestMapping("/post/detail2")
-    public String postEnter2(HttpServletRequest request, Model model) {
+    public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
-        for (PostDTO p : postList) {
+        for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
+
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/timeline";
     }
-
-    // 타임라인 테스트용
-    @RequestMapping("/post/detail3")
-    public String postEnter3(HttpServletRequest request, Model model) {
-        Integer bno = Integer.valueOf(request.getParameter("bno"));
-        List<PostDTO> postList = postService.postList(bno);
-        LinkedList<Long> plist2 = new LinkedList<>();
-        for (PostDTO p : postList) {
-            plist2.add(p.getPno());
-        }
-        plist = plist2;
-
-        Board board = boardService.boardDetail(bno);
-
-        model.addAttribute("detail", board);
-        model.addAttribute("postList", postList);
-        return "board/groupBoard";
-    }
-
 
 
     @MessageMapping("/remove/{bno}")
@@ -130,7 +111,7 @@ public class SocketCtrl {
         int changedIdx = layout.getGPriority(); // 나의 새로운 정렬 순서
         plist.remove(originIdx);
         plist.add(changedIdx, layout.getPno());
-        
+
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0

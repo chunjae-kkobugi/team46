@@ -252,7 +252,7 @@ public class PostServiceImpl implements PostService{
 
         Board head = boardRepo.findById(bno).orElseThrow();
         Long headP = head.getPostHead();
-        while(headP!= postDTOS.size()){
+        while(headP!= 0){
             Long finalHeadP = headP;
             PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
             sortedDTO.add(post);
@@ -262,6 +262,7 @@ public class PostServiceImpl implements PostService{
         Collections.reverse(sortedDTO); // head 가 마지막에 오도록 뒤집기
         return sortedDTO;
     }
+
 
     @Transactional
     @Override

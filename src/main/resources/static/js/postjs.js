@@ -64,7 +64,7 @@ $('#postAddForm').on('submit', function (e) {
     formData.append('content', form.content.value);
     formData.append('bno', form.bno.value);
 
-        // AJAX 요청을 Promise로 감싸서 처리합니다.
+    // AJAX 요청을 Promise로 감싸서 처리합니다.
     $.ajax({
         type: "post",
         method: "post",
