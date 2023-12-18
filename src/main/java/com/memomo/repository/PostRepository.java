@@ -30,7 +30,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p, l FROM Post p LEFT JOIN Layout  l ON p.pno = l.pno WHERE p.bno = :bno")
     public List<Object[]> postDTOList(@Param("bno") Integer bno);
 
+    // 포스트 목록을 보다 간편하고 한 번에 가져올 수 있도록 수정
+    @Transactional
+    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(ls.pno), COUNT(c.pno)) " +
+            "FROM Post p LEFT JOIN Layout l ON p.pno = l.pno " +
+            "LEFT JOIN Likes ls ON p.pno = ls.pno " +
+            "LEFT JOIN PostFile pf ON p.pno = pf.pno " +
+            "LEFT JOIN Comment c ON c.pno = p.pno WHERE p.bno = :bno GROUP BY p.pno")
+    public List<PostDTO> postListAll(@Param("bno") Integer bno);
+
     @Query("SELECT p from Post p WHERE p.bno = :bno AND p.pstatus='HEAD'")
     public Post postHeadGet(@Param("bno") Integer bno);
 
+    // OMG... JPA는 WHERE, HAVING, SELECT 절에서만 서브 쿼리가 가능하다고 한다. 아래 구문을 불가
+    //    SELECT p.*, l.*, ls.likes FROM post p LEFT JOIN layout l ON p.pno = l.pno
+    //    LEFT JOIN (SELECT COUNT(*) as likes, pno FROM likes GROUP BY pno) ls ON p.pno = ls.pno WHERE p.bno = 1;
 }

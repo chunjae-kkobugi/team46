@@ -13,8 +13,6 @@
     <script th:src="@{/js/stomp.min.js}"></script>
     <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
 
-
-
     <style>
         /* 겉부분의 디자인 변경 */
         input[type=color] {
@@ -62,6 +60,18 @@
         textarea {resize: none; overflow: auto;}
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
+
+        /* 배경 이미지 흐리게 처리 */
+        .card-body::before {
+            content: "";
+            opacity: 0.4;
+            background-color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>

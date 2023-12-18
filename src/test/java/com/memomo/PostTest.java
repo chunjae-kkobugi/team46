@@ -3,14 +3,13 @@ package com.memomo;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
+import com.memomo.repository.PostRepository;
 import com.memomo.service.PostService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Random;
@@ -20,6 +19,8 @@ import java.util.Random;
 public class PostTest {
     @Autowired
     private PostService postService;
+    @Autowired
+    private PostRepository postRepo;
     @Autowired
     private ModelMapper mapper;
 
@@ -57,5 +58,4 @@ public class PostTest {
     public void postSelect(){
         List<PostDTO> postDTOs = postService.postList(1);
     }
-
 }
