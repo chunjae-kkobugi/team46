@@ -44,8 +44,12 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
             }
         }
 
-        if(pageDTO.getTeacher() != "") {
-            booleanBuilder.or(board.teacher.contains(pageDTO.getTeacher()));
+        if(pageDTO.getTeacher() != null ) {
+            booleanBuilder.and(board.teacher.contains(pageDTO.getTeacher()));
+        }
+
+        if(pageDTO.getStatus() != null ) {
+            booleanBuilder.and(board.status.contains(pageDTO.getStatus()));
         }
 
         query.where(booleanBuilder);

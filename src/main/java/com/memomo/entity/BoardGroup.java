@@ -19,4 +19,9 @@ public class BoardGroup {
     private String title;       // 그룹 이름
     @Column(length = 10)
     private String gColor;      // 그룹 색깔
+
+    public void change(String title, String gColor){
+        this.title = title;
+        this.gColor = gColor;
+    }
 }

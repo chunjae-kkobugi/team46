@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public interface BoardService {
     public Integer boardAdd(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) throws IOException;
-    public Integer boardEdit(BoardDTO boardDTO);
+    public void boardEdit(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request);
     public Integer boardRemove(Integer bno);
 
     public void boardDelete(Integer bno);
