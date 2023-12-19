@@ -41,6 +41,13 @@ function connect() {
             },
             {}  // 헤더 (Object 선택)
         );
+        stompClient.subscribe(
+            '/stomp-receive/likes/'+bno, // destination (String 필수)
+            function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
+                receiveLikes(JSON.parse(message.body));
+            },
+            {}  // 헤더 (Object 선택)
+        );
     });
 
 }
@@ -96,39 +103,75 @@ function layoutSort(pno, priority){
         JSON.stringify({ // body (String 선택)
             'pno': pno,
             'gPriority': priority,
-            'action': "SORT",
         })
     );
-
 }
+
+function toggleLike(pno, sid){
+    let sendUrl = "/stomp-send/likes/"+bno;
+    stompClient.send(
+        sendUrl, // destination (String 필수)
+        {}, // 헤더 (Object 선택)
+        JSON.stringify({ // body (String 선택)
+            'pno': pno,
+            'author': sid,
+        })
+    );
+}
+
+function receiveLikes(post){
+    let myLike = $(`.myLike[data-pno=${post.pno}]`).next();
+    myLike.text(post.likes);
+}
+
 // 다른 사람이 순서 바꿨을 때 나한테도 적용
 function receiveSort(newOrder){
-    let fragment = document.createDocumentFragment();
-    newOrder.forEach(function(order){
-        let pnoLi = document.querySelector(`#sortable > li[pno='${order}']`);
-        fragment.appendChild(pnoLi);
-
-    });
-    if(layoutNow === 'GRID'){
+    if(layoutNow==='GRID'){
+        let fragment = document.createDocumentFragment();
+        newOrder.forEach(function(order){
+            let pnoLi = document.querySelector(`#sortable > li[data-pno=${order}]`);
+            fragment.appendChild(pnoLi);
+        });
         document.getElementById('sortable').appendChild(fragment);
     }
-
+    else if(layoutNow === 'TIMELINE'){
+        let fragment = document.createDocumentFragment();
+        newOrder.forEach(function(order){
+            let pnoLi = $(`.timeline__items > .timeline__item[data-pno=${order}]`)[0];
+            console.log(pnoLi);
+            fragment.appendChild(pnoLi);
+        });
+        document.getElementsByClassName('timeline__items').appendChild(fragment);
+        alert("TIMELINE");
+    }
 }
 function receiveAdd(p){
-    let postT = postLayout(p);
     if(layoutNow === 'GRID'){
+        let postT = postLayout(p);
         $("#sortable").append(postT);
+    } else if(layoutNow==='TIMELINE'){
+        let newPost = timelineLayout(p);
+        $(".timeline__items").append(newPost);
     }
 
 }
 
 function receiveEdit(newPost){
-    let postT = postLayout(newPost);
-    $(`li[data-pno=${newPost.pno}]`).replaceWith(postT);
+    if(layoutNow==='GRID'){
+        let postT = postLayout(newPost);
+        $(`li[data-pno=${newPost.pno}]`).replaceWith(postT);
+    } else if(layoutNow==='TIMELINE'){
+        let postT = timelineLayout(newPost);
+        $(`.timeline__item[data-pno=${newPost.pno}]`).replaceWith(postT);
+    }
 }
 
 function receiveRemove(pno){
-    $(`li[data-pno=${pno}]`).remove();
+    if(layoutNow==='GRID'){
+        $(`li[data-pno=${pno}]`).remove();
+    } else if(layoutNow==='TIMELINE'){
+        $(`.timeline__item[data-pno=${pno}]`).remove();
+    }
 }
 
 //창 키면 바로 연결

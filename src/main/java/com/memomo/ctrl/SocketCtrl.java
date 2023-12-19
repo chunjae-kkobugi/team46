@@ -11,6 +11,9 @@ import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.Cookie;
+import com.memomo.entity.Likes;
+import com.memomo.service.*;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -41,11 +44,13 @@ public class SocketCtrl {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private ModelMapper mappper;
+    private LikesService likesService;
     @Autowired
     private MemberService memberService;
     @Autowired
     private BoardGroupService boardGroupService;
+    @Autowired
+    private ModelMapper mappper;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -60,7 +65,7 @@ public class SocketCtrl {
             return "redirect:/member/enter/" + bno;
         }
 
-        List<PostDTO> postList = postService.postList(bno);
+        List<PostDTO> postList = postService.postListAll(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
         for(PostDTO p:postList){
@@ -71,8 +76,13 @@ public class SocketCtrl {
 
         Board board = boardService.boardDetail(bno);
 
+        String sid = memberService.getLoginId();
+        List<Likes> myLikes = likesService.myLikes(bno, sid);
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
+        model.addAttribute("myLikes", myLikes);
+        model.addAttribute("sid", sid);
         return "board/boardDetail";
     }
 
@@ -169,11 +179,11 @@ public class SocketCtrl {
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+//        String uploadDir = "C:\\Users\\User\\Desktop\\uploadImg\\";
 
 //        서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/postImage");
+            ServletContext application = request.getSession().getServletContext();
+            String uploadDir = application.getRealPath("/images/postImage");
 
         Long pno;
         if(!postFile.isPresent() || postFile.isEmpty()){
@@ -197,7 +207,6 @@ public class SocketCtrl {
     @PostMapping("/post/edit")
     @ResponseBody
     public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         log.info("post EDIT start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -221,4 +230,13 @@ public class SocketCtrl {
 
         return pno;
     }
+
+    @MessageMapping("/likes/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/likes/{bno}")
+    public PostDTO postLikes(@DestinationVariable Integer bno, PostDTO dto){
+        int cnt = likesService.toggleLikes(bno, dto.getPno(), dto.getAuthor()); // 바뀐 좋아요 수
+        dto.setLikes((long) cnt);
+        return dto;
+    };
 }

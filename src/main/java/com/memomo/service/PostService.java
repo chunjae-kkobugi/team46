@@ -1,13 +1,10 @@
 package com.memomo.service;
 
-import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Layout;
-import com.memomo.entity.Post;
 import com.memomo.entity.PostFile;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.LinkedList;
+
 import java.util.List;
 
 public interface PostService {
@@ -18,8 +15,9 @@ public interface PostService {
 
     public void postDelete(Long pno);
     public List<PostDTO> postList(Integer bno);
-
     public void postSort(Long oldBefore, Long oldNext, Long newBefore, Long newNext, Long changed, Integer bno);
+
     public PostDTO postGet(Long pno);
     public Long postAddFile(PostFile image);
+    public List<PostDTO> postListAll(Integer bno);
 }

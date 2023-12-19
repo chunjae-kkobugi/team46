@@ -15,6 +15,18 @@ $("#sortable").sortable({
 
 $("#sortable").disableSelection();
 
+$(".timeline__items").sortable({
+    stop: function (event, ui){
+        let changed = ui.item[0];
+        let pno = changed.getAttribute("data-pno");
+        let priority = $(".timeline__items > .timeline__item").index(changed);
+        console.log(priority);
+        layoutSort(pno, priority);
+    }
+});
+
+$(".timeline__items").disableSelection();
+
 
 $('.postEditForm').on('submit', function (e) {
     e.preventDefault();
@@ -84,3 +96,14 @@ $('#postAddForm').on('submit', function (e) {
         }
     });
 });
+
+$(".myLike").click(function(){
+    let pno = $(this)[0].getAttribute('data-pno');
+    toggleLike(pno, sid);
+    let myLike = $(`.myLike[data-pno=${pno}]`)
+    if(myLike.hasClass('fa-regular')){
+        myLike.removeClass('fa-regular').addClass('fa-solid');
+    } else{
+        myLike.addClass('fa-regular').removeClass('fa-solid');
+    }
+})
