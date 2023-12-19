@@ -15,27 +15,27 @@ function postLayout(p){
 
                             <!-- 수정버튼 -->
                             <li class="me-2" id="postModifyBtn${p.pno}"
-                                style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee'}">
-                                <span style="${(p.bgColor=='#ffffff' || p.bgColor == null) ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                                style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}">
+                                <span style="${(p.bgColor=='#ffffff' || p.bgColor == null) ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                     <i class="fa-pen-to-square fa-solid"></i>
                                 </span>
                             </li>
 
                             <!-- 삭제 버튼 -->
                             <li class="postRemoveBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))"
-                                style="${ p.bgImage==null ? 'cursor: pointer; background-color: ' + p.bgColor : '#eeeeee' }">
-                                <span style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                                style="${ p.bgImage==null ? 'cursor: pointer; background-color: ' + p.bgColor : '#ffffff' }">
+                                <span style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                     <i class="fa-solid fa-trash-can"></i></span>
                             </li>
                         </ul>
                     </div>
                     <div class="text-body" style="height: 185px;">
-                        <p class="card-text pt-3" style="mix-blend-mode: difference; color: #eeeeee; font-size: 20px;">${p.content}</p>
+                        <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff">${p.author}</p>
-                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span  style="mix-blend-mode: exclusion; color: #ffffff">${p.likes}</span></p>
-                        <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
+                        <p class="card-text text-end mb-0 color">${p.author}</p>
+                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes}</span></p>
+                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
                     </div>
                 </div>
 
@@ -69,30 +69,30 @@ function timelineLayout(p){
     let timelinePost = `
     <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}">
         <div class="timeline__content"
-             style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #eeeeee' } ">
+             style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #ffffff' } ">
             <div class="original" id="original${p.pno}">
                 <div id="postMenuList{p.pno}" class="pe-3"
                      style="position: absolute; right: 0; height: auto; z-index: 10; top: 10px;">
                     <ul class="p-0" style="list-style-type: none">
                         <!-- 수정버튼 -->
                         <li class="me-2" id="postModifyBtn${p.pno}"
-                            style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee' }">
-                            <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                            style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                            <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                 <i class="fa-pen-to-square fa-solid"></i>
                             </span>
                         </li>
                         <!-- 삭제 버튼 -->
                         <li id="postRemoveBtn${p.pno}"
-                            style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #eeeeee' }">
-                            <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">
+                            style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                            <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                 <i class="fa-solid fa-trash-can"></i>
                             </span>
                         </li>
                     </ul>
                 </div>
                 <!-- 내용 -->
-                <p class="pe-3" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #eeeeee'}">${p.content}</p>
-                <p class="text-end m-0" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #eeeeee'}">${p.author}</p>
+                <p class="pe-3" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #ffffff'}">${p.content}</p>
+                <p class="text-end m-0" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">${p.author}</p>
             </div>
             <!-- 수정 창 -->
             <div class="modify register" id="modify${p.pno}">
