@@ -42,4 +42,17 @@ public class Board extends BaseEntity {
 
     @Column(columnDefinition = "BIGINT DEFAULT 0")
     private Long postHead = 0L; //우선순위 첫 번째 (연결 리스트의 헤드)
+
+    public void change(String title, String bpw, Integer maxStudent, String bgColor, Integer bgImage){
+        this.title = title;
+        this.bpw = bpw;
+        this.maxStudent = maxStudent;
+        this.bgColor = bgColor;
+        this.bgImage = bgImage;
+        this. status = status;
+    }
+
+    public void remove(String status){
+        this.status = status;
+    }
 }

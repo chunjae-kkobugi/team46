@@ -2,7 +2,9 @@ package com.memomo.ctrl;
 
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
+import com.memomo.entity.BoardGroup;
 import com.memomo.entity.Layout;
+import com.memomo.service.BoardGroupService;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
@@ -36,6 +38,8 @@ public class SocketCtrl {
     private ModelMapper mappper;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private BoardGroupService boardGroupService;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -52,18 +56,19 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-        
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         return "board/boardDetail";
     }
 
-    // 타임라인 테스트용
+    // 그룹 테스트용
     @RequestMapping("/post/detail2")
     public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
         List<PostDTO> postList = postService.postList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
+        List<BoardGroup> groupList = boardGroupService.groupList(bno);
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
@@ -73,7 +78,8 @@ public class SocketCtrl {
         Board board = boardService.boardDetail(bno);
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
-        return "board/timeline";
+        model.addAttribute("groupList", groupList);
+        return "board/groupBoard";
     }
 
 
@@ -111,7 +117,7 @@ public class SocketCtrl {
         int changedIdx = layout.getGPriority(); // 나의 새로운 정렬 순서
         plist.remove(originIdx);
         plist.add(changedIdx, layout.getPno());
-        
+
         // 나의 새로운 이전 노드가 가졌던 다음 노드의 값은 내가 가지고, 이전 노드에는 나를 집어넣어야 함
         Long newLeft = ((changedIdx)>0)? plist.get(changedIdx-1) : 0;
         // 나의 새로운 다음 노드. 내가 tail 이 되는 경우 0

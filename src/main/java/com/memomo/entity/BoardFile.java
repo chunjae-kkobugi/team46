@@ -24,4 +24,8 @@ public class BoardFile {
     @Column(length = 50, columnDefinition = "VARCHAR(50) DEFAULT 'ACTIVE'")
     private String status = "ACTIVE";       // 파일 상태
 
+    public void change(String status){
+        this.status = status;
+    }
+
 }
