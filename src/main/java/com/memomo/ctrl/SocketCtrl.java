@@ -6,6 +6,7 @@ import com.memomo.entity.Layout;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,7 @@ public class SocketCtrl {
     @RequestMapping("/post/detail")
     public String postEnter(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
-        List<PostDTO> postList = postService.postList(bno);
+        List<PostDTO> postList = postService.postListAll(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
         for(PostDTO p:postList){
@@ -134,7 +135,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/add")
     @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult) {
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -143,15 +144,14 @@ public class SocketCtrl {
         }
         log.info(dto);
         String sid = memberService.getLoginId();
-        log.info("---------- sid: "+sid);
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+//        String uploadDir = "C:\\Users\\User\\Desktop\\uploadImg\\";
 
 //        서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/postImage");
+            ServletContext application = request.getSession().getServletContext();
+            String uploadDir = application.getRealPath("/images/postImage");
 
         Long pno;
         if(!postFile.isPresent() || postFile.isEmpty()){
@@ -175,7 +175,6 @@ public class SocketCtrl {
     @PostMapping("/post/edit")
     @ResponseBody
     public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         log.info("post EDIT start------------------------------");
 
         if (bindingResult.hasErrors()) {

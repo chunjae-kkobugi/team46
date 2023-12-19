@@ -6,7 +6,7 @@ function postLayout(p){
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
-            <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : null}">
+            <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(https://i.namu.wiki/i/2EkspwFSbFB6pKoo31kejqzkw0NyuayfR5ALr7VtAaZyFtrDinBNRBmYZMTVBSbtC8OrGgkFr5rmEGH9qe5vdg.webp)'}">
                 <div class="original" id="original${p.pno}">
                     <div id="postMenuList${p.pno}" class="pe-2"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
@@ -45,7 +45,7 @@ function postLayout(p){
                             <input type="hidden" name="bno" id="${p.bno}" value="${p.bno}">
                             <div class="justify-content-between row">
                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" value="${p.bgColor}">
-                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
+                                <input type="file" class="col-8 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                             </div>
                             <div class="btn-group d-flex">
                                 <button type="button" class="btn btn-main" id="reset${p.pno}"> 취소 </button>
