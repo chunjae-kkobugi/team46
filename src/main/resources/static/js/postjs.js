@@ -15,6 +15,18 @@ $("#sortable").sortable({
 
 $("#sortable").disableSelection();
 
+$(".timeline__items").sortable({
+    stop: function (event, ui){
+        let changed = ui.item[0];
+        let pno = changed.getAttribute("data-pno");
+        let priority = $(".timeline__items > .timeline__item").index(changed);
+        console.log(priority);
+        layoutSort(pno, priority);
+    }
+});
+
+$(".timeline__items").disableSelection();
+
 
 $('.postEditForm').on('submit', function (e) {
     e.preventDefault();
