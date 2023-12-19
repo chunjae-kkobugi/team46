@@ -34,7 +34,7 @@ function postLayout(p){
                     </div>
                     <div class="d-flex justify-content-between">
                         <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff">${p.author}</p>
-                        <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff"><i class="fa-regular fa-heart"></i> ${p.likes}</p>
+                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span  style="mix-blend-mode: exclusion; color: #ffffff">${p.likes}</span></p>
                         <p class="card-text text-end mb-0" style="mix-blend-mode: exclusion; color: #ffffff"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
                     </div>
                 </div>

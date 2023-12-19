@@ -21,6 +21,8 @@ public class QLikes extends EntityPathBase<Likes> {
 
     public final StringPath author = createString("author");
 
+    public final NumberPath<Integer> bno = createNumber("bno", Integer.class);
+
     public final NumberPath<Long> lno = createNumber("lno", Long.class);
 
     public final NumberPath<Long> pno = createNumber("pno", Long.class);

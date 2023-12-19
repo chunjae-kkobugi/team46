@@ -96,3 +96,14 @@ $('#postAddForm').on('submit', function (e) {
         }
     });
 });
+
+$(".myLike").click(function(){
+    let pno = $(this)[0].getAttribute('data-pno');
+    toggleLike(pno, sid);
+    let myLike = $(`.myLike[data-pno=${pno}]`)
+    if(myLike.hasClass('fa-regular')){
+        myLike.removeClass('fa-regular').addClass('fa-solid');
+    } else{
+        myLike.addClass('fa-regular').removeClass('fa-solid');
+    }
+})

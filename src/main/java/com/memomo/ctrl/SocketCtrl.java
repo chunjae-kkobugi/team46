@@ -4,10 +4,8 @@ import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardGroup;
 import com.memomo.entity.Layout;
-import com.memomo.service.BoardGroupService;
-import com.memomo.service.BoardService;
-import com.memomo.service.MemberService;
-import com.memomo.service.PostService;
+import com.memomo.entity.Likes;
+import com.memomo.service.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -36,11 +34,13 @@ public class SocketCtrl {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private ModelMapper mappper;
+    private LikesService likesService;
     @Autowired
     private MemberService memberService;
     @Autowired
     private BoardGroupService boardGroupService;
+    @Autowired
+    private ModelMapper mappper;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
@@ -58,8 +58,13 @@ public class SocketCtrl {
 
         Board board = boardService.boardDetail(bno);
 
+        String sid = memberService.getLoginId();
+        List<Likes> myLikes = likesService.myLikes(bno, sid);
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
+        model.addAttribute("myLikes", myLikes);
+        model.addAttribute("sid", sid);
         return "board/boardDetail";
     }
 
@@ -204,4 +209,13 @@ public class SocketCtrl {
 
         return pno;
     }
+
+    @MessageMapping("/likes/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/likes/{bno}")
+    public PostDTO postLikes(@DestinationVariable Integer bno, PostDTO dto){
+        int cnt = likesService.toggleLikes(bno, dto.getPno(), dto.getAuthor()); // 바뀐 좋아요 수
+        dto.setLikes((long) cnt);
+        return dto;
+    };
 }
