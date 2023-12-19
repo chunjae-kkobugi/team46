@@ -3,8 +3,10 @@ package com.memomo.ctrl;
 import com.memomo.dto.MemberFormDTO;
 import com.memomo.dto.MemberUpdateDto;
 import com.memomo.dto.NicknameDTO;
+import com.memomo.dto.PostDTO;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
+import com.memomo.service.BoardService;
 import com.memomo.service.CustomUserDetailsService;
 import com.memomo.service.MemberService;
 import jakarta.servlet.http.Cookie;
@@ -24,8 +26,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -38,6 +42,7 @@ public class MemberCtrl {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final BoardService boardService;
 
     @GetMapping("/login")
     public String loginMember() {
@@ -136,17 +141,27 @@ public class MemberCtrl {
     @GetMapping("/enter/{bno}")
     public String enter(@PathVariable String bno, Model model) {
         NicknameDTO nicknameDTO = new NicknameDTO();
-        nicknameDTO.setBno(Integer.valueOf(bno));
+        Integer boardNum = Integer.valueOf(bno);
+        nicknameDTO.setBno(boardNum);
         model.addAttribute("nicknameDTO", nicknameDTO);
+        //System.out.println("보드 비번 : " + boardService.boardDetail(boardNum).getBpw());
+        model.addAttribute("boardDetail", boardService.boardDetail(boardNum));
+
         return "member/enter";
     }
 
     @PostMapping("/nick")
-    public String enterNick(NicknameDTO nicknameDTO, HttpServletResponse response) {
+    public String enterNick(NicknameDTO nicknameDTO, HttpServletResponse response, RedirectAttributes rttr, Model model) {
         Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname());
         nickCookie.setPath("/");
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
         response.addCookie(nickCookie);
-        return "redirect:/post/detail?bno=" + nicknameDTO.getBno();
+        Integer bno = nicknameDTO.getBno();
+        String bpw = boardService.boardDetail(bno).getBpw();
+        if (!nicknameDTO.getPassword().equals(bpw)) {
+            rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/member/enter/" + bno;
+        }
+        return "redirect:/post/detail?bno=" + bno;
     }
 }
