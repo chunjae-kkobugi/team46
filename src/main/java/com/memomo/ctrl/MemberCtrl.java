@@ -88,8 +88,7 @@ public class MemberCtrl {
     }
 
     @PostMapping("/idCheckPro")
-    public ResponseEntity<Boolean> idCheck(@RequestBody MemberFormDTO member) throws Exception {
-        String id = member.getId();
+    public ResponseEntity<Boolean> idCheck(@RequestParam String id) throws Exception {
         boolean result = memberService.idCheck(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

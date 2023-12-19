@@ -102,8 +102,8 @@
                             </form>
 
 
-                            <script>
-                                let realpath = "\/";
+                            <script th:inline="javascript">
+                                let realpath = /*[[@{'/'}]]*/ 'default';
                                 var confirm = "";
 
                                 $(document).ready(function () {
@@ -168,13 +168,12 @@
                                         return false;
                                     }
 
-                                    var params = {"id": $("#id").val()};
+                                    //var params = {"id": $("#id").val()};
                                     $.ajax({
                                         url: realpath + "member/idCheckPro",	//아이디가 전송되어질 곳
                                         type: "post",
-                                        data: JSON.stringify(params),
+                                        data: {"id": $("#id").val()},
                                         dataType: "json",
-                                        contentType: "application/json",
                                         success: function (result) {
                                             var idPass = result;
                                             if (idPass == false) {
@@ -190,6 +189,9 @@
                                             } else {
                                                 $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
                                             }
+                                        }, error: function (request, status, error) {
+                                            //alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                                            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                                         }
                                     });
                                 }
