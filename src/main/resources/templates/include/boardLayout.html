@@ -4,32 +4,7 @@
 <body>
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class="ui-sortable">
-        <!-- 포스트잇 등록 -->
-        <li class="mb-3 mt-2" id="postRegister" style="width: 305px;">
-            <div class="m-2">
-                <div class="card shadow-sm">
-                    <div class="card-body" style="height: 240px;">
-                        <div class="xBtn">
-                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
-                        </div>
-                        <!-- 포스트잇 글 등록 -->
-                        <form id="postAddForm" method="post" enctype="multipart/form-data">
-                            <div class="justify-content-center row">
-                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" style="resize: none;height: 104px;" maxlength="900"></textarea>
-                                <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
-                                <div class="justify-content-between row">
-                                    <input type="color" class="col-2 form-control mt-1" name="bgColor" value="#ffffff">
-                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
-                                </div>
-                                <div class="btn-group d-flex">
-                                    <button type="submit" class="btn btn-main"> 등록 </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </li>
+
     </ul>
 
     <script th:inline="javascript">
@@ -46,28 +21,7 @@
     <div class="timeline">
         <div class="timeline__wrap">
             <div class="timeline__items ui-sortable">
-                <div class="timeline__item register" id="postRegister">
-                    <div class="timeline__content">
 
-
-                        <div class="xBtn">
-                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
-                        </div>
-                        <form id="postAddForm" method="post" enctype="multipart/form-data">
-                            <div class="justify-content-center row">
-                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" maxlength="900"></textarea>
-                                <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
-                                <div class="justify-content-between row">
-                                    <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
-                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
-                                </div>
-                                <div class="btn-group d-flex">
-                                    <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -92,7 +46,7 @@
                     <div class="card-actions float-end" th:id="'groupMenuBtn' + ${g.gno}" style="cursor: pointer;">
                         <i class="fa-solid fa-ellipsis color"></i>
                         <div class="dropdown-menu dropdown-menu-right" th:id="'groupMenuList' + ${g.gno}" style="display: none;">
-                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#postRegisterModal">포스트잇 추가</button>
                             <a class="dropdown-item" href="#">그룹 수정</a>
                             <a class="dropdown-item" href="#">그룹 삭제</a>
                         </div>
