@@ -1,17 +1,11 @@
 package com.memomo.service;
 
-import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.Layout;
 import com.memomo.entity.Post;
 import com.memomo.entity.PostFile;
-import com.memomo.repository.BoardRepository;
-import com.memomo.repository.LayoutRepository;
-import com.memomo.repository.PostFileRepository;
-import com.memomo.repository.PostRepository;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
+import com.memomo.repository.*;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
@@ -29,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import java.util.*;
 
@@ -47,6 +40,8 @@ public class PostServiceImpl implements PostService{
     private PostFileRepository fileRepo;
     @Autowired
     private BoardRepository boardRepo;
+    @Autowired
+    private LikesRepository likesRepo;
 
     @Transactional
     @Override
@@ -233,36 +228,38 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> postList(Integer bno) {
-        List<PostDTO> postDTOS = new ArrayList<>();
+//        List<PostDTO> postDTOS = postRepo.postDTOList(bno);
+        List<PostDTO> postDTOS = null;
         List<PostDTO> sortedDTO = new ArrayList<>();
 
-        List<Object[]> objects = postRepo.postDTOList(bno);
-        if(objects.isEmpty()){
-            return sortedDTO;
-        }
-
-        for(Object[] o: objects){
-            Post p = (Post) o[0];
-            Layout l = (Layout) o[1];
-            PostDTO dto = new PostDTO();
-            dto = mapper.map(p, PostDTO.class);
-            dto.setLayout(l);
-            postDTOS.add(dto);
-        }
-
-        Board head = boardRepo.findById(bno).orElseThrow();
-        Long headP = head.getPostHead();
-        while(headP!= 0){
-            Long finalHeadP = headP;
+        Long head = boardRepo.getHead(bno);
+        while(head!= 0){
+            Long finalHeadP = head;
             PostDTO post = postDTOS.stream().filter(p->p.getPno().equals(finalHeadP)).findFirst().orElseThrow();
             sortedDTO.add(post);
-            headP = post.getLayout().getPriority();
+            head = post.getLayout().getPriority();
         }
 
         Collections.reverse(sortedDTO); // head 가 마지막에 오도록 뒤집기
         return sortedDTO;
     }
 
+    @Override
+    public List<PostDTO> postListAll(Integer bno) {
+        List<PostDTO> dto = postRepo.postListAll(bno);
+        List<PostDTO> sortedDTO = new ArrayList<>();
+
+        Long head = boardRepo.getHead(bno);
+        while(head!= 0){
+            Long headP = head;
+            PostDTO post = dto.stream().filter(p->p.getPno().equals(headP)).findFirst().orElseThrow();
+            sortedDTO.add(post);
+            head = post.getLayout().getPriority();
+        }
+
+        Collections.reverse(sortedDTO); // head 가 마지막에 오도록 뒤집기
+        return sortedDTO;
+    }
 
     @Transactional
     @Override
