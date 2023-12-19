@@ -254,41 +254,6 @@
             </div>
         </div>
         <!-- 그룹 끝 -->
-
-        <!-- 그룹 포스트잇 추가 모달 창 시작 -->
-        <div class="modal fade" id="groupPostRegisterModal" aria-labelledby="groupPostRegisterModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupPostRegisterModalLabel">포스트잇 추가</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
-                            <div>
-                                <label for="content" class="col-form-label">내용</label>
-                                <textarea class="form-control" name="content" id="content" cols="30" rows="5" th:max="950" placeholder="내용을 입력하세요"></textarea>
-                            </div>
-                            <div class="p-2 row">
-                                <div class="col-2 mb-3">
-                                    <label for="bgColor" class="col-form-label">배경색</label>
-                                    <input type="color" name="bgColor" class="form-control" id="bgColor">
-                                </div>
-                                <div class="col mb-3">
-                                    <label for="postFile" class="col-form-label">배경이미지</label>
-                                    <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">등록</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 그룹 포스트잇 추가 모달 창 끝 -->
     </div>
 </th:block>
 </body>

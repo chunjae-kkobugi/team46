@@ -229,6 +229,12 @@
                     <div class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                            <div class="mb-3">
+                                <label for="gno"> 그룹 </label>
+                                <select name="gno" id="gno" class="form-select">
+                                    <option th:each="g : ${groupList}" th:value="${g.gno}" th:text="${g.title}"></option>
+                                </select>
+                            </div>
                             <div>
                                 <label for="content" class="col-form-label">내용</label>
                                 <textarea class="form-control" name="content" id="content" cols="30" rows="5" th:max="950" placeholder="내용을 입력하세요"></textarea>
