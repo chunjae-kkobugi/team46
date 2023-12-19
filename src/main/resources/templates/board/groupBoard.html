@@ -62,12 +62,11 @@
         textarea {resize: none; overflow: auto;}
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
-
         .color {
             mix-blend-mode: difference; color: #ffffff;
         }
-
         .original li { float: left;}
+
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
@@ -107,8 +106,6 @@
 
     <div class="post" style="min-height: 700px;">
         <div class="container-fluid m-0 row">
-
-
             <div class="mt-5 row">
                 <!-- 그룹 시작 -->
                 <div class="col-md-2" th:each="g : ${groupList}">
@@ -335,7 +332,7 @@
                             <div class="mb-3">
                                 <label for="bgColor" class="col-form-label">배경색</label>
                                 <input type="color" name="GColor" class="form-control" id="GColor" value="#ffffff">
-                            </div>
+                           </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">수정</button>
                             </div>
@@ -406,7 +403,6 @@
 
     // 포스트잇 메뉴
     $(document).ready(function(){
-
         var sw = true;
         sw =! sw
         $('[id^=groupMenuBtn]').click(function(){

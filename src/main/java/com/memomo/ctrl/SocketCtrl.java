@@ -1,5 +1,7 @@
 package com.memomo.ctrl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardGroup;
@@ -8,7 +10,12 @@ import com.memomo.service.BoardGroupService;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
+import jakarta.servlet.http.Cookie;
+import com.memomo.entity.Likes;
+import com.memomo.service.*;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -23,7 +30,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.WebUtils;
 
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -35,18 +44,28 @@ public class SocketCtrl {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private ModelMapper mappper;
+    private LikesService likesService;
     @Autowired
     private MemberService memberService;
     @Autowired
     private BoardGroupService boardGroupService;
+    @Autowired
+    private ModelMapper mappper;
 
     private static LinkedList<Long>  plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
-    public String postEnter(HttpServletRequest request, Model model){
+    public String postEnter(HttpServletRequest request, HttpServletResponse response, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
-        List<PostDTO> postList = postService.postList(bno);
+        String sid = memberService.getLoginId();
+        //System.out.println("sid : " + sid);
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        if (cookie == null && sid.equals("")) {
+            model.addAttribute("bno", bno);
+            return "redirect:/member/enter/" + bno;
+        }
+
+        List<PostDTO> postList = postService.postListAll(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
         for(PostDTO p:postList){
@@ -56,9 +75,13 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
+        String sid = memberService.getLoginId();
+        List<Likes> myLikes = likesService.myLikes(bno, sid);
 
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
+        model.addAttribute("myLikes", myLikes);
+        model.addAttribute("sid", sid);
         return "board/boardDetail";
     }
 
@@ -140,7 +163,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/add")
     @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult) {
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -148,16 +171,18 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        String sid = memberService.getLoginId();
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        String loginId = memberService.getLoginId();
+        String sid = loginId.equals("") ? cookie.getValue() : loginId;
         log.info("---------- sid: "+sid);
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+//        String uploadDir = "C:\\Users\\User\\Desktop\\uploadImg\\";
 
 //        서버 경로
-//            ServletContext application = request.getSession().getServletContext();
-//            String uploadDir = application.getRealPath("/images/postImage");
+            ServletContext application = request.getSession().getServletContext();
+            String uploadDir = application.getRealPath("/images/postImage");
 
         Long pno;
         if(!postFile.isPresent() || postFile.isEmpty()){
@@ -181,7 +206,6 @@ public class SocketCtrl {
     @PostMapping("/post/edit")
     @ResponseBody
     public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
         log.info("post EDIT start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -205,4 +229,13 @@ public class SocketCtrl {
 
         return pno;
     }
+
+    @MessageMapping("/likes/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/likes/{bno}")
+    public PostDTO postLikes(@DestinationVariable Integer bno, PostDTO dto){
+        int cnt = likesService.toggleLikes(bno, dto.getPno(), dto.getAuthor()); // 바뀐 좋아요 수
+        dto.setLikes((long) cnt);
+        return dto;
+    };
 }

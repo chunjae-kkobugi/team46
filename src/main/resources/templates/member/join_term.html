@@ -14,7 +14,7 @@
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card">
             <div class="card-body p-4">
-              <!--                            <a class="logo text-center font-weight-bold text-secondary" href="/" style="font-size:35px;"><img src="/resources/image/common/logo.png" title="TSellpa 로고" alt="TSellpa 로고" />TSellpa</a>-->
+              <!--<a class="logo text-center font-weight-bold text-secondary" href="/" style="font-size:35px;"><img src="/resources/image/common/logo.png" title="TSellpa 로고" alt="TSellpa 로고" />TSellpa</a>-->
               <h2 class="text-uppercase text-center mt-3 mb-5">회원 약관 동의</h2>
               <div class="d-flex justify-content">
                 <article class="agree_fr">
@@ -1072,12 +1072,11 @@
                 <label class="form-check-label" for="allCheck">전체 약관에 동의</label>
               </div>
 
-
               <div class="d-flex justify-content-center">
-                <button type="button" id="in_btn1" class="btn btn-primary">다음 단계</button>
+                <button type="button" id="in_btn1" class="btn btn-main">다음 단계</button>
               </div>
 
-              <script>
+              <script th:inline="javascript">
                 let realpath = /*[[@{'/'}]]*/ 'default';
                 let allcheck = document.getElementById("allCheck");
                 let in_btn1 = document.getElementById("in_btn1");

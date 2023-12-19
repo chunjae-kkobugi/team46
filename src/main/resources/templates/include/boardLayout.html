@@ -3,14 +3,9 @@
 
 <body>
 <th:block th:fragment="grid-layout">
-    <ul id="sortable" class=" ui-sortable">
-<!--        <li class="mb-3 mt-2 ui-sortable-handle ui-state-default" th:each="p : ${postList}" th:pno="${p.pno}" style="width: 305px;">-->
-<!--            <div th:replace="~{include/postLayout :: post-layout(p=${p})}" class="mb-0"></div>-->
-<!--        </li>-->
-
-
+    <ul id="sortable" class="ui-sortable">
         <!-- 포스트잇 등록 -->
-        <li class="mb-3 mt-2 ui-sortable-handle register" id="postRegister" style="width: 305px;">
+        <li class="mb-3 mt-2" id="postRegister" style="width: 305px;">
             <div class="m-2">
                 <div class="card shadow-sm">
                     <div class="card-body" style="height: 240px;">
@@ -27,7 +22,7 @@
                                     <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                                 </div>
                                 <div class="btn-group d-flex">
-                                    <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
+                                    <button type="submit" class="btn btn-main"> 등록 </button>
                                 </div>
                             </div>
                         </form>
@@ -50,8 +45,7 @@
 <th:block th:fragment="timeline-layout">
     <div class="timeline">
         <div class="timeline__wrap">
-            <div class="timeline__items">
-
+            <div class="timeline__items ui-sortable">
                 <div class="timeline__item register" id="postRegister">
                     <div class="timeline__content">
                         <div class="xBtn">

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>로그인</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<section class="login py-5 border-top-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8 align-item-center">
+                <div class="mx-5">
+                    <h3 class="text-center">학생 입장</h3>
+                    <form th:action="@{/member/nick}" th:object="${nicknameDTO}" method="post">
+                        <fieldset class="p-4">
+                            <input class="form-control mb-3" type="text" id="bno" name="bno" placeholder="게시판 번호를 입력하세요." th:value="${nicknameDTO.bno}" th:field="*{bno}" readonly>
+                            <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." th:field="*{nickname}" required>
+                            <button type="submit" class="form-control btn btn-main font-weight-bold"
+                                    style="color: #ffffff">입장하기
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+</html>
