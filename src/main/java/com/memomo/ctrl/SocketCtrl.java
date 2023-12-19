@@ -66,6 +66,7 @@ public class SocketCtrl {
         }
 
         List<PostDTO> postList = postService.postListAll(bno);
+        List<BoardGroup> groupList = boardGroupService.groupList(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
         for(PostDTO p:postList){
@@ -75,13 +76,13 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
-        String sid = memberService.getLoginId();
         List<Likes> myLikes = likesService.myLikes(bno, sid);
 
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
         model.addAttribute("myLikes", myLikes);
         model.addAttribute("sid", sid);
+        model.addAttribute("groupList", groupList);
         return "board/boardDetail";
     }
 
@@ -89,9 +90,17 @@ public class SocketCtrl {
     @RequestMapping("/post/detail2")
     public String postEnter2(HttpServletRequest request, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
-        List<PostDTO> postList = postService.postList(bno);
+        String sid = memberService.getLoginId();
+        //System.out.println("sid : " + sid);
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        if (cookie == null && sid.equals("")) {
+            model.addAttribute("bno", bno);
+            return "redirect:/member/enter/" + bno;
+        }
+
+        List<PostDTO> postList = postService.postListAll(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
-        List<BoardGroup> groupList = boardGroupService.groupList(bno);
+
         for(PostDTO p:postList){
             plist2.add(p.getPno());
         }
@@ -99,9 +108,12 @@ public class SocketCtrl {
         plist = plist2;
 
         Board board = boardService.boardDetail(bno);
+        List<Likes> myLikes = likesService.myLikes(bno, sid);
+
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
-        model.addAttribute("groupList", groupList);
+        model.addAttribute("myLikes", myLikes);
+        model.addAttribute("sid", sid);
         return "board/groupBoard";
     }
 

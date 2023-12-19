@@ -48,6 +48,8 @@
             <div class="timeline__items ui-sortable">
                 <div class="timeline__item register" id="postRegister">
                     <div class="timeline__content">
+
+
                         <div class="xBtn">
                             <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
                         </div>
@@ -78,6 +80,216 @@
             $(".timeline__items").append(newPost);
         })
     </script>
+</th:block>
+
+<!-- 그룹형 레이아웃 -->
+<th:block th:fragment="group-layout">
+    <div class="mt-5 row">
+        <!-- 그룹 시작 -->
+        <div class="col-md-2" th:each="g : ${groupList}">
+            <div class="card card-border-primary">
+                <div class="card-header" th:style="'background-color : ' + ${g.GColor}">
+                    <div class="card-actions float-end" th:id="'groupMenuBtn' + ${g.gno}" style="cursor: pointer;">
+                        <i class="fa-solid fa-ellipsis color"></i>
+                        <div class="dropdown-menu dropdown-menu-right" th:id="'groupMenuList' + ${g.gno}" style="display: none;">
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
+                            <a class="dropdown-item" href="#">그룹 수정</a>
+                            <a class="dropdown-item" href="#">그룹 삭제</a>
+                        </div>
+                    </div>
+                    <h5 class="card-title mt-2 color" th:text="${g.title}"></h5>
+                </div>
+                <div class="card-body p-3">
+                    <!-- 그룹 내 포스트잇 시작 -->
+                    <div class="card mb-3"
+                         th:each="p : ${postList}" th:if="${g.gno == p.layout.gno}"
+                         th:style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}">
+                        <div class="card-body p-3 original" th:id="'original' + ${p.pno}">
+                            <!-- 포스트잇 메뉴 시작 -->
+                            <div th:id="'postMenuList' + ${p.pno}" class="pe-3"
+                                 style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
+                                <ul class="p-0" style="list-style-type: none">
+                                    <!-- 수정버튼 -->
+                                    <li class="me-2" th:id="'postModifyBtn' + ${p.pno}"
+                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                                            <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                                                <i class="fa-pen-to-square fa-solid"></i>
+                                            </span>
+                                    </li>
+                                    <!-- 삭제 버튼 -->
+                                    <li th:id="'postRemoveBtn' + ${p.pno}"
+                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                                            <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- 포스트잇 메뉴 끝 -->
+                            <p th:text="${p.content}" class="color pt-3" style="height: 70%"></p>
+                            <p class="text-end mb-0 color" th:text="${p.author}"></p>
+                        </div>
+                        <!-- 포스트잇 수정 -->
+                        <div class="card-body p-3 modify register" th:id="'modify' + ${p.pno}">
+                            <form class="postEditForm" method="post" enctype="multipart/form-data">
+                                <div class="justify-content-center row">
+                                    <textarea name="content" cols="30" rows="5" class="form-control" maxlength="900" style="resize: none;height: 80px;">[[${p.content}]]</textarea>
+                                    <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
+                                    <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
+                                    <div class="justify-content-between row">
+                                        <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" th:value="${p.bgColor}">
+                                        <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                    </div>
+                                    <div class="btn-group d-flex">
+                                        <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>
+                                        <button type="submit" class="btn btn-main" th:id="'modSubmit' + ${p.pno}"> 수정 </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 포스트잇 수정 끝 -->
+                    </div>
+                    <!-- 그룹 내 포스트잇 끝 -->
+                </div>
+            </div>
+
+            <!-- 그룹 수정 모달 창 시작 -->
+            <div class="modal fade" id="groupModifyModal" tabindex="-1" aria-labelledby="groupModifyModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="groupModifyModalLabel">그룹 추가</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post">
+                                <input type="hidden" name="bno" id="bno" th:value="${g.bno}">
+                                <input type="hidden" name="gno" id="gno" th:value="${g.gno}">
+                                <div class="mb-3">
+                                    <label for="title" class="col-form-label">그룹 이름</label>
+                                    <input type="text" name="title" class="form-control" id="title" th:value="${g.title}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="bgColor" class="col-form-label">배경색</label>
+                                    <input type="color" name="GColor" class="form-control" id="GColor" th:value="${g.GColor}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">수정</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 그룹 수정 모달 창 끝 -->
+        </div>
+        <!-- 그룹 끝 -->
+
+        <!-- 그룹X -->
+        <div class="col-md-2">
+            <div class="card card-border-primary">
+                <div class="card-header">
+                    <div class="card-actions float-end">
+                        <i class="fa-solid fa-ellipsis" id="groupMenuBtn" style="cursor: pointer"></i>
+                        <div class="dropdown-menu dropdown-menu-right" id="groupMenuList" style="display: none;">
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
+                            <a class="dropdown-item" href="#">그룹 수정</a>
+                            <a class="dropdown-item" href="#">그룹 삭제</a>
+                        </div>
+                    </div>
+                    <h5 class="card-title mt-2">그룹이 없는 포스트잇</h5>
+                </div>
+                <div class="card-body p-3">
+                    <!-- 그룹 내 포스트잇 시작 -->
+                    <div class="card mb-3"
+                         th:each="p : ${postList}" th:if="${p.layout.gno == null}"
+                         th:style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}">
+                        <div class="card-body p-3 original" th:id="'original' + ${p.pno}">
+                            <!-- 포스트잇 메뉴 시작 -->
+                            <div th:id="'postMenuList' + ${p.pno}" class="pe-3"
+                                 style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
+                                <ul class="p-0" style="list-style-type: none">
+                                    <!-- 수정버튼 -->
+                                    <li class="me-2" th:id="'postModifyBtn' + ${p.pno}"
+                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                                            <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                                                <i class="fa-pen-to-square fa-solid"></i>
+                                            </span>
+                                    </li>
+                                    <!-- 삭제 버튼 -->
+                                    <li th:id="'postRemoveBtn' + ${p.pno}"
+                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                                            <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- 포스트잇 메뉴 끝 -->
+                            <p th:text="${p.content}" class="color pt-3" style="height: 70%"></p>
+                            <p class="text-end mb-0 color" th:text="${p.author}"></p>
+                        </div>
+                        <!-- 포스트잇 수정 -->
+                        <div class="card-body p-3 modify register" th:id="'modify' + ${p.pno}">
+                            <form class="postEditForm" method="post" enctype="multipart/form-data">
+                                <div class="justify-content-center row">
+                                    <textarea name="content" cols="30" rows="5" class="form-control" maxlength="900" style="resize: none;height: 80px;">[[${p.content}]]</textarea>
+                                    <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
+                                    <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
+                                    <div class="justify-content-between row">
+                                        <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" th:value="${p.bgColor}">
+                                        <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                                    </div>
+                                    <div class="btn-group d-flex">
+                                        <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>
+                                        <button type="submit" class="btn btn-main" th:id="'modSubmit' + ${p.pno}"> 수정 </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 포스트잇 수정 끝 -->
+                    </div>
+                    <!-- 그룹 내 포스트잇 끝 -->
+                </div>
+            </div>
+        </div>
+        <!-- 그룹 끝 -->
+
+        <!-- 그룹 포스트잇 추가 모달 창 시작 -->
+        <div class="modal fade" id="groupPostRegisterModal" aria-labelledby="groupPostRegisterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupPostRegisterModalLabel">포스트잇 추가</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                            <div>
+                                <label for="content" class="col-form-label">내용</label>
+                                <textarea class="form-control" name="content" id="content" cols="30" rows="5" th:max="950" placeholder="내용을 입력하세요"></textarea>
+                            </div>
+                            <div class="p-2 row">
+                                <div class="col-2 mb-3">
+                                    <label for="bgColor" class="col-form-label">배경색</label>
+                                    <input type="color" name="bgColor" class="form-control" id="bgColor">
+                                </div>
+                                <div class="col mb-3">
+                                    <label for="postFile" class="col-form-label">배경이미지</label>
+                                    <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">등록</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 그룹 포스트잇 추가 모달 창 끝 -->
+    </div>
 </th:block>
 </body>
 </html>
