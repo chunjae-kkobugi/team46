@@ -107,3 +107,4 @@ $(".myLike").click(function(){
         myLike.addClass('fa-regular').removeClass('fa-solid');
     }
 })
+
