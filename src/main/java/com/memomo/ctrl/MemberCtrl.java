@@ -136,7 +136,6 @@ public class MemberCtrl {
 
     @GetMapping("/enter/{bno}")
     public String enter(@PathVariable String bno, Model model) {
-        //System.out.println("전달받았나 : " + model.getAttribute("bno"));
         NicknameDTO nicknameDTO = new NicknameDTO();
         nicknameDTO.setBno(Integer.valueOf(bno));
         model.addAttribute("nicknameDTO", nicknameDTO);
