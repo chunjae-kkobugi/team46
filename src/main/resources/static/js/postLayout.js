@@ -117,3 +117,111 @@ function timelineLayout(p){
 
     return timelinePost;
 }
+
+function groupLayout(g) {
+    let group = `
+<div class="col-md-2">
+    <div class="card card-border-primary">
+        <div class="card-header" style="background-color : ${g.GColor}">
+            <div class="card-actions float-end" id="groupMenuBtn${g.gno}" style="cursor: pointer;">
+                <i class="fa-solid fa-ellipsis color"></i>
+                <div class="dropdown-menu dropdown-menu-right" id="groupMenuList${g.gno}" style="display: none;">
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
+                    <a class="dropdown-item" href="#">그룹 수정</a>
+                    <a class="dropdown-item" href="#">그룹 삭제</a>
+                </div>
+            </div>
+            <h5 class="card-title mt-2 color">${g.title}</h5>
+        </div>
+        <div class="card-body p-3 groupPostList" data-gno="${g.gno}">
+        </div>
+    </div>
+
+    <!-- 그룹 수정 모달 창 시작 -->
+    <div class="modal fade" id="groupModifyModal" tabindex="-1" aria-labelledby="groupModifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="groupModifyModalLabel">그룹 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        <input type="hidden" name="bno" value="${g.bno}">
+                        <input type="hidden" name="gno" value="${g.gno}">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">그룹 이름</label>
+                            <input type="text" name="title" class="form-control" value="${g.title}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bgColor" class="col-form-label">배경색</label>
+                            <input type="color" name="GColor" class="form-control" value="${g.GColor}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 그룹 수정 모달 창 끝 -->
+</div>
+    `;
+
+    return group;
+}
+
+function groupPost(p) {
+    let post = `
+<!-- 그룹 내 포스트잇 시작 -->
+<div class="card mb-3" style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}">
+    <div class="card-body p-3 original" id="original${p.pno}">
+        <!-- 포스트잇 메뉴 시작 -->
+        <div id="postMenuList${p.pno}" class="pe-3" style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
+            <ul class="p-0" style="list-style-type: none">
+                <!-- 수정버튼 -->
+                <li class="me-2" id="postModifyBtn${p.pno}"
+                    style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                        <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                            <i class="fa-pen-to-square fa-solid"></i>
+                        </span>
+                </li>
+                <!-- 삭제 버튼 -->
+                <li id="postRemoveBtn${p.pno}"
+                style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
+                        <span style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </span>
+                </li>
+            </ul>
+        </div>
+        <!-- 포스트잇 메뉴 끝 -->
+        <p class="color pt-3" style="height: 70%">${p.content}</p>
+        <p class="text-end mb-0 color">${p.author}</p>
+    </div>
+    <!-- 포스트잇 수정 -->
+    <div class="card-body p-3 modify register" id="modify${p.pno}">
+        <form class="postEditForm" method="post" enctype="multipart/form-data">
+            <div class="justify-content-center row">
+                <textarea name="content" cols="30" rows="5" class="form-control" maxlength="900" style="resize: none;height: 80px;">${p.content}</textarea>
+                <input type="hidden" name="pno" value="${p.pno}">
+                <input type="hidden" name="bno" value="${p.bno}">
+                <div class="justify-content-between row">
+                    <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="${p.bgColor}">
+                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
+                </div>
+                <div class="btn-group d-flex">
+                    <button type="button" class="btn btn-main" id="reset${p.pno}"> 취소 </button>
+                    <button type="submit" class="btn btn-main" id="modSubmit${p.pno}"> 수정 </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 포스트잇 수정 끝 -->
+</div>
+<!-- 그룹 내 포스트잇 끝 -->
+    `;
+
+    return post;
+}
