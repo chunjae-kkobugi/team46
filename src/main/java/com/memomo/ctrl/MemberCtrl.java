@@ -2,10 +2,12 @@ package com.memomo.ctrl;
 
 import com.memomo.dto.MemberFormDTO;
 import com.memomo.dto.MemberUpdateDto;
+import com.memomo.dto.NicknameDTO;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import com.memomo.service.CustomUserDetailsService;
 import com.memomo.service.MemberService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,6 +25,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -37,6 +41,8 @@ public class MemberCtrl {
 
     @GetMapping("/login")
     public String loginMember() {
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //System.out.println("authentication : " + authentication);
         return "member/login";
     }
 
@@ -49,6 +55,11 @@ public class MemberCtrl {
     @GetMapping("/loginPro")
     public String loginPro() {
         return "redirect:/";
+    }
+
+    @GetMapping("/term")
+    public String joinTerm() {
+        return "member/join_term";
     }
 
     @GetMapping("/join")
@@ -94,11 +105,6 @@ public class MemberCtrl {
 
     @PostMapping("/mypage")
     public String updateMember(@Valid MemberUpdateDto memberUpdateDto, Model model) {
-        //String id = memberService.getLoginId();
-        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
-        //Member member = memberService.memberDetail(id);
-        //model.addAttribute("member", member);
-        model.addAttribute("member", memberUpdateDto);
         customUserDetailsService.updateMember(memberUpdateDto);
         return "redirect:/member/mypage";
     }
@@ -126,5 +132,22 @@ public class MemberCtrl {
             model.addAttribute("msg", "잘못된 접근입니다.");
         }
         return "member/alert";
+    }
+
+    @GetMapping("/enter/{bno}")
+    public String enter(@PathVariable String bno, Model model) {
+        NicknameDTO nicknameDTO = new NicknameDTO();
+        nicknameDTO.setBno(Integer.valueOf(bno));
+        model.addAttribute("nicknameDTO", nicknameDTO);
+        return "member/enter";
+    }
+
+    @PostMapping("/nick")
+    public String enterNick(NicknameDTO nicknameDTO, HttpServletResponse response) {
+        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname());
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
+        return "redirect:/post/detail?bno=" + nicknameDTO.getBno();
     }
 }

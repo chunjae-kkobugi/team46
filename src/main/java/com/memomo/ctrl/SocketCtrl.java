@@ -1,13 +1,21 @@
 package com.memomo.ctrl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardGroup;
 import com.memomo.entity.Layout;
+import com.memomo.service.BoardGroupService;
+import com.memomo.service.BoardService;
+import com.memomo.service.MemberService;
+import com.memomo.service.PostService;
+import jakarta.servlet.http.Cookie;
 import com.memomo.entity.Likes;
 import com.memomo.service.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -22,7 +30,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.WebUtils;
 
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -45,8 +55,16 @@ public class SocketCtrl {
     private static LinkedList<Long>  plist = new LinkedList<>();
 
     @RequestMapping("/post/detail")
-    public String postEnter(HttpServletRequest request, Model model){
+    public String postEnter(HttpServletRequest request, HttpServletResponse response, Model model){
         Integer bno = Integer.valueOf(request.getParameter("bno"));
+        String sid = memberService.getLoginId();
+        //System.out.println("sid : " + sid);
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        if (cookie == null && sid.equals("")) {
+            model.addAttribute("bno", bno);
+            return "redirect:/member/enter/" + bno;
+        }
+
         List<PostDTO> postList = postService.postListAll(bno);
         LinkedList<Long> plist2 = new LinkedList<>();
 
@@ -154,7 +172,10 @@ public class SocketCtrl {
             return null;
         }
         log.info(dto);
-        String sid = memberService.getLoginId();
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        String loginId = memberService.getLoginId();
+        String sid = loginId.equals("") ? cookie.getValue() : loginId;
+        log.info("---------- sid: "+sid);
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로

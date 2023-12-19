@@ -39,8 +39,10 @@
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 <script th:inline="javascript">
-    let sid = /*[[${session.sid}]]*/ 'sid';
-    console.log(sid);
+    //let sid = /*[[${session.sid}]]*/ 'sid';
+    //console.log(sid);
+    var today = new Date();
+    console.log(today + " " + document.cookie);
 </script>
 </body>
 </html>
