@@ -145,6 +145,29 @@
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
     </div>
+
+    <!-- 포스트잇 상세보기 모달 창 시작 -->
+    <div class="modal fade postGetModal" id="postGetModal" aria-labelledby="postGetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postGetModalLabel">포스트잇 상세보기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row getPost">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 포스트잇 상세보기 모달 창 끝 -->
+
 </section>
 <!-- 타임라인 -->
 <script type="text/javascript" th:src="@{/js/timeline.min.js}"></script>
@@ -158,6 +181,7 @@
     });
 
     $(document).ready(function(){
+
         // 게시판 메뉴
         var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수
         var isOpen = false; // 메뉴가 열려있는지 여부
