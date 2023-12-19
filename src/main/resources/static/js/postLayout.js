@@ -2,7 +2,7 @@
 // 포스트잇 추가, 수정 등에서 일률적인 포스트잇 적용을 위해 따로 분리한 코드
 function postLayout(p){
     let post = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="wid 275px;">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
