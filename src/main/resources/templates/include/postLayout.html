@@ -9,7 +9,6 @@
                     <div th:id="postMenuList+${p.pno}" class="pe-2"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
                         <ul class="p-0" style="list-style-type: none">
-
                             <!-- 수정버튼 -->
                             <li class="me-2" th:id="'postModifyBtn'+${p.pno}"
                                 th:style="${ p.bgImage==null ? 'cursor: pointer; background-color : ' + p.bgColor : '#eeeeee' }">
@@ -42,7 +41,7 @@
                             <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
                             <div class="justify-content-between row">
                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" th:value="${p.bgColor}">
-                                <input type="file" class="col-9 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
+                                <input type="file" class="col-8 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                             </div>
                             <div class="btn-group d-flex">
                                 <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>

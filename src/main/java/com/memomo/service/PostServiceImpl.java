@@ -263,6 +263,7 @@ public class PostServiceImpl implements PostService{
         return sortedDTO;
     }
 
+
     @Transactional
     @Override
     public void postSort(Long oldBefore, Long oldNext, Long newBefore, Long newNext, Long changed, Integer bno) {
