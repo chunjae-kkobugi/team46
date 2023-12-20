@@ -21,9 +21,9 @@ public class CommentServiceImpl implements CommentService{
     private ModelMapper mapper;
 
     @Override
-    public Long commentAdd(Comment comment) {
+    public Comment commentAdd(Comment comment) {
         Comment register = commentRepository.save(comment);
-        return register.getCno();
+        return register;
     }
 
     @Override

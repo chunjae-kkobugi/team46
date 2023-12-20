@@ -159,14 +159,15 @@
                         <div class="card-body">
                             <!-- 게시판 상세보기 -->
                             <div class="row getPost"></div>
-                            <!-- 댓글 -->
-                            <form action="" method="post">
+                            <!-- 댓글 입력폼 -->
+                            <form method="post" class="addComment">
                                 <div class="input-group mb-2">
-                                    <input type="text" class="form-control" name="comment" maxlength="100" placeholder="댓글을 입력해 주세요">
-                                    <button type="submit" class="btn btn-main">등록</button>
+                                    <textarea class="form-control" name="content" id="commentContent" cols="30" rows="10" maxlength="950" placeholder="댓글을 입력해 주세요"></textarea>
+                                    <button type="button" class="btn btn-main" onclick="addComment()">등록</button>
                                 </div>
                             </form>
                             <div class="card">
+                                <!-- 댓글 목록 -->
                                 <div class="card-body comment"></div>
                             </div>
                         </div>
@@ -174,69 +175,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- 그룹추가 모달창-->
-        <div class="modal fade" id="groupRegisterModal" tabindex="-1" aria-labelledby="groupRegisterModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupRegisterModalLabel">그룹 추가</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="post">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
-                            <div class="mb-3">
-                                <label for="title" class="col-form-label">그룹 이름</label>
-                                <input type="text" name="title" class="form-control" id="title">
-                            </div>
-                            <div class="mb-3">
-                                <label for="bgColor" class="col-form-label">배경색</label>
-                                <input type="color" name="GColor" class="form-control" id="GColor" value="#ffffff">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">수정</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 그룹 추가 모달 창 끝 -->
-        <!-- 그룹 포스트잇 추가 모달 창 시작 -->
-        <div class="modal fade" id="groupPostRegisterModal" aria-labelledby="groupPostRegisterModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupPostRegisterModalLabel">포스트잇 추가</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
-                            <div>
-                                <label for="content" class="col-form-label">내용</label>
-                                <textarea class="form-control" name="content" id="content" cols="30" rows="5" th:max="950" placeholder="내용을 입력하세요"></textarea>
-                            </div>
-                            <div class="p-2 row">
-                                <div class="col-2 mb-3">
-                                    <label for="bgColor" class="col-form-label">배경색</label>
-                                    <input type="color" name="bgColor" class="form-control" id="bgColor">
-                                </div>
-                                <div class="col mb-3">
-                                    <label for="postFile" class="col-form-label">배경이미지</label>
-                                    <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">등록</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 그룹 포스트잇 추가 모달 창 끝 -->
     </div>
     <!-- 포스트잇 상세보기 모달 창 끝 -->
 
@@ -252,6 +190,28 @@
         verticalStartPosition: 'left' // or right
     });
 
+    // 댓글 입력 처리
+    function addComment(){
+        let pno = $('#commentPno').val();
+        let content = $('#commentContent').val();
+        let params = {"pno" : pno, "content" : content};
+        $.ajax({
+            type:'POST',
+            url: '/post/addComment',
+            data: params,
+            success:function(data) {
+                let commentHTML = '';
+                commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.author + '</p>';
+                commentHTML += '<p>' + data.content + '</p>';
+                commentHTML += '<hr>'
+                $('.comment').prepend(commentHTML);
+            },
+            error: function(err){
+                console.log(err);
+            }
+        })
+    }
+
     $(document).ready(function(){
 
         // 게시판 상세보기
@@ -261,16 +221,26 @@
                 type: 'GET',
                 url: '/post/getPost/' + pno,
                 success: function(data) {
+                    // 상세보기
                     let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
                     postHTML += '<p>' + data.content + '</p>';
                     $('.getPost').html(postHTML);
 
+                    // 댓글 입력 pno
+                    let cnoHTML = '<input type="hidden" name="pno" id="commentPno" value="' + data.pno+ '">'
+                    $('.addComment').append(cnoHTML);
+
+                    // 댓글 목록
                     let commentHTML = ''; // 변수를 밖에서 초기화
 
-                    for (let i = 0; i < data.commentList.length; i++) {
-                        commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
-                        commentHTML += '<p>' + data.commentList[i].content + '</p>';
-                        commentHTML += '<hr>'
+                    if (data.commentList.length == 0 ) {
+                        commentHTML += '<p class="text-center">등록된 댓글이 없습니다</p>'
+                    } else {
+                        for (let i = 0; i < data.commentList.length; i++) {
+                            commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
+                            commentHTML += '<p>' + data.commentList[i].content + '</p>';
+                            commentHTML += '<hr>'
+                        }
                     }
 
                     $('.comment').html(commentHTML); // 반복문이 끝난 후 한 번에 HTML 추가
@@ -280,6 +250,8 @@
                 }
             });
         });
+
+
 
         // 게시판 메뉴
         var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수

@@ -11,9 +11,11 @@ import com.memomo.service.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -22,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
 import java.util.*;
@@ -42,6 +45,7 @@ public class SocketCtrl {
     private BoardGroupService boardGroupService;
     @Autowired
     private ModelMapper mappper;
+    @Autowired CommentService commentService;
 
     private static LinkedList<Long> plist = new LinkedList<>();
 
@@ -218,5 +222,22 @@ public class SocketCtrl {
     public PostDTO getPost(@PathVariable Long pno, HttpServletRequest request) {
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pno : " + pno);
         return postService.getPost(pno);
+    }
+
+    @PostMapping("/post/addComment")
+    @ResponseBody
+    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+
+        log.info("comment register>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        String loginId = memberService.getLoginId();
+        String sid = loginId.equals("") ? cookie.getValue() : loginId;
+        Comment comment = new Comment();
+        log.info("---------- sid: " + sid);
+        comment.setAuthor(sid);
+        comment.setPno(pno);
+        comment.setContent(content);
+        return commentService.commentAdd(comment);
     }
 }
