@@ -3,7 +3,7 @@
 
 function postLayout(p){
     let post = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;"  data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
@@ -12,7 +12,6 @@ function postLayout(p){
                     <div id="postMenuList${p.pno}" class="pe-2"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
                         <ul class="p-0" style="list-style-type: none">
-
                             <!-- 수정버튼 -->
                             <li class="me-2" id="postModifyBtn${p.pno}"
                                 style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}">
@@ -29,13 +28,15 @@ function postLayout(p){
                             </li>
                         </ul>
                     </div>
-                    <div class="text-body" style="height: 185px;">
-                        <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <p class="card-text text-end mb-0 color">${p.author}</p>
-                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes}</span></p>
-                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
+                    <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+                        <div class="text-body" style="height: 185px;">
+                            <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="card-text text-end mb-0 color">${p.author}</p>
+                            <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes}</span></p>
+                            <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -67,8 +68,7 @@ function postLayout(p){
 
 function timelineLayout(p){
     let timelinePost = `
-    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}"
-          data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}">
         <div class="timeline__content"
              style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #ffffff' } ">
             <div class="original" id="original${p.pno}">
@@ -92,8 +92,10 @@ function timelineLayout(p){
                     </ul>
                 </div>
                 <!-- 내용 -->
-                <p class="pe-3" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #ffffff'}">${p.content}</p>
-                <p class="text-end m-0" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">${p.author}</p>
+                <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+                     <p class="pe-3" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #ffffff'}">${p.content}</p>
+                     <p class="text-end m-0" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">${p.author}</p>
+                </div>
             </div>
             <!-- 수정 창 -->
             <div class="modify register" id="modify${p.pno}">
