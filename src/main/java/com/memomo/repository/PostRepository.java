@@ -45,4 +45,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // OMG... JPA는 WHERE, HAVING, SELECT 절에서만 서브 쿼리가 가능하다고 한다. 아래 구문을 불가
     //    SELECT p.*, l.*, ls.likes FROM post p LEFT JOIN layout l ON p.pno = l.pno
     //    LEFT JOIN (SELECT COUNT(*) as likes, pno FROM likes GROUP BY pno) ls ON p.pno = ls.pno WHERE p.bno = 1;
+
+    // 포스트 상세보기
+    @Query("select p from Post p where p.pno = :pno")
+    public Post getPostByPno(@Param("pno") Long pno);
 }

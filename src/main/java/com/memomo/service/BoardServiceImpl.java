@@ -131,6 +131,7 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Override
     public void boardEdit(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) {
 
         // 파일 업로드
@@ -179,7 +180,7 @@ public class BoardServiceImpl implements BoardService{
             Path savePath = Paths.get(String.valueOf(uploadPath), saveName);
             try {
                 multipartFile.transferTo(new File(uploadPath, saveName));
-                if (Files.probeContentType(savePath).startsWith("image")){
+                if (Files.probeContentType(savePath).startsWith("image")) {
                     File thumbnail = new File(uploadPath, "s_" + saveName);
                     Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 411, 255);
                 }
@@ -207,7 +208,8 @@ public class BoardServiceImpl implements BoardService{
                 existingFile.setStatus("REMOVE");
             }
 
-            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
+            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+//            board.change(board.getTitle(), boardDTO. getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
             // 이미지 정보를 게시판 정보에 연결
             boardDTO.setFile(image);
             boardRepo.save(board);
@@ -218,6 +220,17 @@ public class BoardServiceImpl implements BoardService{
             boardRepo.save(board);
             log.info("-------------------------------------------------------------------------------" + image.getFno());
             log.info("---------------------------------------------board : " + board);
+        } else {
+            // 파일이 첨부되지 않은 경우에 실행되는 코드 블록
+            // 파일이 첨부되지 않았으므로 파일 정보를 건드리지 않고 게시판 정보만 수정
+            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
+            Board board = result.orElseThrow();
+
+            // 게시판 정보만 업데이트 (파일 정보는 건드리지 않음)
+            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+
+            boardRepo.save(board);
+            log.info("게시판 정보 수정 완료: " + board);
         }
     }
 
