@@ -10,14 +10,28 @@
 <section class="my_area my-5">
     <div class="mask d-flex align-items-center">
         <div class="container-fluid">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="card">
+                        <div class="card-body pt-5">
+                            <div class="widget widget-categories">
+                                <h4 class="widget-title text-center"><span>마이페이지</span></h4>
+                                <ul class="list-unstyled widget-list">
+                                    <li><a class="" href="#!">대시보드</a></li>
+                                    <li><a class="" href="#!">회원정보 수정</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-md-7">
                     <div class="card">
                         <div class="card-body p-5">
                             <div class="tit-area">
-                                <h3 class="tit">마이페이지</h3>
+                                <h4 class="tit">회원정보 수정</h4>
                             </div>
-                            <h4 class="tit blt-gray">내 정보</h4>
+                            <h5 class="tit blt-gray">내 정보</h5>
                             <form method="post" role="form" th:object="${memberUpdateDto}">
                             <div class="tbl-write th-gray">
                                 <table class="table table-bordered align-middle">
@@ -88,7 +102,7 @@
 
                             <div class="border-bottom mb-4"></div>
 
-                            <h4 class="tit">회원 탈퇴</h4>
+                            <h5 class="tit">회원 탈퇴</h5>
                             <div class="tbl-write ">
                                 <table>
                                     <tbody>
@@ -100,113 +114,13 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <script>
-                                    let realpath = "\/";
-                                    var confirm = "";
+                                <script th:inline="javascript">
+                                    let realpath = /*[[@{'/'}]]*/ 'default';
 
-                                    $(document).ready(function () {
-                                        $('#cert-num').on('keypress', function (e) {
-                                            var key = e.which; // 입력된 키 코드 가져오기
-                                            // 숫자(0-9) 허용 (숫자 키, 백스페이스, 화살표 키)
-                                            if (!(key >= 48 && key <= 57) && key !== 8 && key !== 37 && key !== 39 && key !== 46) {
-                                                e.preventDefault(); // 입력 방지
-                                            }
-                                        });
-                                    });
-
-                                    function idCheck() {
-                                        if ($("#id").val() == "") {
-                                            alert("아이디를 입력하지 않았습니다.");
-                                            $("#id").focus();
-                                            return false;
+                                    function leave() {
+                                        if (confirm("탈퇴하시겠습니까?")) {
+                                            location.href = realpath + "member/remove?id=" + [[${member.id}]];
                                         }
-
-                                        var params = {"id": $("#id").val()};
-                                        $.ajax({
-                                            url: realpath + "member/idCheckPro",	//아이디가 전송되어질 곳
-                                            type: "post",
-                                            data: JSON.stringify(params),
-                                            dataType: "json",
-                                            contentType: "application/json",
-                                            success: function (result) {
-                                                var idPass = result;
-                                                if (idPass == false) {
-                                                    $("#idCk").val("no");
-                                                    $("#msg").addClass("no_check").html("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 기존에 사용되고 있는 아이디입니다. 다시 입력하시기 바랍니다.");
-                                                    $("#id").focus();
-                                                } else if (idPass == true) {
-                                                    $("#idCk").val("yes");
-                                                    if ($("#msg").hasClass("no_check")) {
-                                                        $("#msg").removeClass("no_check");
-                                                    }
-                                                    $("#msg").html("<i class=\"fa fa-check\" aria-hidden=\"true\"></i> 사용 가능한 아이디입니다.");
-                                                } else {
-                                                    $("#msg").addClass("no_check").text("<i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i> 아이디가 확인되지 않았습니다. 다시 시도하시기 바랍니다.");
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    function joinCheck(f) {
-                                        if (f.pw.value != f.pw2.value) {
-                                            alert("비밀번호와 비밀번호 확인이 서로 다릅니다.");
-                                            f.pw.focus();
-                                            return false;
-                                        }
-                                        if (f.idCk.value != "yes") {
-                                            alert("아이디 중복 체크를 하지 않으셨습니다.");
-                                            return false;
-                                        }
-                                        if (f.emailCk.value != "yes") {
-                                            alert("이메일 인증을 하지 않으셨습니다.");
-                                            return false;
-                                        }
-                                    }
-
-                                    function sendNumber() {
-                                        if ($("#email").val() === "") {
-                                            alert("이메일을 입력하지 않았습니다.");
-                                            $("#email").focus();
-                                            return;
-                                        }
-
-                                        $("#mail_number").css("display", "block");
-                                        $.ajax({
-                                            url: "/send-mail",
-                                            type: "post",
-                                            dataType: "json",
-                                            data: {"mail": $("#email").val()},
-                                            success: function (data) {
-                                                alert("인증번호가 발송되었습니다.");
-                                                $("#confirm").attr("value", data);
-                                            }, error: function (request, status, error) {
-                                                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                                            }
-                                        });
-                                    }
-
-                                    function confirmNumber() {
-                                        var inputNum = $("#cert-num").val();
-                                        if (inputNum === "") {
-                                            alert("인증번호를 입력해주세요");
-                                            $("#cert-num").focus();
-                                            return;
-                                        }
-                                        $.ajax({
-                                            url: "/confirm",
-                                            type: "post",
-                                            dataType: "json",
-                                            data: {"inputNum": inputNum},
-                                            success: function (data) {
-                                                if (data) {
-                                                    $("#emailCk").val("yes");
-                                                    alert("인증되었습니다.");
-                                                } else {
-                                                    alert("번호가 다릅니다.");
-                                                }
-                                            }
-                                        });
-
                                     }
                                 </script>
 
@@ -245,16 +159,5 @@
 </section>
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
-<script th:inline="javascript">
-    let realpath = /*[[@{'/'}]]*/ 'default';
-
-    function leave() {
-        if (confirm("탈퇴하시겠습니까?")) {
-            location.href = realpath + "member/remove?id=" + [[${member.id}]];
-        }
-    }
-
-
-</script>
 </body>
 </html>

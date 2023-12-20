@@ -45,6 +45,8 @@ function postAdd(pno){
             'pno' : pno,
         })
     );
+    // 등록 버튼 누르면 바로 모달 창 닫기
+    $('#postRegisterModal .btn-close').click();
 }
 
 function receiveAdd(){
