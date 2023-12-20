@@ -57,6 +57,8 @@ public class SocketCtrl {
         Cookie cookie = WebUtils.getCookie(request, "nickCookie");
         if (cookie == null && sid.equals("")) {
             return "redirect:/member/enter/" + bno;
+        } else if(sid.equals("")){
+            sid = cookie.getValue();
         }
 
         List<PostDTO> postList = postService.postListAll(bno);
@@ -209,7 +211,6 @@ public class SocketCtrl {
     }
 
     @MessageMapping("/likes/{bno}")
-    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
     @SendTo("/stomp-receive/likes/{bno}")
     public PostDTO postLikes(@DestinationVariable Integer bno, PostDTO dto) {
         int cnt = likesService.toggleLikes(bno, dto.getPno(), dto.getAuthor()); // 바뀐 좋아요 수
@@ -240,4 +241,24 @@ public class SocketCtrl {
         comment.setContent(content);
         return commentService.commentAdd(comment);
     }
+
+    @MessageMapping("/groupAdd/{bno}")
+    @SendTo("/stomp-receive/groupAdd/{bno}")
+    public BoardGroup groupAdd(@DestinationVariable Integer bno, BoardGroup group){
+        group.setBno(bno);
+        return boardGroupService.groupAdd(group);
+    };
+
+    @MessageMapping("/groupEdit/{bno}")
+    @SendTo("/stomp-receive/groupEdit/{bno}")
+    public BoardGroup groupEdit(@DestinationVariable Integer bno, BoardGroup group){
+        return boardGroupService.groupEdit(group);
+    };
+
+    @MessageMapping("/groupRemove/{bno}")
+    @SendTo("/stomp-receive/groupRemove/{bno}")
+    public Integer groupRemove(@DestinationVariable Integer bno, BoardGroup group){
+        boardGroupService.groupRemove(group.getGno());
+        return group.getGno();
+    };
 }
