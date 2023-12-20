@@ -151,14 +151,26 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="postGetModalLabel">포스트잇 상세보기</h1>
+                    <h1 class="modal-title fs-5" id="postGetModalLabel">상세보기</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row getPost">
-
+                            <!-- 게시판 상세보기 -->
+                            <div class="row getPost"></div>
+                            <!-- 댓글 -->
+                            <form action="" method="post">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control" name="comment" maxlength="100" placeholder="댓글을 입력해 주세요">
+                                    <button type="submit" class="btn btn-main">등록</button>
+                                </div>
+                            </form>
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="m-0" style="font-size: 13px;">작성자</p>
+                                    <p class="m-0">댓글내용</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,6 +193,26 @@
     });
 
     $(document).ready(function(){
+
+        // 게시판 상세보기
+        $('[id^=getPost]').click(function() {
+            let pno = this.id.replace('getPost', '');
+
+            $.ajax({
+                type: 'GET',
+                url: '/post/getPost/' + pno,
+                success: function(data) {
+                    let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
+                    postHTML += '<p>' + data.content + '</p>';
+
+                    // .html() 메소드를 사용하여 해당 요소에 HTML을 추가
+                    $('.getPost').html(postHTML);
+                },
+                error: function(err) {
+                    console.log(error);
+                }
+            });
+        });
 
         // 게시판 메뉴
         var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수

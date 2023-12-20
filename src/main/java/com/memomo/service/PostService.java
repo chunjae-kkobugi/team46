@@ -20,4 +20,5 @@ public interface PostService {
     public PostDTO postGet(Long pno);
     public Long postAddFile(PostFile image);
     public List<PostDTO> postListAll(Integer bno);
+    public PostDTO getPost(Long pno);
 }

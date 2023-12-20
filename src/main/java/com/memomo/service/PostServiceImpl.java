@@ -304,4 +304,13 @@ public class PostServiceImpl implements PostService{
     public Long postAddFile(PostFile image) {
         return fileRepo.save(image).getFno();
     }
+
+    @Override
+    public PostDTO getPost(Long pno) {
+        Post post = postRepo.getPostByPno(pno);
+        PostFile file = fileRepo.findByPnoAndFstatus(pno, "ACTIVE");
+        PostDTO dto = mapper.map(post, PostDTO.class);
+        dto.setFile(file);
+        return dto;
+    }
 }

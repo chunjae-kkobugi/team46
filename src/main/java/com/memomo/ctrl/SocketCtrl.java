@@ -1,27 +1,19 @@
 package com.memomo.ctrl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.memomo.dto.PostDTO;
-import com.memomo.entity.Board;
-import com.memomo.entity.BoardGroup;
-import com.memomo.entity.Layout;
+import com.memomo.entity.*;
 import com.memomo.service.BoardGroupService;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.Cookie;
-import com.memomo.entity.Likes;
 import com.memomo.service.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -32,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -217,5 +208,12 @@ public class SocketCtrl {
         int cnt = likesService.toggleLikes(bno, dto.getPno(), dto.getAuthor()); // 바뀐 좋아요 수
         dto.setLikes((long) cnt);
         return dto;
+    }
+
+    @GetMapping("/post/getPost/{pno}")
+    @ResponseBody
+    public PostDTO getPost(@PathVariable Long pno) {
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pno : " + pno);
+        return postService.getPost(pno);
     }
 }
