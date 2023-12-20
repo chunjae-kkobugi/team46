@@ -1,10 +1,7 @@
 package com.memomo.service;
 
 import com.memomo.dto.PostDTO;
-import com.memomo.entity.Board;
-import com.memomo.entity.Layout;
-import com.memomo.entity.Post;
-import com.memomo.entity.PostFile;
+import com.memomo.entity.*;
 import com.memomo.repository.*;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -42,6 +39,8 @@ public class PostServiceImpl implements PostService{
     private BoardRepository boardRepo;
     @Autowired
     private LikesRepository likesRepo;
+    @Autowired
+    private CommentRepository commentRepo;
 
     @Transactional
     @Override
@@ -309,8 +308,12 @@ public class PostServiceImpl implements PostService{
     public PostDTO getPost(Long pno) {
         Post post = postRepo.getPostByPno(pno);
         PostFile file = fileRepo.findByPnoAndFstatus(pno, "ACTIVE");
+        List<Comment> commentList = commentRepo.findByPno(pno);
+        Long commentCount = commentRepo.countByPno(pno);
         PostDTO dto = mapper.map(post, PostDTO.class);
         dto.setFile(file);
+        dto.setCommentList(commentList);
+        dto.setComments(commentCount);
         return dto;
     }
 }

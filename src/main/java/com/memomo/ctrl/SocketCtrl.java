@@ -212,7 +212,7 @@ public class SocketCtrl {
 
     @GetMapping("/post/getPost/{pno}")
     @ResponseBody
-    public PostDTO getPost(@PathVariable Long pno) {
+    public PostDTO getPost(@PathVariable Long pno, HttpServletRequest request) {
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pno : " + pno);
         return postService.getPost(pno);
     }

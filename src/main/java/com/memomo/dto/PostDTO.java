@@ -26,10 +26,11 @@ public class PostDTO {
     private String pstatus;
     private Boolean vote;
 
-    private Layout layout;          // 본 포스트잇의 레이아웃
-    private PostFile file;          // 본 포스트잇의 파일
-    private Long likes;             // 좋아요 수
-    private Long comments;          // 댓글 개수
+    private Layout layout;              // 본 포스트잇의 레이아웃
+    private PostFile file;              // 본 포스트잇의 파일
+    private Long likes;                 // 좋아요 수
+    private Long comments;              // 댓글 개수
+    private List<Comment> commentList;  // 댓글 목록
 
     public PostDTO(Post p, Layout l, PostFile pf, Long likes, Long comments) {
         this.pno = p.getPno();

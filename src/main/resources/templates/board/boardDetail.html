@@ -167,10 +167,7 @@
                                 </div>
                             </form>
                             <div class="card">
-                                <div class="card-body">
-                                    <p class="m-0" style="font-size: 13px;">작성자</p>
-                                    <p class="m-0">댓글내용</p>
-                                </div>
+                                <div class="card-body comment"></div>
                             </div>
                         </div>
                     </div>
@@ -193,23 +190,29 @@
     });
 
     $(document).ready(function(){
-
         // 게시판 상세보기
         $('[id^=getPost]').click(function() {
             let pno = this.id.replace('getPost', '');
-
             $.ajax({
                 type: 'GET',
                 url: '/post/getPost/' + pno,
                 success: function(data) {
                     let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
                     postHTML += '<p>' + data.content + '</p>';
-
-                    // .html() 메소드를 사용하여 해당 요소에 HTML을 추가
                     $('.getPost').html(postHTML);
+
+                    let commentHTML = ''; // 변수를 밖에서 초기화
+
+                    for (let i = 0; i < data.commentList.length; i++) {
+                        commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
+                        commentHTML += '<p>' + data.commentList[i].content + '</p>';
+                        commentHTML += '<hr>'
+                    }
+
+                    $('.comment').html(commentHTML); // 반복문이 끝난 후 한 번에 HTML 추가
                 },
                 error: function(err) {
-                    console.log(error);
+                    console.log(err);
                 }
             });
         });
