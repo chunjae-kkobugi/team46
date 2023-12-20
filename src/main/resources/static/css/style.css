@@ -198,7 +198,7 @@ textarea.form-control {
 .footer-info span {
     font-size: 14px;
     font-weight: 500;
-    color: rgb(255, 255, 255);
+    /*color: rgb(255, 255, 255);*/
 }
 
 .footer-info span em {
@@ -237,7 +237,7 @@ textarea.form-control {
 }
 
 .footer-info .link-list a {
-    color: #ffffff;
+    color: #000000;
 }
 
 #sel {
@@ -298,7 +298,7 @@ textarea.form-control {
 .join_area .btn { height: 55px; }
 .join_area .form-control:not(textarea) { height: 55px; }
 
-h3.tit:before {
+h4.tit:before {
     content: '';
     display: inline-block;
     width: 16px;
@@ -308,16 +308,16 @@ h3.tit:before {
     box-sizing: border-box;
     margin-right: 10px;
 }
-h4.tit {
+h5.tit {
     margin-bottom: 10px;
     font-size: 18px;
     font-weight: 500;
 }
-h4.tit:before {
+h5.tit:before {
     content: '';
     color: #E0F2E5;
     font-size: 12px;
-    margin-right: 5px;
+    margin-right: 8px;
     vertical-align: 2px;
     display: inline-block;
     width: 12px;
@@ -400,4 +400,50 @@ hr.dashed-dark {
 }
 .tbl-write table .btn {
     height: initial;
+}
+
+.widget {
+    margin-bottom: 30px;
+}
+.widget .widget-title {
+    margin-bottom: 15px;
+}
+.widget.widget-categories li a, .widget.widget-tags li a {
+    display: block;
+    background: #f7f7f7;
+    padding: 10px 18px;
+    color: #000;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+.widget.widget-categories li a:hover, .widget.widget-tags li a:hover {
+    background-color: #51B56D;
+    color: #fff;
+}
+.widget.widget-categories li a.active, .widget.widget-tags li a.active {
+    background-color: #51B56D;
+    color: #fff;
+}
+.widget.widget-tags li a {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.widget-post .widget-post-image {
+    width: 80px;
+    height: 80px;
+}
+.widget-post .widget-post-image img {
+    height: 100%;
+    width: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center;
+    object-position: center;
+}
+
+.bg-gray {
+    background-color : #f6f7fa
 }
