@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="modal">
+    <!-- 게시판 정보 수정 모달창-->
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modifyModalLabel">게시판 정보 수정</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/board/modify(bno=${detail.bno})}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">게시판 이름</label>
+                            <input type="text" name="title" class="form-control" id="title" th:value="${detail.title}">
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="layout" class="col-form-label">레이아웃</label>
+                                <select name="layout" id="layout" class="form-select" th:value="${detail.layout}">
+                                    <option value="GRID"> 격자형 </option>
+                                    <option value="TIMELINE"> 타임라인 </option>
+                                    <option value="GROUP"> 그룹형 </option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="maxStudent" class="col-form-label">최대 인원 수</label>
+                                <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${detail.maxStudent}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bgColor" class="col-form-label">배경색</label>
+                            <input type="color" name="bgColor" class="form-control" id="bgColor" th:value="${detail.bgColor}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="boardFile" class="col-form-label">배경이미지</label>
+                            <input type="file" name="boardFile" class="form-control" id="boardFile" th:value="${detail.bgColor}" style="height: auto">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 그룹추가 모달창-->
+    <div class="modal fade" id="groupRegisterModal" tabindex="-1" aria-labelledby="groupRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="groupRegisterModalLabel">그룹 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">그룹 이름</label>
+                            <input type="text" name="title" class="form-control" id="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="GColor" class="col-form-label">배경색</label>
+                            <input type="color" name="GColor" class="form-control" id="GColor" value="#ffffff">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 그룹 추가 모달 창 끝 -->
+
+    <!-- 포스트잇 추가 모달 창 시작 -->
+    <div class="modal fade" id="postRegisterModal" aria-labelledby="postRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postRegisterModalLabel">포스트잇 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="postAddForm" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                        <div class="mb-3" th:if="${detail.layout == 'GROUP'}">
+                            <label for="gno"> 그룹 </label>
+                            <select name="gno" id="gno" class="form-select">
+                                <option th:each="g : ${groupList}" th:value="${g.gno}" th:text="${g.title}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="content" class="col-form-label">내용</label>
+                            <textarea class="form-control" name="content" id="content" cols="30" rows="5" maxlength="950" placeholder="내용을 입력하세요"></textarea>
+                        </div>
+                        <div class="p-2 row">
+                            <div class="col-2 mb-3">
+                                <label for="bgColor" class="col-form-label">배경색</label>
+                                <input type="color" name="bgColor" class="form-control" id="bgColor" value="#ffffff">
+                            </div>
+                            <div class="col mb-3">
+                                <label for="postFile" class="col-form-label">배경이미지</label>
+                                <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">등록</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 포스트잇 추가 모달 창 끝 -->
+
+    <!-- 포스트잇 상세보기 모달 창 시작 -->
+    <div class="modal fade postGetModal" id="postGetModal" aria-labelledby="postGetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postGetModalLabel">상세보기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 게시판 상세보기 -->
+                            <div class="row getPost"></div>
+                            <!-- 댓글 입력폼 -->
+                            <form method="post" class="addComment">
+                                <div class="input-group mb-2">
+                                    <textarea class="form-control" name="content" id="commentContent" cols="30" rows="10" maxlength="950" placeholder="댓글을 입력해 주세요"></textarea>
+                                    <button type="button" class="btn btn-main" onclick="addComment()">등록</button>
+                                </div>
+                            </form>
+                            <div class="card">
+                                <!-- 댓글 목록 -->
+                                <div class="card-body comment"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 포스트잇 상세보기 모달 창 끝 -->
+</th:block>
+</body>

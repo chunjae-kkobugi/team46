@@ -1,27 +1,21 @@
 package com.memomo.ctrl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.memomo.dto.PostDTO;
-import com.memomo.entity.Board;
-import com.memomo.entity.BoardGroup;
-import com.memomo.entity.Layout;
+import com.memomo.entity.*;
 import com.memomo.service.BoardGroupService;
 import com.memomo.service.BoardService;
 import com.memomo.service.MemberService;
 import com.memomo.service.PostService;
 import jakarta.servlet.http.Cookie;
-import com.memomo.entity.Likes;
 import com.memomo.service.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.repository.query.Param;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -30,9 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -51,6 +45,7 @@ public class SocketCtrl {
     private BoardGroupService boardGroupService;
     @Autowired
     private ModelMapper mappper;
+    @Autowired CommentService commentService;
 
     private static LinkedList<Long> plist = new LinkedList<>();
 
@@ -84,38 +79,6 @@ public class SocketCtrl {
         model.addAttribute("groupList", groupList);
         return "board/boardDetail";
     }
-
-    // 그룹 테스트용
-    @RequestMapping("/post/detail2")
-    public String postEnter2(HttpServletRequest request, Model model) {
-        Integer bno = Integer.valueOf(request.getParameter("bno"));
-        String sid = memberService.getLoginId();
-        //System.out.println("sid : " + sid);
-        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
-        if (cookie == null && sid.equals("")) {
-            model.addAttribute("bno", bno);
-            return "redirect:/member/enter/" + bno;
-        }
-
-        List<PostDTO> postList = postService.postListAll(bno);
-        LinkedList<Long> plist2 = new LinkedList<>();
-
-        for (PostDTO p : postList) {
-            plist2.add(p.getPno());
-        }
-
-        plist = plist2;
-
-        Board board = boardService.boardDetail(bno);
-        List<Likes> myLikes = likesService.myLikes(bno, sid);
-
-        model.addAttribute("detail", board);
-        model.addAttribute("postList", postList);
-        model.addAttribute("myLikes", myLikes);
-        model.addAttribute("sid", sid);
-        return "board/groupBoard";
-    }
-
 
     @MessageMapping("/remove/{bno}")
     @SendTo("/stomp-receive/remove/{bno}")
@@ -254,5 +217,27 @@ public class SocketCtrl {
         return dto;
     }
 
-    ;
+    @GetMapping("/post/getPost/{pno}")
+    @ResponseBody
+    public PostDTO getPost(@PathVariable Long pno, HttpServletRequest request) {
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pno : " + pno);
+        return postService.getPost(pno);
+    }
+
+    @PostMapping("/post/addComment")
+    @ResponseBody
+    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+
+        log.info("comment register>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        String loginId = memberService.getLoginId();
+        String sid = loginId.equals("") ? cookie.getValue() : loginId;
+        Comment comment = new Comment();
+        log.info("---------- sid: " + sid);
+        comment.setAuthor(sid);
+        comment.setPno(pno);
+        comment.setContent(content);
+        return commentService.commentAdd(comment);
+    }
 }
