@@ -3,11 +3,11 @@
 
 function postLayout(p){
     let post = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;"  data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
-            <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(https://i.namu.wiki/i/2EkspwFSbFB6pKoo31kejqzkw0NyuayfR5ALr7VtAaZyFtrDinBNRBmYZMTVBSbtC8OrGgkFr5rmEGH9qe5vdg.webp)'}">
+            <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
                 <div class="original" id="original${p.pno}">
                     <div id="postMenuList${p.pno}" class="pe-2"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
@@ -29,7 +29,7 @@ function postLayout(p){
                             </li>
                         </ul>
                     </div>
-                    <div class="text-body" style="height: 185px;">
+                    <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
                         <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -123,12 +123,12 @@ function groupLayout(g) {
     let group = `
 <div class="col-md-2 groupLayout" data-gno="${g.gno}">
     <div class="card card-border-primary">
-        <div class="card-header" style="background-color : ${g.GColor}">
-            <div class="card-actions float-end" id="groupMenuBtn${g.gno}" style="cursor: pointer;">
+        <div class="card-header" style="'background-color : '+${g.gColor}">
+            <div class="card-actions float-end" id="groupMenuBtn${g.gno}" data-gno="${g.gno}" style="cursor: pointer;">
                 <i class="fa-solid fa-ellipsis color"></i>
                 <div class="dropdown-menu dropdown-menu-right" id="groupMenuList${g.gno}" style="display: none;">
                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
-                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupModifyModal">그룹 수정</button>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupModifyModal" data-gno="${g.gno}" data-title="${g.title}" data-gColor="${g.gColor}" onclick="groupModifyModalSet(this.getAttribute('data-gno'), this.getAttribute('data-title'), this.getAttribute('g.gColor'))">그룹 수정</button>
                     <a class="dropdown-item" href="javascript:groupRemove(${g.gno})">그룹 삭제</a>
                 </div>
             </div>

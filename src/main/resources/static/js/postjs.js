@@ -1,4 +1,4 @@
-$("#draggable").draggable({
+/*$("#draggable").draggable({
     stop: function( event, ui ) {
         layoutDrag(ui.position.left, ui.position.top);
     }
@@ -25,7 +25,7 @@ $(".timeline__items").sortable({
     }
 });
 
-$(".timeline__items").disableSelection();
+$(".timeline__items").disableSelection();*/
 
 
 $(document).on('submit', '.postEditForm', function(e){
