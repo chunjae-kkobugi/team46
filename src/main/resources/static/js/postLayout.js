@@ -3,7 +3,7 @@
 
 function postLayout(p){
     let post = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;"  data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
@@ -67,7 +67,8 @@ function postLayout(p){
 
 function timelineLayout(p){
     let timelinePost = `
-    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}">
+    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}"
+          data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
         <div class="timeline__content"
              style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #ffffff' } ">
             <div class="original" id="original${p.pno}">

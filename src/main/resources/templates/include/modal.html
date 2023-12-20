@@ -118,6 +118,36 @@
     </div>
     <!-- 포스트잇 추가 모달 창 끝 -->
 
-
+    <!-- 포스트잇 상세보기 모달 창 시작 -->
+    <div class="modal fade postGetModal" id="postGetModal" aria-labelledby="postGetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postGetModalLabel">상세보기</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 게시판 상세보기 -->
+                            <div class="row getPost"></div>
+                            <!-- 댓글 입력폼 -->
+                            <form method="post" class="addComment">
+                                <div class="input-group mb-2">
+                                    <textarea class="form-control" name="content" id="commentContent" cols="30" rows="10" maxlength="950" placeholder="댓글을 입력해 주세요"></textarea>
+                                    <button type="button" class="btn btn-main" onclick="addComment()">등록</button>
+                                </div>
+                            </form>
+                            <div class="card">
+                                <!-- 댓글 목록 -->
+                                <div class="card-body comment"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 포스트잇 상세보기 모달 창 끝 -->
 </th:block>
 </body>

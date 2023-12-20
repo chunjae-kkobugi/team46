@@ -179,7 +179,8 @@
                     <!-- 그룹 내 포스트잇 시작 -->
                     <div class="card mb-3"
                          th:each="p : ${postList}" th:if="${p.layout.gno == null}"
-                         th:style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}">
+                         th:style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}"
+                         data-bs-toggle="modal" data-bs-target="#postGetModal" th:id="'getPost' + ${p.pno}">
                         <div class="card-body p-3 original" th:id="'original' + ${p.pno}">
                             <!-- 포스트잇 메뉴 시작 -->
                             <div th:id="'postMenuList' + ${p.pno}" class="pe-3"
