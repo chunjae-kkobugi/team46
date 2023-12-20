@@ -198,7 +198,7 @@ textarea.form-control {
 .footer-info span {
     font-size: 14px;
     font-weight: 500;
-    color: rgb(255, 255, 255);
+    /*color: rgb(255, 255, 255);*/
 }
 
 .footer-info span em {
@@ -237,7 +237,7 @@ textarea.form-control {
 }
 
 .footer-info .link-list a {
-    color: #ffffff;
+    color: #000000;
 }
 
 #sel {
@@ -442,4 +442,8 @@ hr.dashed-dark {
     object-fit: cover;
     -o-object-position: center;
     object-position: center;
+}
+
+.bg-gray {
+    background-color : #f6f7fa
 }
