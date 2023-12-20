@@ -153,6 +153,7 @@
     const bno = /*[[${detail.bno}]]*/ 1;
     let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
     const sid = /*[[${sid}]]*/ 'default';
+    let realpath = /*[[@{'/'}]]*/ 'default';
 
     timeline(document.querySelectorAll('.timeline'), {
         verticalStartPosition: 'left' // or right
@@ -165,7 +166,7 @@
         let params = {"pno" : pno, "content" : content};
         $.ajax({
             type:'POST',
-            url: '/post/addComment',
+            url: realpath + '/post/addComment',
             data: params,
             success:function(data) {
                 let commentHTML = '';
@@ -189,7 +190,7 @@
             let pno = this.id.replace('getPost', '');
             $.ajax({
                 type: 'GET',
-                url: '/post/getPost/' + pno,
+                url: realpath +  '/post/getPost/' + pno,
                 success: function(data) {
                     // 상세보기
                     let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
