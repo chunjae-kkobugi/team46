@@ -173,6 +173,8 @@
                 commentHTML += '<p>' + data.content + '</p>';
                 commentHTML += '<hr>'
                 $('.comment').prepend(commentHTML);
+                $('.noComment').remove();
+                $('#commentContent').val('');
             },
             error: function(err){
                 console.log(err);
@@ -202,7 +204,7 @@
                     let commentHTML = ''; // 변수를 밖에서 초기화
 
                     if (data.commentList.length == 0 ) {
-                        commentHTML += '<p class="text-center">등록된 댓글이 없습니다</p>'
+                        commentHTML += '<p class="text-center noComment">등록된 댓글이 없습니다</p>'
                     } else {
                         for (let i = 0; i < data.commentList.length; i++) {
                             commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
