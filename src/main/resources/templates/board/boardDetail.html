@@ -199,18 +199,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="post">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                        <form id="groupAddForm" method="post">
+                            <input type="hidden" name="bno" th:value="${detail.bno}">
                             <div class="mb-3">
                                 <label for="title" class="col-form-label">그룹 이름</label>
-                                <input type="text" name="title" class="form-control" id="title">
+                                <input type="text" name="title" class="form-control" maxlength="100" required>
                             </div>
                             <div class="mb-3">
                                 <label for="bgColor" class="col-form-label">배경색</label>
-                                <input type="color" name="GColor" class="form-control" id="GColor" value="#ffffff">
+                                <input type="color" name="gColor" class="form-control" value="#ffffff">
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">수정</button>
+                                <button type="submit" class="btn btn-primary">추가</button>
                             </div>
                         </form>
                     </div>
@@ -218,6 +218,7 @@
             </div>
         </div>
         <!-- 그룹 추가 모달 창 끝 -->
+
         <!-- 그룹 포스트잇 추가 모달 창 시작 -->
         <div class="modal fade" id="groupPostRegisterModal" aria-labelledby="groupPostRegisterModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -236,7 +237,7 @@
                             <div class="p-2 row">
                                 <div class="col-2 mb-3">
                                     <label for="bgColor" class="col-form-label">배경색</label>
-                                    <input type="color" name="bgColor" class="form-control" id="bgColor">
+                                    <input type="color" name="bgColor" class="form-control">
                                 </div>
                                 <div class="col mb-3">
                                     <label for="postFile" class="col-form-label">배경이미지</label>
@@ -252,6 +253,35 @@
             </div>
         </div>
         <!-- 그룹 포스트잇 추가 모달 창 끝 -->
+
+        <!-- 그룹 수정 모달 창 시작 -->
+        <div class="modal fade" id="groupModifyModal" tabindex="-1" aria-labelledby="groupModifyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="groupModifyModalLabel">그룹 수정</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="groupEditForm" method="post">
+                            <input type="hidden" name="gno" value="${g.gno}">
+                            <div class="mb-3">
+                                <label for="title" class="col-form-label">그룹 이름</label>
+                                <input type="text" name="title" class="form-control" value="${g.title}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="bgColor" class="col-form-label">배경색</label>
+                                <input type="color" name="GColor" class="form-control" value="${g.gColor}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">수정</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 그룹 수정 모달 창 끝 -->
     </div>
 </section>
 <!-- 타임라인 -->
@@ -260,6 +290,7 @@
     const bno = /*[[${detail.bno}]]*/ 1;
     let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
     const sid = /*[[${sid}]]*/ 'default';
+    console.log(sid);
 
     timeline(document.querySelectorAll('.timeline'), {
         verticalStartPosition: 'left' // or right
@@ -317,7 +348,6 @@
             } else if ( sw == false) {
                 sw = true;
             }
-
         })
     });
 
@@ -332,6 +362,7 @@
         $("#postRegister").addClass("register")
     })
 
+
     // 포스트잇 메뉴
     $(document).ready(function(){
 
@@ -345,14 +376,14 @@
             $(modify).removeClass('register');
         })
 
-        // 수정 버튼
+/*        // 수정 버튼
         $('[id^=modSubmit]').click(function(){
             var index = this.id.replace('modSubmit','');
             var modify = $("#modify" + index);
             var original = $("#original" + index);
             $(original).removeClass('register');
             $(modify).addClass('register');
-        })
+        })*/
 
         // 수정 취소
         $('[id^=reset]').click(function(){
@@ -361,6 +392,17 @@
             var original = $("#original" + index);
             $(original).removeClass('register');
             $(modify).addClass('register');
+        })
+
+        $('[id^=groupMenuBtn]').click(function(){
+            var index = this.id.replace('groupMenuBtn','');
+            var groupMenuList = $('#groupMenuList' + index);
+            $(groupMenuList).slideToggle();
+            if (sw == true) {
+                sw = false;
+            } else if ( sw == false) {
+                sw = true;
+            }
         })
     });
 

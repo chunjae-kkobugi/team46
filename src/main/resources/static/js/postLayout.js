@@ -34,8 +34,8 @@ function postLayout(p){
                     </div>
                     <div class="d-flex justify-content-between">
                         <p class="card-text text-end mb-0 color">${p.author}</p>
-                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes}</span></p>
-                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments}</p>
+                        <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes===null?0:p.likes}</span></p>
+                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments===null?0:p.comments}</p>
                     </div>
                 </div>
 
@@ -120,15 +120,15 @@ function timelineLayout(p){
 
 function groupLayout(g) {
     let group = `
-<div class="col-md-2">
+<div class="col-md-2 groupLayout" data-gno="${g.gno}">
     <div class="card card-border-primary">
         <div class="card-header" style="background-color : ${g.GColor}">
             <div class="card-actions float-end" id="groupMenuBtn${g.gno}" style="cursor: pointer;">
                 <i class="fa-solid fa-ellipsis color"></i>
                 <div class="dropdown-menu dropdown-menu-right" id="groupMenuList${g.gno}" style="display: none;">
                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
-                    <a class="dropdown-item" href="#">그룹 수정</a>
-                    <a class="dropdown-item" href="#">그룹 삭제</a>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupModifyModal">그룹 수정</button>
+                    <a class="dropdown-item" href="javascript:groupRemove(${g.gno})">그룹 삭제</a>
                 </div>
             </div>
             <h5 class="card-title mt-2 color">${g.title}</h5>
@@ -136,36 +136,6 @@ function groupLayout(g) {
         <div class="card-body p-3 groupPostList" data-gno="${g.gno}">
         </div>
     </div>
-
-    <!-- 그룹 수정 모달 창 시작 -->
-    <div class="modal fade" id="groupModifyModal" tabindex="-1" aria-labelledby="groupModifyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="groupModifyModalLabel">그룹 추가</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="post">
-                        <input type="hidden" name="bno" value="${g.bno}">
-                        <input type="hidden" name="gno" value="${g.gno}">
-                        <div class="mb-3">
-                            <label for="title" class="col-form-label">그룹 이름</label>
-                            <input type="text" name="title" class="form-control" value="${g.title}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="bgColor" class="col-form-label">배경색</label>
-                            <input type="color" name="GColor" class="form-control" value="${g.GColor}">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">수정</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 그룹 수정 모달 창 끝 -->
 </div>
     `;
 

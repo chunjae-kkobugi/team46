@@ -72,7 +72,6 @@
         </div>
     </div>
 
-
     <script th:inline="javascript">
         let postList = /*[[${postList}]]*/ 'default';
         postList.forEach(function(p){
@@ -93,53 +92,15 @@
                         <i class="fa-solid fa-ellipsis" id="groupMenuBtn" style="cursor: pointer"></i>
                         <div class="dropdown-menu dropdown-menu-right" id="groupMenuList" style="display: none;">
                             <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
-                            <a class="dropdown-item" href="#">그룹 수정</a>
-                            <a class="dropdown-item" href="#">그룹 삭제</a>
                         </div>
                     </div>
                     <h5 class="card-title mt-2">그룹 없음</h5>
                 </div>
                 <div class="card-body p-3" id="noGroup">
-
                 </div>
             </div>
         </div>
         <!-- 그룹 끝 -->
-
-        <!-- 그룹 포스트잇 추가 모달 창 시작 -->
-        <div class="modal fade" id="groupPostRegisterModal" aria-labelledby="groupPostRegisterModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="groupPostRegisterModalLabel">포스트잇 추가</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
-                            <div>
-                                <label for="content" class="col-form-label">내용</label>
-                                <textarea class="form-control" name="content" id="content" cols="30" rows="5" th:max="950" placeholder="내용을 입력하세요"></textarea>
-                            </div>
-                            <div class="p-2 row">
-                                <div class="col-2 mb-3">
-                                    <label for="bgColor" class="col-form-label">배경색</label>
-                                    <input type="color" name="bgColor" class="form-control" id="bgColor">
-                                </div>
-                                <div class="col mb-3">
-                                    <label for="postFile" class="col-form-label">배경이미지</label>
-                                    <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">등록</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 그룹 포스트잇 추가 모달 창 끝 -->
     </div>
 
     <script th:inline="javascript">
@@ -153,13 +114,26 @@
         postList.forEach(function(p){
             let newPost = groupPost(p);
             let gno = p.layout.gno;
-            console.log(gno);
             if(gno!==null){
                 $(`.groupPostList[data-gno=${gno}]`).append(newPost);
             } else {
                 $("#noGroup").append(newPost);
             }
         })
+
+        $('#groupAddForm').on('submit', function (e) {
+            e.preventDefault();
+            let form = $(this)[0];
+            console.log(form);
+            groupAdd(form);
+            form.reset();
+        });
+
+        $('.groupEditForm').on('submit', function (e) {
+            e.preventDefault();
+            let form = $(this)[0];
+            groupEdit(form);
+        });
     </script>
 </th:block>
 </body>

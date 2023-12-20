@@ -28,7 +28,7 @@ $(".timeline__items").sortable({
 $(".timeline__items").disableSelection();
 
 
-$('.postEditForm').on('submit', function (e) {
+$(document).on('submit', '.postEditForm', function(e){
     e.preventDefault();
     let form = $(this)[0];
 
@@ -60,10 +60,12 @@ $('.postEditForm').on('submit', function (e) {
             console.log(e);
         }
     });
+
+    form.reset();
 });
 
-$('#postAddForm').on('submit', function (e) {
-    var form = document.querySelector('#postAddForm');
+$(document).on('submit', '#postAddForm', function(e){
+    let form = $(this)[0];
 
     e.preventDefault();
     var formData = new FormData();
@@ -95,9 +97,11 @@ $('#postAddForm').on('submit', function (e) {
             console.log(e);
         }
     });
+
+    form.reset();
 });
 
-$(".myLike").click(function(){
+$(document).on('click', '.myLike', function(){
     let pno = $(this)[0].getAttribute('data-pno');
     toggleLike(pno, sid);
     let myLike = $(`.myLike[data-pno=${pno}]`)
@@ -106,5 +110,13 @@ $(".myLike").click(function(){
     } else{
         myLike.addClass('fa-regular').removeClass('fa-solid');
     }
-})
+});
 
+$(document).on('click', '[id^=postModifyBtn]', function(){
+    var index = this.id.replace('postModifyBtn','');
+    var modify = $("#modify" + index);
+    var original = $("#original" + index);
+
+    $(original).addClass('register');
+    $(modify).removeClass('register');
+});
