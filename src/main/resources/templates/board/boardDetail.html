@@ -170,7 +170,7 @@
         let params = {"pno" : pno, "content" : content};
         $.ajax({
             type:'POST',
-            url: realpath + '/post/addComment',
+            url: /*realpath + */'/post/addComment',
             data: params,
             success:function(data) {
                 let commentHTML = '';
@@ -194,7 +194,7 @@
             let pno = this.id.replace('getPost', '');
             $.ajax({
                 type: 'GET',
-                url: realpath +  '/post/getPost/' + pno,
+                url: /*realpath +  */'/post/getPost/' + pno,
                 success: function(data) {
                     // 상세보기
                     let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
