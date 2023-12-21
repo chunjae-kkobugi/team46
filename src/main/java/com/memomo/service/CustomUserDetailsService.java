@@ -43,9 +43,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return member.getId();
     }
 
-    public String updatePw(MemberPwDTO memberPwDTO, String id) {
-        System.out.println("memberPwDTO : " + memberPwDTO);
-        Optional<Member> optionalMember = memberRepository.findById(id);
+    public String updatePw(MemberPwDTO memberPwDTO) {
+        //System.out.println("memberPwDTO : " + memberPwDTO);
+        Optional<Member> optionalMember = memberRepository.findById(memberPwDTO.getId());
         Member member = optionalMember.orElseThrow();
         // 회원 비밀번호 수정을 위한 패스워드 암호화
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

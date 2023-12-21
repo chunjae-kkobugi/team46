@@ -12,14 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @Controller
@@ -29,6 +27,7 @@ public class MyPageCtrl {
 
     private final MemberService memberService;
     private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/info")
     public String myInfo(Model model) {
@@ -80,9 +79,10 @@ public class MyPageCtrl {
     }
 
     @PostMapping("/changePw")
-    public String changePw(@Valid MemberPwDTO memberPwDTO, BindingResult bindingResult, Model model) {
+    public String changePw(MemberPwDTO memberPwDTO) {
         //String id = memberService.getLoginId();
-        customUserDetailsService.updatePw(memberPwDTO, memberService.getLoginId());
+        //System.out.println("memberPwDTO : " + memberPwDTO);
+        customUserDetailsService.updatePw(memberPwDTO);
 //        if (bindingResult.hasErrors()) {
 //            return "member/changePw";
 //        }
@@ -101,6 +101,14 @@ public class MyPageCtrl {
 //            return "member/myPagePw";
 //        }
         return "redirect:/mypage/info";
+    }
+
+    @ResponseBody
+    @PostMapping("/check")
+    public boolean check(String password) {
+        //pwEncoder.matches(pw, mem.getPw())
+        String id = memberService.getLoginId();
+        return passwordEncoder.matches(password, memberService.memberDetail(id).getPw());
     }
 
 }

@@ -32,16 +32,17 @@
                                 <h4 class="tit">회원정보 수정</h4>
                             </div>
                             <h5 class="tit blt-gray">비밀번호 변경</h5>
-                            <form method="post" role="form" th:object="${memberPwDTO}">
+                            <form method="post" role="form" onsubmit="return changePw()">
                                 <!--<input type="hidden" name="bno" id="bno" th:value="${list.bno}">-->
-                                <!--<input type="hidden" name="id" id="id" th:value="${member.id}" readonly>-->
+                                <input type="hidden" name="id" id="id" th:value="${member.id}" readonly>
 
                                 <input type="password" name="password" id="password" placeholder="현재 비밀번호 입력"
-                                       class="form-control my-2" maxlength="16" required>
+                                       class="form-control my-2" maxlength="16">
+
                                 <input type="password" name="newPassword" id="newPassword" placeholder="새 비밀번호 입력"
-                                       class="form-control my-2" maxlength="16" required>
+                                       class="form-control my-2" maxlength="16">
                                 <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="새 비밀번호 확인"
-                                       class="form-control my-2" maxlength="16" required>
+                                       class="form-control my-2" maxlength="16">
 
                             <div class="text-center my-4">
                                 <button type="submit" class="btn btn-outline-main mx-1">수정</button>
@@ -58,5 +59,32 @@
 </section>
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    let realpath = /*[[@{'/'}]]*/ 'default';
+    function changePw() {
+        var password = $("#password").val();
+        var newPassword = $("#newPassword").val();
+        var newPasswordConfirm = $("#newPasswordConfirm").val();
+        if (newPassword != newPasswordConfirm) {
+            alert("새로운 비밀번호와 새로운 비밀번호 확인이 서로 다릅니다.");
+            return false;
+        }
+        $.ajax({
+            url: "/mypage/check",
+            type: "post",
+            dataType: "json",
+            data: {"password": password},
+            success: function (data) {
+                if (!data) {
+                    alert("현재 비밀번호와 일치하지 않습니다.");
+                    location.href = realpath + 'mypage/changePw';
+                } else {
+                    alert("비밀번호가 변경되었습니다");
+                    location.href = realpath + 'mypage/info';
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
