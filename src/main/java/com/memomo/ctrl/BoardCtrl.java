@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,7 +41,7 @@ public class BoardCtrl {
         String type = request.getParameter("type");
         String keyword = request.getParameter("keyword");
         int pageNow = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-        String teacher = request.getSession().getAttribute("sid") != null ? (String) request.getSession().getAttribute("sid") : "";
+        String teacher = request.getSession().getAttribute("sid") != null ? memberService.getLoginId() : "";
         pageDTO.setType(type);
         pageDTO.setKeyword(keyword);
         pageDTO.setPageNow(pageNow);
@@ -55,6 +56,11 @@ public class BoardCtrl {
             board.setFile(boardFile);
         }
 
+        String id = memberService.getLoginId();
+        if (id.isEmpty() && teacher == "") {
+            model.addAttribute("msg", "로그인 후 이용해 주세요");
+            return "member/alert";
+        }
 
         model.addAttribute("boardList", boardList);
 
