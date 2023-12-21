@@ -13,6 +13,8 @@
     <script th:src="@{/js/stomp.min.js}"></script>
     <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
 
+    <script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
+
     <!-- 타임라인 -->
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link th:href="@{/css/timeline.min.css}" rel="stylesheet">
@@ -141,6 +143,7 @@
             </th:block>
             <th:block th:if="${detail.layout eq 'GROUP'}">
                 <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
+                <th:block th:replace="~{include/modal :: groupModal}"></th:block>
             </th:block>
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
@@ -149,6 +152,7 @@
 </section>
 <!-- 타임라인 -->
 <script type="text/javascript" th:src="@{/js/timeline.min.js}"></script>
+
 <script th:inline="javascript">
     const bno = /*[[${detail.bno}]]*/ 1;
     let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
@@ -166,7 +170,7 @@
         let params = {"pno" : pno, "content" : content};
         $.ajax({
             type:'POST',
-            url: realpath + '/post/addComment',
+            url: /*realpath + */'/post/addComment',
             data: params,
             success:function(data) {
                 let commentHTML = '';
@@ -190,7 +194,7 @@
             let pno = this.id.replace('getPost', '');
             $.ajax({
                 type: 'GET',
-                url: realpath +  '/post/getPost/' + pno,
+                url: /*realpath +  */'/post/getPost/' + pno,
                 success: function(data) {
                     // 상세보기
                     let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
@@ -262,21 +266,6 @@
                 toggleMenu('close'); // 메뉴에서 마우스가 벗어나면 닫힘
             }
         );
-
-        // 그룹 메뉴
-        var sw = true;
-        sw =! sw
-        $('[id^=groupMenuBtn]').click(function(){
-            var index = this.id.replace('groupMenuBtn','');
-            var groupMenuList = $('#groupMenuList' + index);
-            $(groupMenuList).slideToggle();
-            if (sw == true) {
-                sw = false;
-            } else if ( sw == false) {
-                sw = true;
-            }
-
-        })
     });
 
     // 포스트잇 글쓰기 영역
@@ -289,6 +278,7 @@
     $("#submit").click(function(){
         $("#postRegister").addClass("register")
     })
+
 
     // 포스트잇 메뉴
     $(document).ready(function(){
@@ -303,14 +293,14 @@
             $(modify).removeClass('register');
         })
 
-        // 수정 버튼
+/*        // 수정 버튼
         $('[id^=modSubmit]').click(function(){
             var index = this.id.replace('modSubmit','');
             var modify = $("#modify" + index);
             var original = $("#original" + index);
             $(original).removeClass('register');
             $(modify).addClass('register');
-        })
+        })*/
 
         // 수정 취소
         $('[id^=reset]').click(function(){
@@ -320,6 +310,8 @@
             $(original).removeClass('register');
             $(modify).addClass('register');
         })
+
+
     });
 
     let myLikes = /*[[${myLikes}]]*/ 'default';
@@ -331,6 +323,6 @@
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
-<script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
+
 <script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 </html>
