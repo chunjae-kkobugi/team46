@@ -23,4 +23,6 @@ public interface MemberService {
     String getLoginId();
 
     String findId(String email, String name);
+
+    boolean findId(String email, String name, String id);
 }

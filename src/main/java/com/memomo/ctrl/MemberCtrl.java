@@ -150,4 +150,27 @@ public class MemberCtrl {
         return "member/findIdResult";
     }
 
+    @GetMapping("/findPw")
+    public String findPwForm() {
+        return "member/findPw";
+    }
+
+    @PostMapping("/findPw")
+    public String findPw(HttpServletRequest request, RedirectAttributes rttr, Model model) {
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        //System.out.printf("id : %s, name : %s, email : %s\n", id, name, email);
+        boolean found =  memberService.findId(email, name, id);
+        System.out.println("찾았는지 ? : " + found);
+
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("found", found);
+        if (!found) {
+            //return "redirect:/member/findPw";
+            //rttr.addFlashAttribute("")
+        }
+        return "redirect:/member/findPw";
+    }
+
 }

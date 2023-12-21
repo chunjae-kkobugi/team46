@@ -103,4 +103,13 @@ public class MemberServiceImpl implements MemberService {
         }
         return optionalMember.get().getId();
     }
+
+    @Override
+    public boolean findId(String email, String name, String id) {
+        Optional<Member> optionalMember = memberRepo.findByEmailAndNameAndId(email, name, id);
+        if (optionalMember.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }
