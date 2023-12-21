@@ -66,8 +66,7 @@ function postLayout(p){
 
 function timelineLayout(p){
     let timelinePost = `
-    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}"
-          data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+    <div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}">
         <div class="timeline__content"
              style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'background-color : #ffffff' } ">
             <div class="original" id="original${p.pno}">
@@ -128,7 +127,7 @@ function groupLayout(g) {
             <div class="card-actions float-end" id="groupMenuBtn${g.gno}" data-gno="${g.gno}" style="cursor: pointer;">
                 <i class="fa-solid fa-ellipsis color"></i>
                 <div class="dropdown-menu dropdown-menu-right" id="groupMenuList${g.gno}" style="display: none;">
-                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupPostRegisterModal">포스트잇 추가</button>
+                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#postRegisterModal">포스트잇 추가</button>
                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#groupModifyModal" data-gno="${g.gno}" data-title="${g.title}" data-gColor="${g.gColor}" onclick="groupModifyModalSet(this.getAttribute('data-gno'), this.getAttribute('data-title'), this.getAttribute('g.gColor'))">그룹 수정</button>
                     <a class="dropdown-item" href="javascript:groupRemove(${g.gno})">그룹 삭제</a>
                 </div>
@@ -169,8 +168,11 @@ function groupPost(p) {
             </ul>
         </div>
         <!-- 포스트잇 메뉴 끝 -->
-        <p class="color pt-3" style="height: 70%">${p.content}</p>
-        <p class="text-end mb-0 color">${p.author}</p>
+        <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+            <p class="color pt-3" style="height: 70%">${p.content}</p>
+            <p class="text-end mb-0 color">${p.author}</p>
+        </div>
+       
     </div>
     <!-- 포스트잇 수정 -->
     <div class="card-body p-3 modify register" id="modify${p.pno}">
