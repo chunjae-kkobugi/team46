@@ -1,9 +1,6 @@
 package com.memomo.ctrl;
 
-import com.memomo.dto.MemberFormDTO;
-import com.memomo.dto.MemberUpdateDto;
-import com.memomo.dto.NicknameDTO;
-import com.memomo.dto.PostDTO;
+import com.memomo.dto.*;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import com.memomo.service.BoardService;
@@ -75,7 +72,7 @@ public class MemberCtrl {
         return "member/join";
     }
 
-    @PostMapping("/joinPro")
+    @PostMapping("/join")
     public String joinPro(@ModelAttribute("member") @Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
         System.out.println("bindingResult : " + bindingResult);
         if (bindingResult.hasErrors()) {
@@ -163,5 +160,66 @@ public class MemberCtrl {
             return "redirect:/member/enter/" + bno;
         }
         return "redirect:/post/detail?bno=" + bno;
+    }
+
+    @GetMapping("/findId")
+    public String findIdForm() {
+        return "member/findId";
+    }
+
+    @PostMapping("/findId")
+    public String findId(HttpServletRequest request, RedirectAttributes rttr, Model model) {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String id = memberService.findId(email, name);
+        //System.out.println("찾은 아이디 : " + id);
+        rttr.addFlashAttribute("rt", true);
+        if (id == null) {
+            return "redirect:/member/findId";
+        }
+        String first = id.substring(0, 3);
+        String mask = "*".repeat(id.length() - 3);
+        rttr.addFlashAttribute("id", first + mask);
+        rttr.addFlashAttribute("name", name);
+        rttr.addFlashAttribute("email", email);
+        return "redirect:/member/findIdResult";
+    }
+
+    @GetMapping("/findIdResult")
+    public String findIdResult() {
+        return "member/findIdResult";
+    }
+
+    @GetMapping("/changePw")
+    public String changePwForm(Model model) {
+        MemberPwDTO memberPwDTO = new MemberPwDTO();
+        model.addAttribute("memberPwDTO", memberPwDTO);
+        return "member/changePw";
+    }
+
+    @PostMapping("/changePw")
+    public String changePw(@Valid MemberPwDTO memberPwDTO, BindingResult bindingResult, Model model) {
+        String id = memberService.getLoginId();
+        Member member = memberService.memberDetail(memberService.getLoginId());
+
+//        if (bindingResult.hasErrors()) {
+//            return "member/changePw";
+//        }
+//        try {
+//            if(!memberPwDTO.getNewPassword().equals(memberPwDTO.getNewPasswordConfirm())) {
+//                model.addAttribute("errorMessage", "새로운 비밀번호와 새로운 비밀번호 확인이 일치하지 않습니다");
+//            } else {
+//                boolean modifyPwCheck = memberService.modifyPw(member.getMno(), memberPwDTO);
+//                if(!modifyPwCheck) {
+//                    model.addAttribute("errorMessage", "기존 비밀번호가 다릅니다.");
+//                    return "member/myPagePw";
+//                }
+//            }
+//        } catch (Exception e) {
+//            model.addAttribute("errorMessage", e.getMessage());
+//            return "member/myPagePw";
+//        }
+
+        return "redirect:/member/mypage";
     }
 }

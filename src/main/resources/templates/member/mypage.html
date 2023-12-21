@@ -18,7 +18,7 @@
                                 <h4 class="widget-title text-center"><span>마이페이지</span></h4>
                                 <ul class="list-unstyled widget-list">
                                     <li><a class="" href="#!">대시보드</a></li>
-                                    <li><a class="" href="#!">회원정보 수정</a></li>
+                                    <li><a class="" th:href="@{/member/mypage}">회원정보 수정</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,8 +56,8 @@
                                     <tr>
                                         <th class="text-center pwd">비밀번호</th>
                                         <td>
-                                            <button type="button" class="btn btn-main btn-sm" onclick="reco()">변경
-                                            </button>
+                                            <!--<button type="button" class="btn btn-main btn-sm" onclick="reco()">변경</button>-->
+                                            <a th:href="@{/member/changePw}" class="btn btn-main btn-sm">변경</a>
                                         </td>
                                         <input type="hidden" name="pw" id="pw" class="form-control"
                                                th:value="${member.pw}">

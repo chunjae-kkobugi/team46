@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>마이페이지</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<section class="my_area my-5">
+    <div class="mask d-flex align-items-center">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="card">
+                        <div class="card-body pt-5">
+                            <div class="widget widget-categories">
+                                <h4 class="widget-title text-center"><span>마이페이지</span></h4>
+                                <ul class="list-unstyled widget-list">
+                                    <li><a class="" href="#!">대시보드</a></li>
+                                    <li><a class="" th:href="@{/member/mypage}">회원정보 수정</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 col-md-7">
+                    <div class="card">
+                        <div class="card-body p-5">
+                            <div class="tit-area">
+                                <h4 class="tit">회원정보 수정</h4>
+                            </div>
+                            <h5 class="tit blt-gray">비밀번호 변경</h5>
+                            <form method="post" role="form">
+                                <input type="password" id="password" placeholder="현재 비밀번호 입력"
+                                       class="form-control my-2" maxlength="16" required>
+                                <input type="password" id="pw1" placeholder="새 비밀번호 입력"
+                                       class="form-control my-2" maxlength="16" required>
+                                <input type="password" id="pw2" placeholder="새 비밀번호 확인"
+                                       class="form-control my-2" maxlength="16" required>
+
+                            <div class="text-center my-4">
+                                <button type="submit" class="btn btn-outline-main mx-1">수정</button>
+                                <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
+                                <a th:href="@{/member/mypage}" class="btn btn-outline-main mx-1">취소</a>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+</html>

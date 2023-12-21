@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>아이디 찾기</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<section class="login py-5 border-top-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8 align-item-center">
+                <div class="mx-5">
+                    <h3 class="text-center">아이디 찾기</h3>
+                    <!--<p th:text="${boardDetail}"></p>-->
+                    <form th:action="@{/member/findId}" method="post">
+                        <fieldset class="p-4">
+                            <input class="form-control mb-3" type="text" id="name" name="name" placeholder="이름 입력" required>
+                            <input class="form-control mb-3" type="email" id="email" name="email" placeholder="이메일 입력" required>
+                            <p class="text-danger">[[${msg}]]</p>
+                            <button type="submit" class="form-control btn btn-main font-weight-bold text-white">아이디 찾기</button>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    var rt = /*[[${rt}]]*/ null;
+    var id = /*[[${id}]]*/ null;
+
+    console.log(rt + " " + id);
+    if (rt === true && id === null) {
+        alert('존재하지 않는 회원정보입니다.');
+    }
+</script>
+</body>
+</html>

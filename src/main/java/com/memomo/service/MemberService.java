@@ -3,6 +3,8 @@ package com.memomo.service;
 import com.memomo.dto.MemberFormDTO;
 import com.memomo.entity.Member;
 
+import java.util.Optional;
+
 public interface MemberService {
     void join(MemberFormDTO member);
 
@@ -19,4 +21,6 @@ public interface MemberService {
     Member saveMember(Member member);
 
     String getLoginId();
+
+    String findId(String email, String name);
 }
