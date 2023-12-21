@@ -163,68 +163,10 @@
         verticalStartPosition: 'left' // or right
     });
 
-    // 댓글 입력 처리
-    function addComment(){
-        let pno = $('#commentPno').val();
-        let content = $('#commentContent').val();
-        let params = {"pno" : pno, "content" : content};
-        $.ajax({
-            type:'POST',
-            url: /*realpath + */'/post/addComment',
-            data: params,
-            success:function(data) {
-                let commentHTML = '';
-                commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.author + '</p>';
-                commentHTML += '<p>' + data.content + '</p>';
-                commentHTML += '<hr>'
-                $('.comment').prepend(commentHTML);
-                $('.noComment').remove();
-                $('#commentContent').val('');
-            },
-            error: function(err){
-                console.log(err);
-            }
-        })
-    }
+
 
     $(document).ready(function(){
 
-        // 게시판 상세보기
-        $('[id^=getPost]').click(function() {
-            let pno = this.id.replace('getPost', '');
-            $.ajax({
-                type: 'GET',
-                url: /*realpath +  */'/post/getPost/' + pno,
-                success: function(data) {
-                    // 상세보기
-                    let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
-                    postHTML += '<p>' + data.content + '</p>';
-                    $('.getPost').html(postHTML);
-
-                    // 댓글 입력 pno
-                    let cnoHTML = '<input type="hidden" name="pno" id="commentPno" value="' + data.pno+ '">'
-                    $('.addComment').append(cnoHTML);
-
-                    // 댓글 목록
-                    let commentHTML = ''; // 변수를 밖에서 초기화
-
-                    if (data.commentList.length == 0 ) {
-                        commentHTML += '<p class="text-center noComment">등록된 댓글이 없습니다</p>'
-                    } else {
-                        for (let i = 0; i < data.commentList.length; i++) {
-                            commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
-                            commentHTML += '<p>' + data.commentList[i].content + '</p>';
-                            commentHTML += '<hr>'
-                        }
-                    }
-
-                    $('.comment').html(commentHTML); // 반복문이 끝난 후 한 번에 HTML 추가
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        });
 
 
 

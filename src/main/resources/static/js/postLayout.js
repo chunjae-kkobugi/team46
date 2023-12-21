@@ -28,7 +28,7 @@ function postLayout(p){
                             </li>
                         </ul>
                     </div>
-                    <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+                    <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                         <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -90,7 +90,7 @@ function timelineLayout(p){
                     </ul>
                 </div>
                 <!-- 내용 -->
-                <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+                <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                      <p class="pe-3" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'font-size : 20px; color : #333333' : 'font-size : 20px; mix-blend-mode: difference; color : #ffffff'}">${p.content}</p>
                      <p class="text-end m-0" style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">${p.author}</p>
                 </div>
@@ -168,7 +168,7 @@ function groupPost(p) {
             </ul>
         </div>
         <!-- 포스트잇 메뉴 끝 -->
-        <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}">
+        <div style="height: 100%; cursor: pointer" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
             <p class="color pt-3" style="height: 70%">${p.content}</p>
             <p class="text-end mb-0 color">${p.author}</p>
         </div>
