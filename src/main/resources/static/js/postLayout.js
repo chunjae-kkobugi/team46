@@ -23,7 +23,7 @@ function postLayout(p){
 
                             <!-- 삭제 버튼 -->
                             <li class="postRemoveBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))"
-                                style="${ p.bgImage==null ? 'cursor: pointer; background-color: ' + p.bgColor : '#ffffff' }">
+                                style="${ p.bgImage==null ? 'cursor: pointer; background-color: '  + p.bgColor : '#ffffff' }">
                                 <span style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                     <i class="fa-solid fa-trash-can"></i></span>
                             </li>
