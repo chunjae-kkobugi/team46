@@ -41,7 +41,7 @@ public class BoardCtrl {
         String type = request.getParameter("type");
         String keyword = request.getParameter("keyword");
         int pageNow = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-        String teacher = request.getSession().getAttribute("sid") != null ? memberService.getLoginId() : "";
+        String teacher = memberService.getLoginId();
         pageDTO.setType(type);
         pageDTO.setKeyword(keyword);
         pageDTO.setPageNow(pageNow);
@@ -56,8 +56,7 @@ public class BoardCtrl {
             board.setFile(boardFile);
         }
 
-        String id = memberService.getLoginId();
-        if (id.isEmpty() && teacher == "") {
+        if (teacher == "") {
             model.addAttribute("msg", "로그인 후 이용해 주세요");
             return "member/alert";
         }
