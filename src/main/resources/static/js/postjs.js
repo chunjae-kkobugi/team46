@@ -1,31 +1,4 @@
-/*$("#draggable").draggable({
-    stop: function( event, ui ) {
-        layoutDrag(ui.position.left, ui.position.top);
-    }
-});
-
-$("#sortable").sortable({
-    stop: function (event, ui){
-        let changed = ui.item[0];
-        let pno = changed.getAttribute("data-pno");
-        let priority = $("#sortable > li").index(changed);
-        layoutSort(pno, priority);
-    }
-});
-
-$("#sortable").disableSelection();
-
-$(".timeline__items").sortable({
-    stop: function (event, ui){
-        let changed = ui.item[0];
-        let pno = changed.getAttribute("data-pno");
-        let priority = $(".timeline__items > .timeline__item").index(changed);
-        console.log(priority);
-        layoutSort(pno, priority);
-    }
-});
-
-$(".timeline__items").disableSelection();*/
+// 포스트 공통 함수
 
 // 포스트 추가
 $(document).on('submit', '#postAddForm', function(e){
@@ -114,14 +87,14 @@ $(document).on('click', '.myLike', function(){
 });
 
 // 포스트 수정
-$(document).on('click', '[id^=postModifyBtn]', function(){
-    var index = this.id.replace('postModifyBtn','');
-    var modify = $("#modify" + index);
-    var original = $("#original" + index);
-
-    $(original).addClass('register');
-    $(modify).removeClass('register');
-});
+// $(document).on('click', '[id^=postModifyBtn]', function(){
+//     var index = this.id.replace('postModifyBtn','');
+//     var modify = $("#modify" + index);
+//     var original = $("#original" + index);
+//
+//     $(original).addClass('register');
+//     $(modify).removeClass('register');
+// });
 
 // 포스트 상세 보기
 /*$(document).on('click', '[id^=getPost]', function(){
@@ -159,7 +132,6 @@ $(document).on('click', '[id^=postModifyBtn]', function(){
         }
     });
 });*/
-
 function getPostModal(pno){
     $.ajax({
         type: 'GET',
@@ -222,3 +194,22 @@ $(document).on('submit', '#commentAddForm', function(e){
         }
     })
 });
+
+// 포스트 수정 모달
+function editPostModal(pno){
+    $.ajax({
+        type: 'GET',
+        url: /*realpath +  */'/post/getPost/' + pno,
+        success: function(data) {
+            let form = $("#postEditForm")[0];
+            form.pno.setAttribute('value', pno);
+            $(form.content).text(data.content);
+            form.bgColor.setAttribute('value', data.bgColor);
+
+            $(`#postEditForm select option[value=${data.gno}]`).prop("selected", true);
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+}

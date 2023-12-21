@@ -90,6 +90,47 @@
     </div>
     <!-- 포스트잇 추가 모달 창 끝 -->
 
+    <!-- 포스트잇 수정 모달 창 시작 -->
+    <div class="modal fade" id="postEditModal" aria-labelledby="postRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">포스트잇 수정</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="postEditForm" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="pno">
+                        <div class="mb-3" th:if="${detail.layout == 'GROUP'}">
+                            <label for="gno">그룹</label>
+                            <select name="gno" class="form-select">
+                                <option th:each="g : ${groupList}" th:value="${g.gno}" th:text="${g.title}"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="content" class="col-form-label">내용</label>
+                            <textarea id="postEditText" class="form-control" name="content" cols="30" rows="5" maxlength="950" placeholder="내용을 입력하세요" required></textarea>
+                        </div>
+                        <div class="p-2 row">
+                            <div class="col-2 mb-3">
+                                <label for="bgColor" class="col-form-label">배경색</label>
+                                <input type="color" name="bgColor" class="form-control" value="#ffffff">
+                            </div>
+                            <div class="col mb-3">
+                                <label for="postFile" class="col-form-label">배경이미지</label>
+                                <input type="file" name="postFile" class="form-control" style="height: auto">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 포스트잇 수정 모달 창 끝 -->
+
     <!-- 포스트잇 상세보기 모달 창 시작 -->
     <div class="modal fade postGetModal" id="postGetModal" aria-labelledby="postGetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -106,7 +147,7 @@
                             <!-- 댓글 입력폼 -->
                             <form method="post" class="addComment" id="commentAddForm">
                                 <div class="input-group mb-2">
-                                    <textarea class="form-control" name="content" id="commentContent" cols="30" rows="5" maxlength="950" placeholder="댓글을 입력해 주세요"></textarea>
+                                    <textarea class="form-control" name="content" id="commentContent" cols="30" rows="5" maxlength="950" placeholder="댓글을 입력해 주세요" required></textarea>
                                     <input id="commentAddPno" type="hidden" name="pno">
                                     <button type="submit" class="btn btn-main">등록</button>
                                 </div>

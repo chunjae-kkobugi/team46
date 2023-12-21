@@ -9,12 +9,11 @@ function postLayout(p){
             <!-- 포스트잇 내용-->
             <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
                 <div class="original" id="original${p.pno}">
-                    <div id="postMenuList${p.pno}" class="pe-2"
-                         style="position: absolute; right: 0; height: auto; z-index: 10; ">
+                    <div id="postMenuList${p.pno}" class="pe-2" style="position: absolute; right: 0; height: auto; z-index: 10; ">
                         <ul class="p-0" style="list-style-type: none">
                             <!-- 수정버튼 -->
-                            <li class="me-2" id="postModifyBtn${p.pno}"
-                                style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}">
+                            <li class="me-2" id="postModifyBtn${p.pno}" style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}" 
+                            data-bs-toggle="modal" data-bs-target="#postEditModal" data-pno="${p.pno}" onclick="editPostModal(this.getAttribute('data-pno'))">
                                 <span style="${(p.bgColor=='#ffffff' || p.bgColor == null) ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
                                     <i class="fa-pen-to-square fa-solid"></i>
                                 </span>
@@ -31,14 +30,24 @@ function postLayout(p){
                     <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                         <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수 - 일단 뺌)-->
+                    <div class="d-flex justify-content-between"> 
                         <p class="card-text text-end mb-0 color">${p.author}</p>
                         <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes===null?0:p.likes}</span></p>
-                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments===null?0:p.comments}</p>
+                        <!-- <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments===null?0:p.comments}</p> -->
                     </div>
                 </div>
 
-                <!-- 포스트잇 수정 -->
+
+            </div>
+        </div>
+    </div>
+</li>`;
+    return post;
+}
+
+function temp(p){
+    let temp = `                <!-- 포스트잇 수정 -->
                 <div class="modify register" id="modify${p.pno}">
                     <form class="postEditForm" method="post" enctype="multipart/form-data">
                         <div class="justify-content-center row">
@@ -47,7 +56,7 @@ function postLayout(p){
                             <input type="hidden" name="bno" id="${p.bno}" value="${p.bno}">
                             <div class="justify-content-between row">
                                 <input type="color" class="col-2 form-control mt-1" name="bgColor" value="${p.bgColor}">
-                                <input type="file" class="col-8 form-control mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
+                                <input type="file" class="col-8 form-control form-control-sm mb-2 me-2 mt-2 uploadFiles" name="postFile" style="height: auto">
                             </div>
                             <div class="btn-group d-flex">
                                 <button type="button" class="btn btn-main" id="reset${p.pno}"> 취소 </button>
@@ -56,12 +65,7 @@ function postLayout(p){
                         </div>
                     </form>
                 </div>
-                <!-- 포스트잇 수정 끝 -->
-            </div>
-        </div>
-    </div>
-</li>`;
-    return post;
+                <!-- 포스트잇 수정 끝 -->`
 }
 
 function timelineLayout(p){

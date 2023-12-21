@@ -13,6 +13,17 @@
             let newPost = postLayout(p);
             $("#sortable").append(newPost);
         })
+
+        $("#sortable").sortable({
+            stop: function (event, ui){
+                let changed = ui.item[0];
+                let pno = changed.getAttribute("data-pno");
+                let priority = $("#sortable > li").index(changed);
+                layoutSort(pno, priority);
+            }
+        });
+
+        $("#sortable").disableSelection();
     </script>
 </th:block>
 
@@ -53,6 +64,18 @@
             let newPost = timelineLayout(p);
             $(".timeline__items").append(newPost);
         })
+
+        $(".timeline__items").sortable({
+            stop: function (event, ui){
+                let changed = ui.item[0];
+                let pno = changed.getAttribute("data-pno");
+                let priority = $(".timeline__items > .timeline__item").index(changed);
+                console.log(priority);
+                layoutSort(pno, priority);
+            }
+        });
+
+        $(".timeline__items").disableSelection();
     </script>
 </th:block>
 
