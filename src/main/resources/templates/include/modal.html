@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="modal">
-    <!-- 게시판 정보 수정 모달창-->
+    <!-- 게시판 정보 수정 모달창 시작 -->
     <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -13,8 +13,8 @@
                 <div class="modal-body">
                     <form th:action="@{/board/modify(bno=${detail.bno})}" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label for="title" class="col-form-label">게시판 이름</label>
-                            <input type="text" name="title" class="form-control" id="title" th:value="${detail.title}">
+                            <label for="boardTitle" class="col-form-label">게시판 이름</label>
+                            <input type="text" name="title" class="form-control" id="boardTitle" aria-describedby="title" th:value="${detail.title}">
                         </div>
                         <div class="row">
                             <div class="col">
@@ -32,8 +32,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="bgColor" class="col-form-label">배경색</label>
-                            <input type="color" name="bgColor" class="form-control" id="bgColor" th:value="${detail.bgColor}">
+                            <label for="boardBgColor" class="col-form-label">배경색</label>
+                            <input type="color" name="bgColor" class="form-control" id="boardBgColor" th:value="${detail.bgColor}">
                         </div>
                         <div class="mb-3">
                             <label for="boardFile" class="col-form-label">배경이미지</label>
@@ -47,6 +47,7 @@
             </div>
         </div>
     </div>
+    <!-- 게시판 정보 수정 모달창 끝-->
 
     <!-- 그룹추가 모달창-->
     <div class="modal fade" id="groupRegisterModal" tabindex="-1" aria-labelledby="groupRegisterModalLabel" aria-hidden="true">
@@ -149,5 +150,65 @@
         </div>
     </div>
     <!-- 포스트잇 상세보기 모달 창 끝 -->
+</th:block>
+
+<th:block th:fragment="groupModal">
+    <!-- 그룹 추가 모달 창 시작-->
+    <div class="modal fade" id="groupRegisterModal" tabindex="-1" aria-labelledby="groupRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="groupRegisterModalLabel">그룹 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="groupRegisterModalForm">
+                        <input type="hidden" name="bno" th:value="${detail.bno}">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">그룹 이름</label>
+                            <input type="text" name="title" class="form-control" id="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="gColor" class="col-form-label">배경색</label>
+                            <input type="color" name="gColor" class="form-control" id="gColor" value="#ffffff">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 그룹 추가 모달 창 끝 -->
+
+    <!-- 그룹 수정 모달 창 시작 -->
+    <div class="modal fade" id="groupModifyModal" tabindex="-1" aria-labelledby="groupModifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="groupModifyModalLabel">그룹 수정</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="groupModifyModalForm">
+                        <input type="hidden" name="gno">
+                        <div class="mb-3">
+                            <label for="groupEditTitle" class="col-form-label">그룹 이름</label>
+                            <input type="text" name="title" class="form-control" id="groupEditTitle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="groupEditBgColor" class="col-form-label">배경색</label>
+                            <input type="color" name="gColor" class="form-control" id="groupEditBgColor">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 그룹 수정 모달 창 끝 -->
 </th:block>
 </body>

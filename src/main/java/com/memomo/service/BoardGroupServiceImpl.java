@@ -22,17 +22,16 @@ public class BoardGroupServiceImpl implements BoardGroupService{
     }
 
     @Override
-    public Integer groupAdd(BoardGroup boardGroup) {
-        groupRepository.save(boardGroup);
-        return boardGroup.getGno();
+    public BoardGroup groupAdd(BoardGroup boardGroup) {
+        return groupRepository.save(boardGroup);
     }
 
     @Override
-    public void groupEdit(BoardGroup boardGroup) {
+    public BoardGroup groupEdit(BoardGroup boardGroup) {
         Optional<BoardGroup> result = groupRepository.findById(boardGroup.getGno());
         BoardGroup group = result.orElseThrow();
         group.change(boardGroup.getTitle(), boardGroup.getGColor());
-        groupRepository.save(group);
+        return groupRepository.save(group);
     }
 
     @Override

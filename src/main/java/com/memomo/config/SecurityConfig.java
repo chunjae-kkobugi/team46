@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 import javax.sql.DataSource;
 
@@ -35,7 +37,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> auth
                 //.requestMatchers("/admin/**", "/lecture/**", "/teacher/**").permitAll()
                 //.requestMatchers("/", "/**", "/login", "/join_frm", "join_frm_u", "join_frm_t").permitAll()
-                .requestMatchers("/", "/member/**", "/board/list", "/post/**", "/send-mail", "/confirm").permitAll()
+                .requestMatchers("/", "/member/**", "/board/list", "/post/**", "/send-mail", "/confirm", "/stomp/**", "/socket/**").permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin((formLogin) -> formLogin
