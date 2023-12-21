@@ -18,7 +18,7 @@
                                 <h4 class="widget-title text-center"><span>마이페이지</span></h4>
                                 <ul class="list-unstyled widget-list">
                                     <li><a class="" href="#!">대시보드</a></li>
-                                    <li><a class="" th:href="@{/member/mypage}">회원정보 수정</a></li>
+                                    <li><a class="" th:href="@{/mypage/info}">회원정보 수정</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -32,18 +32,21 @@
                                 <h4 class="tit">회원정보 수정</h4>
                             </div>
                             <h5 class="tit blt-gray">비밀번호 변경</h5>
-                            <form method="post" role="form">
-                                <input type="password" id="password" placeholder="현재 비밀번호 입력"
+                            <form method="post" role="form" th:object="${memberPwDTO}">
+                                <!--<input type="hidden" name="bno" id="bno" th:value="${list.bno}">-->
+                                <!--<input type="hidden" name="id" id="id" th:value="${member.id}" readonly>-->
+
+                                <input type="password" name="password" id="password" placeholder="현재 비밀번호 입력"
                                        class="form-control my-2" maxlength="16" required>
-                                <input type="password" id="pw1" placeholder="새 비밀번호 입력"
+                                <input type="password" name="newPassword" id="newPassword" placeholder="새 비밀번호 입력"
                                        class="form-control my-2" maxlength="16" required>
-                                <input type="password" id="pw2" placeholder="새 비밀번호 확인"
+                                <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" placeholder="새 비밀번호 확인"
                                        class="form-control my-2" maxlength="16" required>
 
                             <div class="text-center my-4">
                                 <button type="submit" class="btn btn-outline-main mx-1">수정</button>
                                 <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
-                                <a th:href="@{/member/mypage}" class="btn btn-outline-main mx-1">취소</a>
+                                <a th:href="@{/mypage/info}" class="btn btn-outline-main mx-1">취소</a>
                             </div>
                             </form>
                         </div>
