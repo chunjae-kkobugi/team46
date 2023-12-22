@@ -34,7 +34,7 @@ function postLayout(p){
                     <div class="d-flex justify-content-between">
                         <p class="card-text text-end mb-0 color">${p.author}</p>
                         <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes===null?0:p.likes}</span></p>
-                        <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments===null?0:p.comments}</p>
+                        <p class="card-text text-end mb-0 color"><i class="comments fa-regular fa-comment" data-pno="${p.pno}"></i> ${p.comments===null?0:p.comments}</p>
                     </div>
                 </div>
 
