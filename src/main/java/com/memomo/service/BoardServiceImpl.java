@@ -1,25 +1,17 @@
 package com.memomo.service;
 
 import com.memomo.dto.BoardDTO;
-import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
-import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
-import com.memomo.entity.Post;
 import com.memomo.repository.BoardFileRepository;
 import com.memomo.repository.BoardRepository;
 import com.memomo.repository.PostRepository;
-import com.querydsl.core.BooleanBuilder;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -267,10 +258,23 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board boardDetail(Integer  bno) {
+    public BoardDTO boardDetail(Integer  bno) {
         Optional<Board> result = boardRepo.findById(bno);
         Board board = result.orElseThrow();
-        return board;
+        BoardFile boardFile = boardFileRepo.findBoardFileByFno(board.getBgImage());
+        BoardDTO dto = new BoardDTO();
+        dto.setBno(board.getBno());
+        dto.setTitle(board.getTitle());
+        dto.setBpw(board.getBpw());
+        dto.setStatus(board.getStatus());
+        dto.setBgImage(board.getBgImage());
+        dto.setBgColor(board.getBgColor());
+        dto.setCreateAt(board.getCreateAt());
+        dto.setLayout(board.getLayout());
+        dto.setMaxStudent(board.getMaxStudent());
+        dto.setTeacher(board.getTeacher());
+        dto.setFile(boardFile);
+        return dto;
     }
 
     @Override

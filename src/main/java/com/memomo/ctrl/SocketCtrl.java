@@ -1,5 +1,6 @@
 package com.memomo.ctrl;
 
+import com.memomo.dto.BoardDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.*;
 import com.memomo.service.BoardGroupService;
@@ -71,8 +72,9 @@ public class SocketCtrl {
 
         plist = plist2;
 
-        Board board = boardService.boardDetail(bno);
+        BoardDTO board = boardService.boardDetail(bno);
         List<Likes> myLikes = likesService.myLikes(bno, sid);
+        BoardFile bgImage = null;
 
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);

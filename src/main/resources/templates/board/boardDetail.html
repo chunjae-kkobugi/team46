@@ -104,7 +104,9 @@
             mix-blend-mode: difference; color: #ffffff;
         }
         .original li { float: left;}
-
+        .bg {min-height: 700px;}
+        .bg::before { background-size: contain; filter: contrast(0.5);}
+        .post{z-index: 1;}
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
@@ -117,7 +119,7 @@
 <th:block th:replace="~{include/header :: header}" class="mb-0"></th:block>
 
 
-<section class="section pb-5" th:style="'background-color : '+ ${detail.bgColor}">
+<section class="section">
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
@@ -147,7 +149,7 @@
         </div>
     </div>
 
-    <div class="post" style="min-height: 700px;">
+    <div class="post" th:style="${detail.bgImage != null ? 'background-image : url(/fileImages/' + detail.file.savePath + '/' + detail.file.saveName + ');' : 'background-color :' + detail.bgColor}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
@@ -162,6 +164,8 @@
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
     </div>
+
+
 
 </section>
 <!-- 타임라인 -->
