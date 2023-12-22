@@ -17,6 +17,7 @@ import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -49,6 +50,7 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     private BoardFileRepository boardFileRepo;
 
+
     @Override
     public Integer boardAdd(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) throws IOException {
         String imageOriginName = "";
@@ -62,7 +64,8 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+//            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+            String uploadDir = "C:\\upload\\";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
@@ -146,8 +149,9 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+//            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
 
+            String uploadDir = "C:\\upload\\";
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
