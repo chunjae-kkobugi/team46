@@ -5,6 +5,7 @@ import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import com.memomo.service.BoardService;
 import com.memomo.service.CustomUserDetailsService;
+import com.memomo.service.EmailService;
 import com.memomo.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -40,6 +43,7 @@ public class MemberCtrl {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final BoardService boardService;
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String loginMember() {
@@ -162,13 +166,20 @@ public class MemberCtrl {
         String email = request.getParameter("email");
         //System.out.printf("id : %s, name : %s, email : %s\n", id, name, email);
         boolean found =  memberService.findId(email, name, id);
-        System.out.println("찾았는지 ? : " + found);
+        //System.out.println("찾았는지 ? : " + found);
 
         rttr.addFlashAttribute("rt", true);
         rttr.addFlashAttribute("found", found);
-        if (!found) {
-            //return "redirect:/member/findPw";
-            //rttr.addFlashAttribute("")
+        rttr.addFlashAttribute("id", id);
+        rttr.addFlashAttribute("name", name);
+        rttr.addFlashAttribute("email", email);
+        if (found) {
+            String tempPw = emailService.sendPw(email);
+            Optional<Member> optionalMember = memberRepository.findById(id);
+            Member member = optionalMember.orElseThrow();
+            String encodedPw = passwordEncoder.encode(tempPw);
+            member.updatePw(encodedPw);
+            memberRepository.save(member);
         }
         return "redirect:/member/findPw";
     }

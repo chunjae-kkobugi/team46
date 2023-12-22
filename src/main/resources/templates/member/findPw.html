@@ -19,7 +19,7 @@
                             <input class="form-control mb-3" type="text" id="id" name="id" placeholder="아이디 입력" required>
                             <input class="form-control mb-3" type="text" id="name" name="name" placeholder="이름 입력" required>
                             <input class="form-control mb-3" type="email" id="email" name="email" placeholder="이메일 입력" required>
-                            <p id="msg" style="display: none;">임시 비밀번호가 전송되었습니다.</p>
+                            <!--<p id="msg" style="display: none;">임시 비밀번호가 전송되었습니다.</p>-->
                             <button type="submit" class="form-control btn btn-main font-weight-bold text-white">임시 비밀번호 받기</button>
                         </fieldset>
                     </form>
@@ -31,13 +31,23 @@
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 <script th:inline="javascript">
+    var rt = /*[[${rt}]]*/ null;
     var found = /*[[${found}]]*/ null;
+    var id = /*[[${id}]]*/ null;
+    var name = /*[[${name}]]*/ null;
+    var email = /*[[${email}]]*/ null;
 
     if (found === false) {
         alert('존재하지 않는 회원정보입니다.');
     }
     if (found === true) {
-        $('#msg').show();
+        alert('임시 비밀번호가 전송되었습니다.');
+    }
+
+    if (rt === true) {
+        $('#id').val(id);
+        $('#name').val(name);
+        $('#email').val(email);
     }
 </script>
 </body>

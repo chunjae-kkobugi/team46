@@ -17,7 +17,8 @@
                         <fieldset class="p-4">
                             <input class="form-control mb-3" name="id" type="text" placeholder="아이디" required="">
                             <input class="form-control mb-3" name="pw" type="password" placeholder="비밀번호" required="">
-                            <p th:if="${loginErrorMsg}" class="text-danger" th:text="${loginErrorMsg}"></p>
+                            <!--<p th:if="${loginErrorMsg}" class="text-danger" th:text="${loginErrorMsg}"></p>-->
+                            <p class="text-danger">[[${loginErrorMsg}]]</p>
                             <button type="submit" class="form-control btn btn-main font-weight-bold"
                                     style="color: #ffffff">로그인
                             </button>
