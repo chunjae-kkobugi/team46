@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class MemberFormDTO {
     @NotEmpty(message = "아이디는 필수 입력 값입니다.")
-    @Length(min = 6, max = 20, message = "아이디는 6자 이상, 20자 이하로 입력해주세요.")
+    @Pattern(regexp = "^[a-z0-9]{6,20}$", message = "영문 소문자+숫자조합 (6~20자 이내)")
     private String id;
 
     @NotEmpty(message = "비밀번호는 필수 입력 값입니다.")
