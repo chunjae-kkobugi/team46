@@ -3,7 +3,7 @@
 
 function postLayout(p){
     let post = `
-<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default" data-pno="${p.pno}" style="width 275px;">    
+<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-default post-style" data-pno="${p.pno}">    
     <div class="m-2">
         <div class="card shadow-sm">
             <!-- 포스트잇 내용-->
@@ -28,7 +28,7 @@ function postLayout(p){
                         </ul>
                     </div>
                     <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
-                        <p class="card-text pt-3 color" style="font-size: 20px;">${p.content}</p>
+                        <p class="card-text pt-3 color post-text-style" style="font-size: 20px;">${p.content}</p>
                     </div>
                     <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수 - 일단 뺌)-->
                     <div class="d-flex justify-content-between"> 

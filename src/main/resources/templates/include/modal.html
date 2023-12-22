@@ -109,7 +109,7 @@
                         </div>
                         <div>
                             <label for="content" class="col-form-label">내용</label>
-                            <textarea id="postEditText" class="form-control" name="content" cols="30" rows="5" maxlength="950" placeholder="내용을 입력하세요" required></textarea>
+                            <textarea class="form-control" name="content" cols="30" rows="5" maxlength="950" placeholder="내용을 입력하세요" required></textarea>
                         </div>
                         <div class="p-2 row">
                             <div class="col-2 mb-3">
@@ -163,6 +163,23 @@
         </div>
     </div>
     <!-- 포스트잇 상세보기 모달 창 끝 -->
+
+    <!--  모달창 스크립트 시작 -->
+    <script th:inline="javascript">
+        // 포스트 수정 모달
+        $('#postEditModal .btn-close').click(function (){
+            $("#postEditModal textarea").text("");
+        });
+
+        // 포스트 추가 모달
+        $("#postRegisterModal .btn-close").click(function() {
+            $("#postRegisterModal textarea").text("");
+            $("#postRegisterModal input[name='bgColor']").val('#ffffff');
+            $("#postRegisterModal input[name='postFile']").val('');
+            $("#postRegisterModal option[selected]").prop('selected', false);
+        });
+    </script>
+    <!--  모달창 스크립트 끝 -->
 </th:block>
 
 <th:block th:fragment="groupModal">

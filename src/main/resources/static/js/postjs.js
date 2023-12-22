@@ -38,7 +38,7 @@ $(document).on('submit', '#postAddForm', function(e){
 });
 
 // 포스트 수정
-$(document).on('submit', '.postEditForm', function(e){
+$(document).on('submit', '#postEditForm', function(e){
     e.preventDefault();
     let form = $(this)[0];
 
@@ -71,7 +71,8 @@ $(document).on('submit', '.postEditForm', function(e){
         }
     });
 
-    form.reset();
+    // 수정 후 모달 창 닫기
+    $('#postEditModal .btn-close').click();
 });
 
 // 포스트 좋아요
@@ -86,52 +87,8 @@ $(document).on('click', '.myLike', function(){
     }
 });
 
-// 포스트 수정
-// $(document).on('click', '[id^=postModifyBtn]', function(){
-//     var index = this.id.replace('postModifyBtn','');
-//     var modify = $("#modify" + index);
-//     var original = $("#original" + index);
-//
-//     $(original).addClass('register');
-//     $(modify).removeClass('register');
-// });
 
 // 포스트 상세 보기
-/*$(document).on('click', '[id^=getPost]', function(){
-    let pno = this.id.replace('getPost', '');
-    $.ajax({
-        type: 'GET',
-        url: /!*realpath +  *!/'/post/getPost/' + pno,
-        success: function(data) {
-            // 상세보기
-            let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
-            postHTML += '<p>' + data.content + '</p>';
-            $('.getPost').html(postHTML);
-
-            // 댓글 입력 pno
-            let cnoHTML = '<input type="hidden" name="pno" id="commentPno" value="' + data.pno+ '">'
-            $('.addComment').append(cnoHTML);
-
-            // 댓글 목록
-            let commentHTML = ''; // 변수를 밖에서 초기화
-
-            if (data.commentList.length == 0 ) {
-                commentHTML += '<p class="text-center noComment">등록된 댓글이 없습니다</p>'
-            } else {
-                for (let i = 0; i < data.commentList.length; i++) {
-                    commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
-                    commentHTML += '<p>' + data.commentList[i].content + '</p>';
-                    commentHTML += '<hr>'
-                }
-            }
-
-            $('.comment').html(commentHTML); // 반복문이 끝난 후 한 번에 HTML 추가
-        },
-        error: function(err) {
-            console.log(err);
-        }
-    });
-});*/
 function getPostModal(pno){
     $.ajax({
         type: 'GET',
