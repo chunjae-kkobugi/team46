@@ -9,7 +9,9 @@ function postLayout(p){
             <!-- 포스트잇 내용-->
             <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
                 <div class="original" id="original${p.pno}">
-                    <div id="postMenuList${p.pno}" class="pe-2" style="position: absolute; right: 0; height: auto; z-index: 10; ">
+                    <div id="postMenuList${p.pno}" class="pe-2 postMenu"
+                         style="position: absolute; right: 0; height: auto; z-index: 10; ">
+                         <input type="hidden" class="postAuthor" value="${p.author}">
                         <ul class="p-0" style="list-style-type: none">
                             <!-- 수정버튼 -->
                             <li class="me-2" id="postModifyBtn${p.pno}" style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}" 
@@ -34,7 +36,7 @@ function postLayout(p){
                     <div class="d-flex justify-content-between"> 
                         <p class="card-text text-end mb-0 color">${p.author}</p>
                         <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes===null?0:p.likes}</span></p>
-                        <!-- <p class="card-text text-end mb-0 color"><i class="fa-regular fa-comment"></i> ${p.comments===null?0:p.comments}</p> -->
+                        <p class="card-text text-end mb-0 color"><i class="comments fa-regular fa-comment" data-pno="${p.pno}"></i> ${p.comments===null?0:p.comments}</p>
                     </div>
                 </div>
 
@@ -76,6 +78,7 @@ function timelineLayout(p){
             <div class="original" id="original${p.pno}">
                 <div id="postMenuList{p.pno}" class="pe-3"
                      style="position: absolute; right: 0; height: auto; z-index: 10; top: 10px;">
+                     <input type="hidden" class="postAuthor" value="${p.author}">
                     <ul class="p-0" style="list-style-type: none">
                         <!-- 수정버튼 -->
                         <li class="me-2" id="postModifyBtn${p.pno}"
@@ -154,6 +157,7 @@ function groupPost(p) {
     <div class="card-body p-3 original" id="original${p.pno}">
         <!-- 포스트잇 메뉴 시작 -->
         <div id="postMenuList${p.pno}" class="pe-3" style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
+        <input type="hidden" class="postAuthor${p.pno}" value="${p.author}">
             <ul class="p-0" style="list-style-type: none">
                 <!-- 수정버튼 -->
                 <li class="me-2" id="postModifyBtn${p.pno}"

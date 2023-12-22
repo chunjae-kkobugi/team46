@@ -261,5 +261,11 @@ public class SocketCtrl {
     public Integer groupRemove(@DestinationVariable Integer bno, BoardGroup group){
         boardGroupService.groupRemove(group.getGno());
         return group.getGno();
-    };
+    }
+
+    @MessageMapping("/comments/{pno}")
+    @SendTo("/stomp-receive/comments/{pno}")
+    public Long commentCount(@DestinationVariable Long pno){
+        return commentService.commentCount(pno);
+    }
 }

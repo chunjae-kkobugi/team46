@@ -27,9 +27,9 @@
         </div>
     </div>
 </section>
-<section class="section pb-5">
+<section class="section">
     <div class="album py-5 bg-body-tertiary">
-        <div class="container">
+        <div class="container mb-5">
             <div class="d-flex justify-content-end pb-4">
                 <a th:href="@{/board/register}" class="btn btn-main"> 게시판 생성 <i class="fa-solid fa-clipboard"></i></a>
             </div>
@@ -59,19 +59,19 @@
                                         </li>
                                         <!-- 삭제 버튼 -->
                                         <li class="boardRemoveBtn" th:id="'boardRemoveBtn'+${list.bno}" th:bno="${list.bno}" onclick="postRemove(this.getAttribute('bno'))">
-                                            <a th:href="@{/board/remove(bno=${list.bno})}"><i class="fa-solid fa-trash-can"></i></a>
+                                            <a th:href="@{/board/remove(bno=${list.bno})}"><i class="fa-solid fa-trash-can" style="color: #000000"></i></a>
                                         </li>
                                     </ul>
                                 </div>
-                                <a th:href="@{/post/detail(bno=${list.bno})}"><p class="card-text" th:text="${list.title}"></p></a>
+                                <a th:href="@{/post/detail(bno=${list.bno})}"><p class="card-text" th:text="${list.title}" style="color: #000000"></p></a>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-body-secondary" th:text="${#temporals.format(list.createAt, 'yyyy-MM-dd')}"></small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- 게시판 정보 수정 모달창-->
-                    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+                    <!-- 게시판 정보 수정 모달창 시작 -->
+                    <div class="modal fade" id="modifyModal" aria-labelledby="modifyModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -79,20 +79,29 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form th:action="@{/board/modify}" method="post" enctype="multipart/form-data">
-                                        <input type="hidden" name="bno" id="bno" th:value="${list.bno}">
-                                        <input type="hidden" name="bgImage" id="bgImage" th:value="${list.bgImage}">
+                                    <form th:action="@{/board/modify(bno=${list.bno})}" method="post" enctype="multipart/form-data">
                                         <div class="mb-3">
-                                            <label for="title" class="col-form-label">게시판 이름</label>
-                                            <input type="text" name="title" class="form-control" id="title" th:value="${list.title}">
+                                            <label for="boardTitle" class="col-form-label">게시판 이름</label>
+                                            <input type="text" name="title" class="form-control" id="boardTitle" aria-describedby="title" th:value="${list.title}">
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="maxStudent" class="col-form-label">최대 인원 수</label>
-                                            <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${list.maxStudent}">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="layout" class="col-form-label">레이아웃</label>
+                                                <select name="layout" id="layout" class="form-select" th:value="${list.layout}">
+                                                    <option value="GRID"> 격자형 </option>
+                                                    <option value="TIMELINE"> 타임라인 </option>
+                                                    <option value="GROUP"> 그룹형 </option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for="maxStudent" class="col-form-label">최대 인원 수</label>
+                                                <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${list.maxStudent}">
+                                            </div>
                                         </div>
+
                                         <div class="mb-3">
-                                            <label for="bgColor" class="col-form-label">배경색</label>
-                                            <input type="color" name="bgColor" class="form-control" id="bgColor" th:value="${list.bgColor}">
+                                            <label for="boardBgColor" class="col-form-label">배경색</label>
+                                            <input type="color" name="bgColor" class="form-control" id="boardBgColor" th:value="${list.bgColor}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="boardFile" class="col-form-label">배경이미지</label>
@@ -106,16 +115,17 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 게시판 정보 수정 모달창 끝-->
                 </th:block>
             </div>
         </div>
+        <th:block th:if="${not #lists.isEmpty(boardList)}">
+            <div th:replace="~{/include/pagination :: pagination('board/list')}"></div>
+        </th:block>
+        <th:block th:if="${boardList.isEmpty()}">
+            <p class="text-center">만들어진 게시판이 없습니다.</p>
+        </th:block>
     </div>
-    <th:block th:if="${not #lists.isEmpty(boardList)}">
-        <div th:replace="~{/include/pagination :: pagination('board/list')}"></div>
-    </th:block>
-    <th:block th:if="${boardList.isEmpty()}">
-        <p class="text-center">만들어진 게시판이 없습니다.</p>
-    </th:block>
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 
