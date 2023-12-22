@@ -17,6 +17,7 @@ function connect() {
         receiveGroupAdd();
         receiveGroupEdit();
         receiveGroupRemove();
+        receiveCount();
     });
 }
 
@@ -260,4 +261,28 @@ function receiveGroupRemove(){
         },
         {}  // 헤더 (Object 선택)
     );
+}
+
+function commentCount(pno){
+    let sendUrl = "/stomp-send/comments/" + pno;
+    stompClient.send(
+        sendUrl,
+        {},
+        JSON.stringify({
+            'pno' : pno,
+        })
+    );
+}
+
+function receiveCount(){
+    stompClient.subscribe(
+        '/stomp-receive/comments/' + pno,
+        function (message){
+            let count = message.body
+            let comments = $('.comments[data-pno='+pno+']').next();
+            comments.text(count)
+            $()
+        },
+    {}
+    )
 }

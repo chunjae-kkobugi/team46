@@ -30,4 +30,9 @@ public class CommentServiceImpl implements CommentService{
     public void commentDelete(Long cno) {
         commentRepository.deleteById(cno);
     }
+
+    @Override
+    public Long commentCount(Long pno) {
+        return commentRepository.countByPno(pno);
+    }
 }
