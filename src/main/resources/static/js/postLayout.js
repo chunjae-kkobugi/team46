@@ -9,8 +9,9 @@ function postLayout(p){
             <!-- 포스트잇 내용-->
             <div class="card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
                 <div class="original" id="original${p.pno}">
-                    <div id="postMenuList${p.pno}" class="pe-2"
+                    <div id="postMenuList${p.pno}" class="pe-2 postMenu"
                          style="position: absolute; right: 0; height: auto; z-index: 10; ">
+                         <input type="hidden" class="postAuthor" value="${p.author}">
                         <ul class="p-0" style="list-style-type: none">
                             <!-- 수정버튼 -->
                             <li class="me-2" id="postModifyBtn${p.pno}"
@@ -72,6 +73,7 @@ function timelineLayout(p){
             <div class="original" id="original${p.pno}">
                 <div id="postMenuList{p.pno}" class="pe-3"
                      style="position: absolute; right: 0; height: auto; z-index: 10; top: 10px;">
+                     <input type="hidden" class="postAuthor" value="${p.author}">
                     <ul class="p-0" style="list-style-type: none">
                         <!-- 수정버튼 -->
                         <li class="me-2" id="postModifyBtn${p.pno}"
@@ -150,6 +152,7 @@ function groupPost(p) {
     <div class="card-body p-3 original" id="original${p.pno}">
         <!-- 포스트잇 메뉴 시작 -->
         <div id="postMenuList${p.pno}" class="pe-3" style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
+        <input type="hidden" class="postAuthor${p.pno}" value="${p.author}">
             <ul class="p-0" style="list-style-type: none">
                 <!-- 수정버튼 -->
                 <li class="me-2" id="postModifyBtn${p.pno}"

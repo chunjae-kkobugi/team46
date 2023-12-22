@@ -278,10 +278,11 @@ function receiveCount(){
     stompClient.subscribe(
         '/stomp-receive/comments/' + pno,
         function (message){
-            let count = JSON.parse(message.count);
+            let count = message.body
             let comments = $('.comments[data-pno='+pno+']').next();
             comments.text(count)
             $()
-        }
+        },
+    {}
     )
 }

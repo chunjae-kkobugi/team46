@@ -181,6 +181,7 @@
                 $('.comment').prepend(commentHTML);
                 $('.noComment').remove();
                 $('#commentContent').val('');
+                receiveCount();
             },
             error: function(err){
                 console.log(err);
@@ -269,20 +270,15 @@
         );
     });
 
-    // 포스트잇 글쓰기 영역
-    $("#postRegisterBtn").click(function (){
-        $("#postRegister").removeClass("register")
-    })
-    $(".xBtn i").click(function(){
-        $("#postRegister").addClass("register")
-    })
-    $("#submit").click(function(){
-        $("#postRegister").addClass("register")
-    })
-
-
     // 포스트잇 메뉴
     $(document).ready(function(){
+        // 작성자 아니면 포스트 수정, 삭제버튼 보이지 않게 하기
+        for (let i = 0; i<postList.length; i++) {
+            let author = $('.postAuthor'+[i]).val;
+            if (author != sid){
+                $('#postMenuList'+[i]).addClass('register')
+            }
+        }
 
         // 포스트잇 수정창
         $('[id^=postModifyBtn]').click(function(){
