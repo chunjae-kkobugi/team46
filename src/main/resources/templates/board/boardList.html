@@ -45,8 +45,8 @@
                                      th:style="'width: 100%; height: 225px; background-color:' + ${list.bgColor}">
                                 </div>
                                 <!-- 배경이미지O -->
-                                <div th:if="${list.bgImage ne null}" class="bd-placeholder-img card-img-top" style="width: 100%; height: 225px;">
-                                    <div th:style="'background-image : url(' + |@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}| + ');'"></div>
+                                <div th:if="${list.bgImage ne null}" class="bd-placeholder-img card-img-top"
+                                     th:style="'background-size: cover; width: 100%; height: 225px; background-image : url(' + |@{'/images/boardImage/' + ${list.file.savePath}+ '/' + ${list.file.saveName}}| + ');'">
 <!--                                    <img th:if="${list.bgImage ne null}" th:src="@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}">-->
                                 </div>
                             </a>
