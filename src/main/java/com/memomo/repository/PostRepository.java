@@ -39,6 +39,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Comment c ON c.pno = p.pno WHERE p.bno = :bno GROUP BY p.pno")
     public List<PostDTO> postListAll(@Param("bno") Integer bno);
 
+    @Transactional
+    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(ls.pno), COUNT(c.pno)) " +
+            "FROM Post p LEFT JOIN Layout l ON p.pno = l.pno " +
+            "LEFT JOIN Likes ls ON p.pno = ls.pno " +
+            "LEFT JOIN PostFile pf ON p.pno = pf.pno " +
+            "LEFT JOIN Comment c ON c.pno = p.pno WHERE p.pno = :pno GROUP BY p.pno")
+    public PostDTO postGetAll(@Param("pno") Long pno);
+
     @Query("SELECT p from Post p WHERE p.bno = :bno AND p.pstatus='HEAD'")
     public Post postHeadGet(@Param("bno") Integer bno);
 

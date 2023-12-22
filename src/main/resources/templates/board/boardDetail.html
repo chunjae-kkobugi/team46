@@ -20,6 +20,20 @@
     <link th:href="@{/css/timeline.min.css}" rel="stylesheet">
 
     <style>
+        .post-style {
+            width: 275px;
+            height: 275px;
+            text-overflow: ellipsis;
+        }
+
+        .post-text-style {
+            font-size: 20px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+        }
+
         /* 겉부분의 디자인 변경 */
         input[type=color] {
             width: 57px;
@@ -158,77 +172,14 @@
     let layoutNow = /*[[${detail.layout}]]*/ 'GRID';
     const sid = /*[[${sid}]]*/ 'default';
     let realpath = /*[[@{'/'}]]*/ 'default';
-    let pno = $('.comments data-pno').val();
 
     timeline(document.querySelectorAll('.timeline'), {
         verticalStartPosition: 'left' // or right
     });
 
-    // 댓글 입력 처리
-    function addComment(){
-        let pno = $('#commentPno').val();
-        let content = $('#commentContent').val();
-        let params = {"pno" : pno, "content" : content};
-        $.ajax({
-            type:'POST',
-            url: /*realpath + */'/post/addComment',
-            data: params,
-            success:function(data) {
-                let commentHTML = '';
-                commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.author + '</p>';
-                commentHTML += '<p>' + data.content + '</p>';
-                commentHTML += '<hr>'
-                $('.comment').prepend(commentHTML);
-                $('.noComment').remove();
-                $('#commentContent').val('');
-                receiveCount();
-            },
-            error: function(err){
-                console.log(err);
-            }
-        })
-    }
+
 
     $(document).ready(function(){
-
-        // 게시판 상세보기
-        $('[id^=getPost]').click(function() {
-            let pno = this.id.replace('getPost', '');
-            $.ajax({
-                type: 'GET',
-                url: /*realpath +  */'/post/getPost/' + pno,
-                success: function(data) {
-                    // 상세보기
-                    let postHTML = '<p style="font-size: 13px;">' + data.author + '</p>';
-                    postHTML += '<p>' + data.content + '</p>';
-                    $('.getPost').html(postHTML);
-
-                    // 댓글 입력 pno
-                    let cnoHTML = '<input type="hidden" name="pno" id="commentPno" value="' + data.pno+ '">'
-                    $('.addComment').append(cnoHTML);
-
-                    // 댓글 목록
-                    let commentHTML = ''; // 변수를 밖에서 초기화
-
-                    if (data.commentList.length == 0 ) {
-                        commentHTML += '<p class="text-center noComment">등록된 댓글이 없습니다</p>'
-                    } else {
-                        for (let i = 0; i < data.commentList.length; i++) {
-                            commentHTML += '<p class="m-0" style="font-size: 13px;">' + data.commentList[i].author + '</p>';
-                            commentHTML += '<p>' + data.commentList[i].content + '</p>';
-                            commentHTML += '<hr>'
-                        }
-                    }
-
-                    $('.comment').html(commentHTML); // 반복문이 끝난 후 한 번에 HTML 추가
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        });
-
-
 
         // 게시판 메뉴
         var hoverTimeout; // 호버 시간 지연을 위한 타임아웃 변수
@@ -310,6 +261,17 @@
 
 
     });
+
+    // 포스트잇 글쓰기 영역
+    $("#postRegisterBtn").click(function (){
+        $("#postRegister").removeClass("register")
+    })
+    $(".xBtn i").click(function(){
+        $("#postRegister").addClass("register")
+    })
+    $("#submit").click(function(){
+        $("#postRegister").addClass("register")
+    })
 
     let myLikes = /*[[${myLikes}]]*/ 'default';
     myLikes.forEach(function(l){
