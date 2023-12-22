@@ -8,4 +8,5 @@ import java.util.List;
 public interface CommentService {
     public Comment commentAdd(Comment comment);
     public void commentDelete(Long cno);
+    public Long commentCount(Long pno);
 }
