@@ -227,13 +227,14 @@ public class SocketCtrl {
 
     @PostMapping("/post/addComment")
     @ResponseBody
-    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request) {
 
         log.info("comment register>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
         Cookie cookie = WebUtils.getCookie(request, "nickCookie");
         String loginId = memberService.getLoginId();
         String sid = loginId.equals("") ? cookie.getValue() : loginId;
+
         Comment comment = new Comment();
         log.info("---------- sid: " + sid);
         comment.setAuthor(sid);
