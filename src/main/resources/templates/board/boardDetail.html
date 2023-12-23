@@ -104,9 +104,7 @@
             mix-blend-mode: difference; color: #ffffff;
         }
         .original li { float: left;}
-        .bg {min-height: 700px;}
-        .bg::before { background-size: contain; filter: contrast(0.5);}
-        .post{z-index: 1;}
+        .post { background-repeat: repeat-y; background-position: center; min-height: 1000px;}
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
@@ -149,7 +147,7 @@
         </div>
     </div>
 
-    <div class="post" th:style="${detail.bgImage != null ? 'background-image : url(/fileImages/' + detail.file.savePath + '/' + detail.file.saveName + ');' : 'background-color :' + detail.bgColor}">
+    <div class="post" th:style="'background-image: url(\'/fileImages/'+${detail.file.savePath}+'/' + ${detail.file.saveName} + '\');'">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
