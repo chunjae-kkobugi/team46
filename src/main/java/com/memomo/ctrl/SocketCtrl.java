@@ -158,11 +158,11 @@ public class SocketCtrl {
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-//        String uploadDir = "C:\\Users\\User\\Desktop\\uploadImg\\";
+        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
-        ServletContext application = request.getSession().getServletContext();
-        String uploadDir = application.getRealPath("/images/postImage");
+//        ServletContext application = request.getSession().getServletContext();
+//        String uploadDir = application.getRealPath("/images/postImage");
 
         Long pno;
         if (!postFile.isPresent() || postFile.isEmpty()) {
@@ -196,7 +196,7 @@ public class SocketCtrl {
         }
         log.info(dto);
         // 로컬 경로
-        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
 //            ServletContext application = request.getSession().getServletContext();
