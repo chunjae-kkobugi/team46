@@ -12,12 +12,21 @@
         <div class="row justify-content-center">
             <div class="col-lg-5 col-md-8 align-item-center">
                 <div class="mx-5">
-                    <h3 class="text-center">비밀번호 찾기</h3>
+                    <!--<h3 class="text-center">비밀번호 찾기</h3>-->
                     <!--<p th:text="${boardDetail}"></p>-->
                     <form th:action="@{/member/findPw}" method="post">
+                        <div class="code-tabs">
+                            <ul class="nav nav-justified">
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/member/findId}">아이디 찾기</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link" th:href="@{/member/findPw}">비밀번호 찾기</a>
+                                </li>
+                            </ul>
+                        </div>
                         <fieldset class="p-4">
                             <input class="form-control mb-3" type="text" id="id" name="id" placeholder="아이디 입력" required>
-                            <input class="form-control mb-3" type="text" id="name" name="name" placeholder="이름 입력" required>
                             <input class="form-control mb-3" type="email" id="email" name="email" placeholder="이메일 입력" required>
                             <!--<p id="msg" style="display: none;">임시 비밀번호가 전송되었습니다.</p>-->
                             <button type="submit" class="form-control btn btn-main font-weight-bold text-white">임시 비밀번호 받기</button>
@@ -34,7 +43,6 @@
     var rt = /*[[${rt}]]*/ null;
     var found = /*[[${found}]]*/ null;
     var id = /*[[${id}]]*/ null;
-    var name = /*[[${name}]]*/ null;
     var email = /*[[${email}]]*/ null;
 
     if (found === false) {
@@ -46,7 +54,6 @@
 
     if (rt === true) {
         $('#id').val(id);
-        $('#name').val(name);
         $('#email').val(email);
     }
 </script>
