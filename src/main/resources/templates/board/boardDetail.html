@@ -104,7 +104,10 @@
             mix-blend-mode: difference; color: #ffffff;
         }
         .original li { float: left;}
-        .post { background-repeat: repeat-y; background-position: center; min-height: 1000px;}
+        .post { background-size: contain;
+            background-repeat: repeat-y;
+            background-position: center;
+            min-height: 700px;}
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
@@ -146,8 +149,25 @@
             <!-- 포스트잇 등록 슬라이드 메뉴 끝 -->
         </div>
     </div>
+    <!-- 배경이미지 X -->
+    <div class="post" th:if="${detail.bgImage != null}" th:style="'background-image: url(\'/fileImages/'+${detail.file.savePath}+'/' + ${detail.file.saveName} + '\');'">
+        <div class="container-fluid m-0 row">
+            <th:block th:if="${detail.layout eq 'GRID'}">
+                <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
+            </th:block>
+            <th:block th:if="${detail.layout eq 'TIMELINE'}">
+                <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
+            </th:block>
+            <th:block th:if="${detail.layout eq 'GROUP'}">
+                <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
+                <th:block th:replace="~{include/modal :: groupModal}"></th:block>
+            </th:block>
+        </div>
+        <th:block th:replace="~{include/modal :: modal}"></th:block>
+    </div>
 
-    <div class="post" th:style="'background-image: url(\'/fileImages/'+${detail.file.savePath}+'/' + ${detail.file.saveName} + '\');'">
+    <!-- 배경이미지 O -->
+    <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
