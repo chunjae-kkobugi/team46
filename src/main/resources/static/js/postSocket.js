@@ -17,7 +17,7 @@ function connect() {
         receiveGroupAdd();
         receiveGroupEdit();
         receiveGroupRemove();
-        receiveCount();
+        receiveCommentCount();
     });
 }
 
@@ -282,12 +282,12 @@ function commentCount(pno){
     );
 }
 
-function receiveCount(){
+function receiveCommentCount(){
     stompClient.subscribe(
         '/stomp-receive/comments/' + bno,
         function (message){
             let c = JSON.parse(message.body);
-            let comments = $(`.comments[data-pno=${c.pno}]`).text(c.cno);
+            let comments = $(`.comments[data-pno=${c.pno}]`).next().text(c.cno);
         },
     {}
     )

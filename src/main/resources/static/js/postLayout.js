@@ -5,8 +5,8 @@ function postLayout(p, sid){
     let post = `    
     <div class="m-2">
         <div class="card shadow-sm">
-            <div class="timeline__content content card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
-            <div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(/fileImages/' + p.file.savePath + '/' + p.file.saveName + ');'}"></div>    
+            <div class="timeline__content content card-body" id="post${p.pno}">
+            <div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(\'/fileImages/' + p.file.savePath + '/' + p.file.saveName + '\');'}"></div>    
             <div class="original content" id="original${p.pno}">
                     <!-- 포스트잇 메뉴 -->
                     <div id="postMenuList${p.pno}" class="pe-2 postMenu"
@@ -25,14 +25,16 @@ function postLayout(p, sid){
                             </li>
                         </ul>
                     </div>
+                    
+                    <!-- 포스트잇 내용 -->
                     <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                         <p class="card-text pt-3 color post-text-style" style="font-size: 20px;">${p.content}</p>
                     </div>
-                    <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수 - 일단 뺌)-->
+                    <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수)-->
                     <div class="d-flex justify-content-between"> 
                         <p class="card-text text-end mb-0 color">${p.author}</p>
                         <p class="card-text text-end mb-0"><i class="myLike fa-regular fa-heart" data-pno="${p.pno}"></i> <span class="color">${p.likes===null?0:p.likes}</span></p>
-                        <p class="card-text text-end mb-0 color"><i class="comments fa-regular fa-comment" data-pno="${p.pno}"></i> ${p.comments===null?0:p.comments}</p>
+                        <p class="card-text text-end mb-0 color"><i class="comments fa-regular fa-comment" data-pno="${p.pno}"></i> <span>${p.comments===null?0:p.comments}</span></p>
                     </div>
                 </div>
 
@@ -86,7 +88,7 @@ function groupPost(p) {
     let post = `
 <!-- 그룹 내 포스트잇 시작 -->
 <div class="card mb-3">
-<div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(/fileImages/' + p.file.savePath + '/' + p.file.saveName + ');'}"></div>
+<div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(\'/fileImages/' + p.file.savePath + '/' + p.file.saveName + '\');'}"></div>
     <div class="card-body p-3 original content" id="original${p.pno}">
         <!-- 포스트잇 메뉴 시작 -->
         <div id="postMenuList${p.pno}" class="pe-3" style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">

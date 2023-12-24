@@ -87,33 +87,22 @@
         #sortable { list-style-type: none; /*margin: 1rem; padding: 0; width: 350px; */}
         #sortable li { float: left;/*margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 20px; text-align: center; border: 1px solid black;*/}
 
-        /* 배경 이미지 흐리게 처리 */
-        /*.card-body::before {
-            content: "";
-            opacity: 0.4;
-            background-color: white;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }*/
-
         .myLike {cursor: pointer;}
 
         .fa-solid.fa-heart {
             color: red !important;
         }
 
-        /*.color {*/
-        /*    mix-blend-mode: difference; color: #000000;*/
-        /*}*/
+        .color {
+            mix-blend-mode: difference; color: #000000;
+        }
         .original li { float: left;}
         .post { background-size: contain;
             background-repeat: repeat-y;
             background-position: center;
             min-height: 700px;}
         .content { position: relative; z-index: 1}
+
         .bg {
             position: absolute;
             z-index: -1;
@@ -165,25 +154,25 @@
         </div>
     </div>
 
-        <!-- 배경이미지 X -->
-        <div class="post" th:if="${detail.bgImage != null}" th:style="'background-image: url(\'/fileImages/'+${detail.file.savePath}+'/' + ${detail.file.saveName} + '\');'">
-        <div class="container-fluid m-0 row">
-            <th:block th:if="${detail.layout eq 'GRID'}">
-                <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
-            </th:block>
-            <th:block th:if="${detail.layout eq 'TIMELINE'}">
-                <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
-                <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
-            </th:block>
-            <th:block th:if="${detail.layout eq 'GROUP'}">
-                <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
-                <th:block th:replace="~{include/modal :: groupModal}"></th:block>
-            </th:block>
-        </div>
-        <th:block th:replace="~{include/modal :: modal}"></th:block>
+    <!-- 배경이미지 X -->
+    <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
+    <div class="container-fluid m-0 row">
+        <th:block th:if="${detail.layout eq 'GRID'}">
+            <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
+        </th:block>
+        <th:block th:if="${detail.layout eq 'TIMELINE'}">
+            <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
+            <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
+        </th:block>
+        <th:block th:if="${detail.layout eq 'GROUP'}">
+            <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
+            <th:block th:replace="~{include/modal :: groupModal}"></th:block>
+        </th:block>
     </div>
+    <th:block th:replace="~{include/modal :: modal}"></th:block>
+</div>
 
-    <!-- 배경이미지 O -->
+<!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
     <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
@@ -198,7 +187,7 @@
             </th:block>
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
-    </div>
+    </div>-->
 
 
 
@@ -249,6 +238,15 @@
                 toggleMenu('close'); // 메뉴에서 마우스가 벗어나면 닫힘
             }
         );
+
+        let boardImage = /*[[${detail.bgImage}]]*/ 'default';
+        if(boardImage === null){
+            $("#bgColorBoard").css('background-color', /*[[${detail.bgColor}]]*/ 'default');
+        } else {
+            let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
+            let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
+            $("#bgImageBoard").css('background-image', url('/fileImages/'+boardSavePath+'/' +boardSaveName+ '\''));
+        }
     });
 
     // 포스트 별 나의 좋아요 표시

@@ -150,7 +150,7 @@ function timeline(e, v) {
             }),
                 function(e) {
                     e.timelineEl.classList.remove("timeline--horizontal", "timeline--mobile"), e.scroller.removeAttribute("style"), e.items.forEach(function(e) {
-                        e.removeAttribute("style"), e.classList.remove( "timeline__item--left", "timeline__item--right")
+                        e.removeAttribute("style"), e.classList.remove("animated", "fadeIn", "timeline__item--left", "timeline__item--right")
                     });
                     var t = e.timelineEl.querySelectorAll(".timeline-nav-button");
                     [].forEach.call(t, function(e) {
@@ -159,10 +159,14 @@ function timeline(e, v) {
                 }(e), window.innerWidth <= e.settings.forceVerticalMode && e.timelineEl.classList.add("timeline--mobile"), "horizontal" === e.settings.mode && window.innerWidth > e.settings.forceVerticalMode ? s(e) : function(i) {
                 var n = 0;
                 i.items.forEach(function(e, t) {
-                    !l(e, i.settings.verticalTrigger) && 0 < t ? null : n = t;
-                    t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left")
+                    e.classList.remove("animated", "fadeIn"), !l(e, i.settings.verticalTrigger) && 0 < t ? e.classList.add("animated") : n = t, t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left")
                 });
-
+                for (var e = 0; e < n; e += 1) i.items[e].classList.remove("animated", "fadeIn");
+                window.addEventListener("scroll", function() {
+                    i.items.forEach(function(e) {
+                        l(e, i.settings.verticalTrigger) && e.classList.add("fadeIn")
+                    })
+                })
             }(e), e.timelineEl.classList.add("timeline--loaded"), setTimeout(function() {
                 e.timelineEl.style.opacity = 1
             }, 500)
