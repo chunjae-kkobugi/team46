@@ -263,9 +263,10 @@ public class SocketCtrl {
         return group.getGno();
     }
 
-    @MessageMapping("/comments/{pno}")
-    @SendTo("/stomp-receive/comments/{pno}")
-    public Long commentCount(@DestinationVariable Long pno){
-        return commentService.commentCount(pno);
+    @MessageMapping("/comments/{bno}")
+    @SendTo("/stomp-receive/comments/{bno}")
+    public Comment commentCount(@DestinationVariable Long bno, Comment comment){
+        comment.setCno(commentService.commentCount(comment.getPno()));
+        return comment;
     }
 }
