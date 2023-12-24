@@ -153,35 +153,8 @@
 
     <!-- 내보내기 모달 창 시작 -->
     <div class="modal fade" id="exportModal" aria-labelledby="exportModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exportModalLabel">내보내기</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-6 text-center">
-                                    <button class="btn btn-main" id="save-image" style="border-radius: 2em;" data-bs-dismiss="modal">이미지로 저장</button>
-                                </div>
-                                <div class="col-6 text-center">
-                                    <button class="btn btn-main" id="save-pdf" style="border-radius: 2em;">PDF로 저장</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 내보내기 모달 창 끝 -->
-
-    <!-- 이미지로 저장 모달 창 시작 -->
-    <div class="modal fade" id="imageModal" aria-labelledby="imageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
-            <div class="modal-content">
+            <div class="modal-content" data-html2canvas-ignore="true">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exportModalLabel">미리보기</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -189,13 +162,13 @@
                 <div class="modal-body">
                     <img id="previewImage" src="" alt="미리보기">
                 </div>
-                <div class="modal-footer">
-                    <button id="downloadButton" type="button" class="btn btn-primary">다운로드</button>
+                <div class="modal-footer" style="justify-content: center;">
+                    <button type="button" class="btn btn-main mx-2" id="save-img">이미지로 저장</button>
+                    <button type="button" class="btn btn-main mx-2" id="save-pdf">PDF로 저장</button>
                 </div>
             </div>
         </div>
     </div>
-
 </th:block>
 
 <th:block th:fragment="groupModal">

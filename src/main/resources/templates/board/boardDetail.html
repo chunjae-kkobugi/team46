@@ -126,7 +126,7 @@
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 20">
                 <i class="fas fa-plus-circle fa-3x pe-3" style="color: #51B56D; cursor: pointer" id="boardMenu"></i>
-                <div id="boardMenuList" class="me-2 mt-2 p-2 pb-0 pt-3">
+                <div id="boardMenuList" data-html2canvas-ignore="true" class="me-2 mt-2 p-2 pb-0 pt-3">
                     <ul class="p-0" style="list-style-type: none">
                         <li th:if="${detail.layout != 'GROUP'}">
                             <button type="button" class="btn btn-outline-main mb-2" style="width: 100%" data-bs-toggle="modal" data-bs-target="#postRegisterModal">포스트잇 쓰기</button>
@@ -139,9 +139,7 @@
                             <!--<button class="btn btn-outline-main mb-2"
                                     style="width: 100%"
                                     data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>-->
-                            <button class="btn btn-outline-main mb-2"
-                                    style="width: 100%"
-                                    data-bs-toggle="modal" data-bs-target="#exportModal">내보내기</button>
+                            <button class="btn btn-outline-main mb-2" style="width: 100%" id="export-board">내보내기</button>
                         </li>
                     </ul>
                 </div>
@@ -335,8 +333,9 @@
 
     /* 내보내기 */
     $(function(){
-        $("#save-image").on("click", function(){
+        $("#export-board").on("click", function(){
             /*$('#exportModal').modal('hide');*/
+
             html2canvas(document.querySelector("#main_capture"), {
             }).then(canvas => {
                 var imgData = canvas.toDataURL('image/jpg');
@@ -344,30 +343,21 @@
                 var curFileName = "board_" + currentDateTime + ".jpg";
                 // 모달 창에 이미지를 표시합니다.
                 $('#previewImage').attr('src', imgData);
-                $('#downloadButton').attr('download', curFileName);
-                $('#imageModal').modal('show');
+                $('#save-img').attr('download', curFileName);
+                $('#exportModal').modal('show');
             });
         });
-        $('#downloadButton').on('click', function(){
+        $('#save-img').on('click', function(){
             var imgData = $('#previewImage').attr('src');
-            saveAs(imgData, $('#downloadButton').attr('download'));
-            /*$('#imageModal').modal('hide');*/
+            saveAs(imgData, $('#save-img').attr('download'));
+            /*$('#exportModal').modal('hide');*/
         });
-        function saveAs(uri, filename) {
-            var link = document.createElement('a');
-            if ('download' in link) {
-                link.href = uri;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                window.open(uri);
-            }
-        }
         $("#save-pdf").on("click", function(){
             html2canvas(document.querySelector("#main_capture")).then(canvas => {
                 var imgData = canvas.toDataURL('image/jpg');
+                var currentDateTime = new Date().toISOString().slice(0, 19).replace(/[-T:/]/g, "");
+                var curFileName = "board_" + currentDateTime + ".pdf";
+
                 var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
                 var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
                 var imgHeight = canvas.height * imgWidth / canvas.width;
@@ -386,9 +376,22 @@
                     heightLeft -= pageHeight;
                 }
                 // 파일 저장
-                doc.save('sample.pdf');
+                doc.save(curFileName);
             });
         });
+        function saveAs(uri, filename) {
+            var link = document.createElement('a');
+            if ('download' in link) {
+                link.href = uri;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                window.open(uri);
+            }
+        }
+
     });
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
