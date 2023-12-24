@@ -49,6 +49,35 @@
     </div>
     <!-- 게시판 정보 수정 모달창 끝-->
 
+    <!-- 그룹추가 모달창-->
+    <div class="modal fade" id="groupRegisterModal" tabindex="-1" aria-labelledby="groupRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="groupRegisterModalLabel">그룹 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        <input type="hidden" name="bno" id="bno" th:value="${detail.bno}">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">그룹 이름</label>
+                            <input type="text" name="title" class="form-control" id="title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="GColor" class="col-form-label">배경색</label>
+                            <input type="color" name="GColor" class="form-control" id="GColor" value="#ffffff">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 그룹 추가 모달 창 끝 -->
+
     <!-- 포스트잇 추가 모달 창 시작 -->
     <div class="modal fade" id="postRegisterModal" aria-labelledby="postRegisterModalLabel" aria-hidden="true">
         <div class="modal-dialog">

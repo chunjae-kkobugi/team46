@@ -21,7 +21,7 @@
                             <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." th:field="*{nickname}" required>
                             <!-- 비밀번호가 존재할때만 보이도록 -->
                             <th:block th:if="${boardDetail.bpw != ''}">
-                                <input class="form-control mb-3" type="password" id="password" name="password" placeholder="비밀번호를 입력하세요." th:field="*{password}" required>
+                                <input class="form-control mb-3" type="password" id="bpw" name="bpw" placeholder="비밀번호를 입력하세요." th:field="*{password}" required>
                             </th:block>
                             <p class="text-danger">[[${msg}]]</p>
                             <button type="submit" class="form-control btn btn-main font-weight-bold"

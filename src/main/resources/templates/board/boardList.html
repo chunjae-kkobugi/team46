@@ -16,6 +16,7 @@
             list-style-type: none;
             cursor: pointer;
         }
+        .bgImage { background-repeat: no-repeat; background-position: center; width: 100%; height: 225px;}
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -44,10 +45,10 @@
                                      class="bd-placeholder-img card-img-top"
                                      th:style="'width: 100%; height: 225px; background-color:' + ${list.bgColor}">
                                 </div>
-                                <!-- 배경이미지O -->
-                                <div th:if="${list.bgImage ne null}" class="bd-placeholder-img card-img-top" style="width: 100%; height: 225px;">
-                                    <div th:style="'background-image : url(' + |@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}| + ');'"></div>
-<!--                                    <img th:if="${list.bgImage ne null}" th:src="@{'/images/boardImage/' + ${list.file.savePath} + '/s_' + ${list.file.saveName}}">-->
+                                <div th:if="${list.bgImage != null}"
+                                     class="bd-placeholder-img card-img-top"
+                                     th:style="'background-image: url(/fileImages/' + ${list.file.savePath} + '/s_' + ${list.file.saveName} +');'">
+                                    <img class="bgImage" th:src="@{'/fileImages/'+ ${list.file.savePath} + '/s_' + ${list.file.saveName}}" th:alt="${list.file.originName}">
                                 </div>
                             </a>
                             <div class="card-body">

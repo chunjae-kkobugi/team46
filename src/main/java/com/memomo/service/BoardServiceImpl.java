@@ -1,26 +1,20 @@
 package com.memomo.service;
 
 import com.memomo.dto.BoardDTO;
-import com.memomo.dto.BoardPostDTO;
 import com.memomo.dto.PageDTO;
-import com.memomo.dto.PostDTO;
 import com.memomo.entity.Board;
 import com.memomo.entity.BoardFile;
-import com.memomo.entity.Post;
 import com.memomo.repository.BoardFileRepository;
 import com.memomo.repository.BoardRepository;
 import com.memomo.repository.PostRepository;
-import com.querydsl.core.BooleanBuilder;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,6 +42,7 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     private BoardFileRepository boardFileRepo;
 
+
     @Override
     public Integer boardAdd(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) throws IOException {
         String imageOriginName = "";
@@ -62,7 +56,8 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+//            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+            String uploadDir = "C:\\upload\\";
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
@@ -146,8 +141,9 @@ public class BoardServiceImpl implements BoardService{
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
-            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
+//            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
 
+            String uploadDir = "C:\\upload\\";
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
@@ -227,7 +223,13 @@ public class BoardServiceImpl implements BoardService{
             Board board = result.orElseThrow();
 
             // 게시판 정보만 업데이트 (파일 정보는 건드리지 않음)
-            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            if (boardFile == null || boardFile.isEmpty()) {
+                // 파일이 첨부되지 않은 경우, 기존 bgImage 값을 유지
+                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), board.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            } else {
+                // 파일이 첨부된 경우, 새로운 bgImage 값을 사용
+                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            }
 
             boardRepo.save(board);
             log.info("게시판 정보 수정 완료: " + board);
@@ -263,10 +265,23 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board boardDetail(Integer  bno) {
+    public BoardDTO boardDetail(Integer  bno) {
         Optional<Board> result = boardRepo.findById(bno);
         Board board = result.orElseThrow();
-        return board;
+        BoardFile boardFile = boardFileRepo.findBoardFileByFno(board.getBgImage());
+        BoardDTO dto = new BoardDTO();
+        dto.setBno(board.getBno());
+        dto.setTitle(board.getTitle());
+        dto.setBpw(board.getBpw());
+        dto.setStatus(board.getStatus());
+        dto.setBgImage(board.getBgImage());
+        dto.setBgColor(board.getBgColor());
+        dto.setCreateAt(board.getCreateAt());
+        dto.setLayout(board.getLayout());
+        dto.setMaxStudent(board.getMaxStudent());
+        dto.setTeacher(board.getTeacher());
+        dto.setFile(boardFile);
+        return dto;
     }
 
     @Override
