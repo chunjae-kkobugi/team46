@@ -68,6 +68,16 @@ public class BoardCtrl {
         return "board/boardList";
     }
 
+    // 비밀번호 있는 게시판
+    @RequestMapping("bpw")
+    public String boardPasswordForm(){
+        return "board/password";
+    }
+    @PostMapping("bpw")
+    public String boardPassword(){
+        return null;
+    }
+
     /*
     특정 게시판을 여는 것부터는 PostCtrl로 넘어가야 함
 

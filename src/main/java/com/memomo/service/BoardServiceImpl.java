@@ -222,7 +222,13 @@ public class BoardServiceImpl implements BoardService{
             Board board = result.orElseThrow();
 
             // 게시판 정보만 업데이트 (파일 정보는 건드리지 않음)
-            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            if (boardFile == null || boardFile.isEmpty()) {
+                // 파일이 첨부되지 않은 경우, 기존 bgImage 값을 유지
+                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), board.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            } else {
+                // 파일이 첨부된 경우, 새로운 bgImage 값을 사용
+                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            }
 
             boardRepo.save(board);
             log.info("게시판 정보 수정 완료: " + board);
