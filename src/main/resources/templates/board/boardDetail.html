@@ -26,9 +26,9 @@
 
     <style>
         .post-style {
-            width: 275px !important;
-            height: 275px !important;
-            text-overflow: ellipsis !important;
+            width: 275px;
+            height: 275px;
+            text-overflow: ellipsis;
         }
 
         .post-text-style {
@@ -105,10 +105,26 @@
             color: red !important;
         }
 
-        .color {
-            mix-blend-mode: difference; color: #ffffff;
-        }
+        /*.color {*/
+        /*    mix-blend-mode: difference; color: #000000;*/
+        /*}*/
         .original li { float: left;}
+        .post { background-size: contain;
+            background-repeat: repeat-y;
+            background-position: center;
+            min-height: 700px;}
+        .content { position: relative; z-index: 1}
+        .bg {
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: .6;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -119,7 +135,7 @@
 <th:block th:replace="~{include/header :: header}" class="mb-0"></th:block>
 
 
-<section class="section pb-5" th:style="'background-color : '+ ${detail.bgColor}">
+<section class="section">
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
@@ -149,7 +165,8 @@
         </div>
     </div>
 
-    <div class="post" style="min-height: 700px;">
+        <!-- 배경이미지 X -->
+        <div class="post" th:if="${detail.bgImage != null}" th:style="'background-image: url(\'/fileImages/'+${detail.file.savePath}+'/' + ${detail.file.saveName} + '\');'">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
@@ -165,6 +182,25 @@
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
     </div>
+
+    <!-- 배경이미지 O -->
+    <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
+        <div class="container-fluid m-0 row">
+            <th:block th:if="${detail.layout eq 'GRID'}">
+                <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
+            </th:block>
+            <th:block th:if="${detail.layout eq 'TIMELINE'}">
+                <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
+            </th:block>
+            <th:block th:if="${detail.layout eq 'GROUP'}">
+                <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
+                <th:block th:replace="~{include/modal :: groupModal}"></th:block>
+            </th:block>
+        </div>
+        <th:block th:replace="~{include/modal :: modal}"></th:block>
+    </div>
+
+
 
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>

@@ -5,35 +5,29 @@ function postLayout(p, sid){
     let post = `    
     <div class="m-2">
         <div class="card shadow-sm">
-            <div class="timeline__content  card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
-                <div class="original" id="original${p.pno}">
+            <div class="timeline__content content card-body" id="post${p.pno}" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background: no-repeat center/cover url(/images/purin.webp)'}">
+            <div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(/fileImages/' + p.file.savePath + '/' + p.file.saveName + ');'}"></div>    
+            <div class="original content" id="original${p.pno}">
                     <!-- 포스트잇 메뉴 -->
                     <div id="postMenuList${p.pno}" class="pe-2 postMenu"
                          style="position: absolute; right: 0; height: auto; z-index: 300; ${(sid===p.author)? '':'display: none;'}">
                          <input type="hidden" class="postAuthor" value="${p.author}">
                         <ul class="p-0" style="list-style-type: none">
                             <!-- 수정버튼 -->
-                            <li class="me-2" id="postModifyBtn${p.pno}" style="${(p.bgImage==null)? 'cursor: pointer; background-color : ' + p.bgColor : '#ffffff'}" 
+                            <li class="me-2" id="postModifyBtn${p.pno}" 
                             data-bs-toggle="modal" data-bs-target="#postEditModal" data-pno="${p.pno}" onclick="editPostModal(this.getAttribute('data-pno'))">
-                                <span style="${(p.bgColor=='#ffffff' || p.bgColor == null) ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
-                                    <i class="fa-pen-to-square fa-solid"></i>
-                                </span>
+                                <span><i class="fa-pen-to-square fa-solid color"></i>
                             </li>
 
                             <!-- 삭제 버튼 -->
-                            <li class="postRemoveBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))"
-                                style="${ p.bgImage==null ? 'cursor: pointer; background-color: '  + p.bgColor : '#ffffff' }">
-                                <span style="${p.bgColor=='#ffffff' || p.bgColor==null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
-                                    <i class="fa-solid fa-trash-can"></i></span>
+                            <li class="postRemoveBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))">
+                                <span><i class="fa-solid fa-trash-can color"></i></span>
                             </li>
                         </ul>
                     </div>
-                    
-                    <!-- 포스트잇 내용-->
                     <div class="text-body" style="height: 185px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                         <p class="card-text pt-3 color post-text-style" style="font-size: 20px;">${p.content}</p>
                     </div>
-                    
                     <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수 - 일단 뺌)-->
                     <div class="d-flex justify-content-between"> 
                         <p class="card-text text-end mb-0 color">${p.author}</p>
@@ -91,8 +85,9 @@ function groupLayout(g) {
 function groupPost(p) {
     let post = `
 <!-- 그룹 내 포스트잇 시작 -->
-<div class="card mb-3" style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}">
-    <div class="card-body p-3 original" id="original${p.pno}">
+<div class="card mb-3">
+<div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(/fileImages/' + p.file.savePath + '/' + p.file.saveName + ');'}"></div>
+    <div class="card-body p-3 original content" id="original${p.pno}">
         <!-- 포스트잇 메뉴 시작 -->
         <div id="postMenuList${p.pno}" class="pe-3" style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
         <input type="hidden" class="postAuthor${p.pno}" value="${p.author}">
