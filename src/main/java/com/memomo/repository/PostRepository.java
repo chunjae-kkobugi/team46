@@ -31,8 +31,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public List<Object[]> postDTOList(@Param("bno") Integer bno);
 
     // 포스트 목록을 보다 간편하고 한 번에 가져올 수 있도록 수정
+    // 기존의 COUNT(ls.pno), COUNT(c.pno)는 likes, comments left join 상 문제가 생길 수 있어 변경
+    // 다음의 쿼리는 SQL 상에서 "SELECT p.pno, l.*, pf.*, COUNT(DISTINCT ls.lno) AS likes_count, COUNT(DISTINCT c.cno) AS comment_count FROM Post p LEFT JOIN Layout l ON p.pno = l.pno LEFT JOIN Likes ls ON p.pno = ls.pno LEFT JOIN PostFile pf ON p.pno = pf.pno LEFT JOIN Comment c ON c.pno = p.pno WHERE p.bno = 1 GROUP BY p.pno" 와 같음.
     @Transactional
-    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(ls.pno), COUNT(c.pno)) " +
+    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(DISTINCT ls.lno), COUNT(DISTINCT c.cno)) " +
             "FROM Post p LEFT JOIN Layout l ON p.pno = l.pno " +
             "LEFT JOIN Likes ls ON p.pno = ls.pno " +
             "LEFT JOIN PostFile pf ON p.pno = pf.pno " +
@@ -40,7 +42,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public List<PostDTO> postListAll(@Param("bno") Integer bno);
 
     @Transactional
-    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(ls.pno), COUNT(c.pno)) " +
+    @Query(value = "SELECT new com.memomo.dto.PostDTO(p, l, pf, COUNT(DISTINCT ls.lno), COUNT(DISTINCT c.cno)) " +
             "FROM Post p LEFT JOIN Layout l ON p.pno = l.pno " +
             "LEFT JOIN Likes ls ON p.pno = ls.pno " +
             "LEFT JOIN PostFile pf ON p.pno = pf.pno " +

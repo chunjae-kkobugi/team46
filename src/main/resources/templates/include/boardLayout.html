@@ -4,15 +4,12 @@
 <body>
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class="ui-sortable">
-
     </ul>
 
     <script th:inline="javascript">
-        let postList = /*[[${postList}]]*/ 'default';
         postList.forEach(function(p){
-            let newPost = postLayout(p);
+            let newPost = gridLayout(p, sid);
             $("#sortable").append(newPost);
-
         })
 
         $("#sortable").sortable({
@@ -30,39 +27,21 @@
 
 <!-- 타임라인 레이아웃 -->
 <th:block th:fragment="timeline-layout">
-    <div class="timeline">
+    <!-- 타임라인 -->
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/timeline.css}" rel="stylesheet">
+
+    <div class="timeline timeline--loaded timeline--vertical">
         <div class="timeline__wrap">
             <div class="timeline__items ui-sortable">
-                <div class="timeline__item register" id="postRegister">
-                    <div class="timeline__content">
 
-
-                        <div class="xBtn">
-                            <i class="fa-2x fa-circle-xmark fa-solid float-end"></i>
-                        </div>
-                        <form id="postAddForm" method="post" enctype="multipart/form-data">
-                            <div class="justify-content-center row">
-                                <textarea name="content" cols="30" rows="5" class="form-control" placeholder="내용을 입력해주세요" maxlength="900"></textarea>
-                                <input type="hidden" name="bno" th:id="${detail.bno}" th:value="${detail.bno}">
-                                <div class="justify-content-between row">
-                                    <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" value="#ffffff">
-                                    <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
-                                </div>
-                                <div class="btn-group d-flex">
-                                    <button type="submit" class="btn btn-main" id="submit"> 등록 </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
     <script th:inline="javascript">
-        let postList = /*[[${postList}]]*/ 'default';
         postList.forEach(function(p){
-            let newPost = timelineLayout(p);
+            let newPost = timelineLayout(p, sid);
             $(".timeline__items").append(newPost);
         })
 
@@ -71,12 +50,21 @@
                 let changed = ui.item[0];
                 let pno = changed.getAttribute("data-pno");
                 let priority = $(".timeline__items > .timeline__item").index(changed);
-                console.log(priority);
                 layoutSort(pno, priority);
             }
         });
 
         $(".timeline__items").disableSelection();
+
+        $(function(){
+            jQuery('.timeline').timeline();
+
+            timeline(document.querySelectorAll('.timeline'), {
+                verticalStartPosition: 'left' // or right
+            });
+
+            $(".timeline__item--left ").addClass("d-flex justify-content-end");
+        });
     </script>
 </th:block>
 
@@ -162,7 +150,6 @@
             $("#groupList").append(newGroup);
         })
 
-        let postList = /*[[${postList}]]*/ 'default';
         postList.forEach(function(p){
             let newPost = groupPost(p);
             let gno = p.layout.gno;
