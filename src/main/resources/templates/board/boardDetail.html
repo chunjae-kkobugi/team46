@@ -19,6 +19,11 @@
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link th:href="@{/css/timeline.min.css}" rel="stylesheet">
 
+    <!-- 화면 캡쳐 CDN -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         /* 겉부분의 디자인 변경 */
         input[type=color] {
@@ -91,6 +96,15 @@
         }
         .original li { float: left;}
 
+        .section a {
+            color: #040404;
+            text-decoration: none;
+        }
+        .section a:hover {
+            color: #555555;
+            cursor: pointer;
+        }
+
     </style>
 
     <script th:src="@{/js/postLayout.js}" th:inline="javascript"></script>
@@ -103,11 +117,11 @@
 <th:block th:replace="~{include/header :: header}" class="mb-0"></th:block>
 
 
-<section class="section pb-5" th:style="'background-color : '+ ${detail.bgColor}">
+<section class="section pb-5" id="main_capture" th:style="'background-color : '+ ${detail.bgColor}">
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 th:text="${detail.title}" class="ms-5"></h1>
+                <h1 class="ms-5">[[${detail.title}]] <a class="fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 20">
@@ -122,9 +136,12 @@
                                     data-bs-toggle="modal" data-bs-target="#groupRegisterModal">그룹 추가</button>
                         </li>
                         <li>
+                            <!--<button class="btn btn-outline-main mb-2"
+                                    style="width: 100%"
+                                    data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>-->
                             <button class="btn btn-outline-main mb-2"
                                     style="width: 100%"
-                                    data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>
+                                    data-bs-toggle="modal" data-bs-target="#exportModal">내보내기</button>
                         </li>
                     </ul>
                 </div>
@@ -316,7 +333,63 @@
         $(`.myLike[data-pno=${l.pno}]`).removeClass('fa-regular').addClass('fa-solid');
     })
 
-
+    /* 내보내기 */
+    $(function(){
+        $("#save-image").on("click", function(){
+            /*$('#exportModal').modal('hide');*/
+            html2canvas(document.querySelector("#main_capture"), {
+            }).then(canvas => {
+                var imgData = canvas.toDataURL('image/jpg');
+                var currentDateTime = new Date().toISOString().slice(0, 19).replace(/[-T:/]/g, "");
+                var curFileName = "board_" + currentDateTime + ".jpg";
+                // 모달 창에 이미지를 표시합니다.
+                $('#previewImage').attr('src', imgData);
+                $('#downloadButton').attr('download', curFileName);
+                $('#imageModal').modal('show');
+            });
+        });
+        $('#downloadButton').on('click', function(){
+            var imgData = $('#previewImage').attr('src');
+            saveAs(imgData, $('#downloadButton').attr('download'));
+            /*$('#imageModal').modal('hide');*/
+        });
+        function saveAs(uri, filename) {
+            var link = document.createElement('a');
+            if ('download' in link) {
+                link.href = uri;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                window.open(uri);
+            }
+        }
+        $("#save-pdf").on("click", function(){
+            html2canvas(document.querySelector("#main_capture")).then(canvas => {
+                var imgData = canvas.toDataURL('image/jpg');
+                var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
+                var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+                window.jsPDF = window.jspdf.jsPDF;
+                var doc = new jsPDF('p', 'mm', 'a4');
+                var position = 0;
+                // 첫 페이지 출력
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                // 한 페이지 이상일 경우 루프 돌면서 출력
+                while (heightLeft >= 20) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                // 파일 저장
+                doc.save('sample.pdf');
+            });
+        });
+    });
 </script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
