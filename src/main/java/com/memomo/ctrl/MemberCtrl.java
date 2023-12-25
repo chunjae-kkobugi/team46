@@ -1,13 +1,11 @@
 package com.memomo.ctrl;
 
-import com.memomo.dto.MemberFormDTO;
-import com.memomo.dto.MemberUpdateDto;
-import com.memomo.dto.NicknameDTO;
-import com.memomo.dto.PostDTO;
+import com.memomo.dto.*;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
 import com.memomo.service.BoardService;
 import com.memomo.service.CustomUserDetailsService;
+import com.memomo.service.EmailService;
 import com.memomo.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -44,6 +43,7 @@ public class MemberCtrl {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final BoardService boardService;
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String loginMember() {
@@ -76,7 +76,7 @@ public class MemberCtrl {
         return "member/join";
     }
 
-    @PostMapping("/joinPro")
+    @PostMapping("/join")
     public String joinPro(@ModelAttribute("member") @Valid MemberFormDTO memberFormDto, BindingResult bindingResult, Model model) {
         System.out.println("bindingResult : " + bindingResult);
         if (bindingResult.hasErrors()) {
@@ -97,46 +97,6 @@ public class MemberCtrl {
     public ResponseEntity<Boolean> idCheck(@RequestParam String id) throws Exception {
         boolean result = memberService.idCheck(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping("/mypage")
-    public String myPage(Model model) {
-        String id = memberService.getLoginId();
-        //System.out.println("회원 정보 : " + memberService.memberDetail(id));
-        Member member = memberService.memberDetail(id);
-        model.addAttribute("member", member);
-        return "member/mypage";
-    }
-
-    @PostMapping("/mypage")
-    public String updateMember(@Valid MemberUpdateDto memberUpdateDto, Model model) {
-        customUserDetailsService.updateMember(memberUpdateDto);
-        return "redirect:/member/mypage";
-    }
-
-    @GetMapping("/remove")
-    public String removeMember(@RequestParam String id, Model model, HttpServletRequest request, HttpServletResponse response) {
-        model.addAttribute("url", "");
-        if (id == null || id.isEmpty()) {
-            model.addAttribute("msg", "올바른 회원 ID가 제공되지 않았습니다.");
-            return "member/alert";
-        }
-        // 현재 로그인된 사용자의 정보 가져오기
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            model.addAttribute("msg", "사용자 인증 정보를 찾을 수 없습니다.");
-            return "member/alert";
-        }
-        String loggedInUserId = auth.getName(); // 현재 로그인된 사용자의 ID
-        // 입력된 ID와 현재 로그인된 사용자의 ID 비교하여 회원 탈퇴 처리
-        if (id.equals(loggedInUserId)) {
-            memberService.memberRemove(id); // 회원 탈퇴 메소드
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            model.addAttribute("msg", "회원 탈퇴가 정상적으로 이루어졌습니다. 감사합니다.");
-        } else {
-            model.addAttribute("msg", "잘못된 접근입니다.");
-        }
-        return "member/alert";
     }
 
     @GetMapping("/enter/{bno}")
@@ -168,4 +128,63 @@ public class MemberCtrl {
         }
         return "redirect:/post/detail?bno=" + bno;
     }
+
+    @GetMapping("/findId")
+    public String findIdForm() {
+        return "member/findId";
+    }
+
+    @PostMapping("/findId")
+    public String findId(HttpServletRequest request, RedirectAttributes rttr, Model model) {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String id = memberService.findId(email, name);
+        //System.out.println("찾은 아이디 : " + id);
+        rttr.addFlashAttribute("rt", true);
+        if (id == null) {
+            return "redirect:/member/findId";
+        }
+        String first = id.substring(0, 3);
+        String mask = "*".repeat(id.length() - 3);
+        rttr.addFlashAttribute("id", first + mask);
+        rttr.addFlashAttribute("name", name);
+        rttr.addFlashAttribute("email", email);
+        return "redirect:/member/findIdResult";
+    }
+
+    @GetMapping("/findIdResult")
+    public String findIdResult() {
+        return "member/findIdResult";
+    }
+
+    @GetMapping("/findPw")
+    public String findPwForm() {
+        return "member/findPw";
+    }
+
+    @PostMapping("/findPw")
+    public String findPw(HttpServletRequest request, RedirectAttributes rttr, Model model) {
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        //System.out.printf("id : %s, name : %s, email : %s\n", id, name, email);
+        boolean found =  memberService.findId(email, name, id);
+        //System.out.println("찾았는지 ? : " + found);
+
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("found", found);
+        rttr.addFlashAttribute("id", id);
+        rttr.addFlashAttribute("name", name);
+        rttr.addFlashAttribute("email", email);
+        if (found) {
+            String tempPw = emailService.sendPw(email);
+            Optional<Member> optionalMember = memberRepository.findById(id);
+            Member member = optionalMember.orElseThrow();
+            String encodedPw = passwordEncoder.encode(tempPw);
+            member.updatePw(encodedPw);
+            memberRepository.save(member);
+        }
+        return "redirect:/member/findPw";
+    }
+
 }

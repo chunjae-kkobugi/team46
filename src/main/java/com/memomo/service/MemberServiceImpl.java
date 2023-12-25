@@ -94,4 +94,22 @@ public class MemberServiceImpl implements MemberService {
         }
         return "";
     }
+
+    @Override
+    public String findId(String email, String name) {
+        Optional<Member> optionalMember = memberRepo.findByEmailAndName(email, name);
+        if (optionalMember.isEmpty()) {
+            return null;
+        }
+        return optionalMember.get().getId();
+    }
+
+    @Override
+    public boolean findId(String email, String name, String id) {
+        Optional<Member> optionalMember = memberRepo.findByEmailAndId(email, id);
+        if (optionalMember.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }

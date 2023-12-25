@@ -1,5 +1,6 @@
 package com.memomo.service;
 
+import com.memomo.dto.MemberPwDTO;
 import com.memomo.dto.MemberUpdateDto;
 import com.memomo.entity.Member;
 import com.memomo.repository.MemberRepository;
@@ -39,6 +40,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         memberRepository.save(member);
 
+        return member.getId();
+    }
+
+    public String updatePw(MemberPwDTO memberPwDTO) {
+        //System.out.println("memberPwDTO : " + memberPwDTO);
+        Optional<Member> optionalMember = memberRepository.findById(memberPwDTO.getId());
+        Member member = optionalMember.orElseThrow();
+        // 회원 비밀번호 수정을 위한 패스워드 암호화
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodePw = encoder.encode(memberPwDTO.getNewPassword());
+        member.updatePw(encodePw);
+        memberRepository.save(member);
         return member.getId();
     }
 
