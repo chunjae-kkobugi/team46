@@ -1,7 +1,9 @@
 package com.memomo.ctrl;
 
 import com.memomo.dto.*;
+import com.memomo.entity.Board;
 import com.memomo.entity.Member;
+import com.memomo.repository.BoardRepository;
 import com.memomo.repository.MemberRepository;
 import com.memomo.service.BoardService;
 import com.memomo.service.CustomUserDetailsService;
@@ -43,6 +45,7 @@ public class MemberCtrl {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final BoardService boardService;
+    private final BoardRepository boardRepository;
     private final EmailService emailService;
 
     @GetMapping("/login")
@@ -121,10 +124,47 @@ public class MemberCtrl {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String originBpw = nicknameDTO.getPassword();
         String storedBpw = boardService.boardDetail(bno).getBpw();
-//        String bpw = boardService.boardDetail(bno).getBpw();
+        //String bpw = boardService.boardDetail(bno).getBpw();
         if (!pwEncoder.matches(originBpw, storedBpw)) {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter/" + bno;
+        }
+        return "redirect:/post/detail?bno=" + bno;
+    }
+
+    @GetMapping("/enter")
+    public String enterAtHome(Model model) {
+        NicknameDTO nicknameDTO = new NicknameDTO();
+        //Integer boardNum = Integer.valueOf(bno);
+        //nicknameDTO.setBno(boardNum);
+        model.addAttribute("nicknameDTO", nicknameDTO);
+        //System.out.println("보드 비번 : " + boardService.boardDetail(boardNum).getBpw());
+        return "member/enterAtHome";
+    }
+
+    @PostMapping("/nick0")
+    public String enterNick0(NicknameDTO nicknameDTO, HttpServletResponse response, RedirectAttributes rttr, Model model) {
+        //System.out.println("nicknameDTO : " + nicknameDTO);
+        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname());
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
+        Integer bno = nicknameDTO.getBno();
+        //BoardDTO board = boardService.boardDetail(bno);
+        //boolean found = board != null;
+        boolean found = boardRepository.existsById(bno);
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("found", found);
+        if (!found) {
+            return "redirect:/member/enter";
+        }
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        String originBpw = nicknameDTO.getPassword();
+        String storedBpw = boardService.boardDetail(bno).getBpw();
+        //String bpw = boardService.boardDetail(bno).getBpw();
+        if (!pwEncoder.matches(originBpw, storedBpw)) {
+            rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/member/enter";
         }
         return "redirect:/post/detail?bno=" + bno;
     }
@@ -165,16 +205,13 @@ public class MemberCtrl {
     @PostMapping("/findPw")
     public String findPw(HttpServletRequest request, RedirectAttributes rttr, Model model) {
         String id = request.getParameter("id");
-        String name = request.getParameter("name");
         String email = request.getParameter("email");
         //System.out.printf("id : %s, name : %s, email : %s\n", id, name, email);
-        boolean found =  memberService.findId(email, name, id);
+        boolean found =  memberService.existsId(email, id);
         //System.out.println("찾았는지 ? : " + found);
-
         rttr.addFlashAttribute("rt", true);
         rttr.addFlashAttribute("found", found);
         rttr.addFlashAttribute("id", id);
-        rttr.addFlashAttribute("name", name);
         rttr.addFlashAttribute("email", email);
         if (found) {
             String tempPw = emailService.sendPw(email);
