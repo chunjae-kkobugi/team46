@@ -273,7 +273,7 @@ textarea.form-control {
 
 .signup > a {
     display: inline-block;
-    margin-left: 10px;
+    margin-left: 0.5rem;
 }
 
 .forgot {
@@ -446,4 +446,43 @@ hr.dashed-dark {
 
 .bg-gray {
     background-color : #f6f7fa
+}
+
+.code-tabs {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.code-tabs .nav-tabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+.code-tabs {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.code-tabs .nav-tabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+.code-tabs .nav-item {
+    padding-left: 0;
+}
+.code-tabs .nav-item.active .nav-link {
+    color: #fff;
+}
+.code-tabs .nav-item.active .nav-link {
+    background: #e0f2e5;
+    color: #3f9457
+}
+.code-tabs .nav-item .nav-link {
+    text-decoration: none;
+    font-weight: 500;
+    border: 0;
+    border-radius: 8px;
+    color: #51B56D;
+}
+.code-tabs .tab-content {
+    padding: 20px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }

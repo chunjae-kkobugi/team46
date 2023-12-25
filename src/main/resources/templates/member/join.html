@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
-    <title>로그인</title>
+    <title>회원가입</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <th:block th:replace="~{include/header :: header}"></th:block>
@@ -16,7 +16,7 @@
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mt-3 mb-5">회원가입</h2>
 
-                            <form th:action="@{/member/joinPro}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
+                            <form th:action="@{/member/join}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="name">이름</label>
                                     <input type="text" th:field="*{name}" id="name" placeholder="이름" class="form-control" autofocus>
@@ -26,28 +26,31 @@
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="id">아이디</label>
                                     <br>
-                                    <input type="text" th:field="*{id}" id="id" placeholder="영문소문자 및 숫자를 혼용하여 아이디 입력"
-                                           class="form-control" maxlength="16" required>
+                                    <input type="text" th:field="*{id}" id="id" placeholder="영문 소문자+숫자조합 (6~20자 이내)"
+                                           class="form-control" maxlength="20" required>
                                     <input type="button" class="btn btn-main ms-1" value="중복확인" onclick="idCheck()">
                                     <input type="hidden" name="idCk" id="idCk" value="neu">
                                     <p id="msg" class="no_check"><i class="fas fa-times-circle"></i> 아직 아이디 중복 체크를 하지
                                         않으셨습니다.</p>
+                                    <p th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="text-danger info">Incorrect data</p>
                                 </div>
 
                                 <div class="form-outline mb-1">
                                     <label class="form-label blind" for="pw">비밀번호</label>
-                                    <input type="password" th:field="*{pw}" id="pw" placeholder="비밀번호"
-                                           class="form-control" maxlength="16" required>
-                                    <p class="info"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각
-                                        1개 이상 포함</p>
+                                    <input type="password" th:field="*{pw}" id="pw" placeholder="영문 대/소문자+숫자조합 (8~20자 이내)"
+                                           class="form-control" maxlength="20" required>
+                                    <p th:if="${#fields.hasErrors('pw')}" th:errors="*{pw}" class="text-danger info">Incorrect data</p>
+                                    <!--<p class="info"><i class="fas fa-check"></i> 비밀번호는 최소 8자리에서 최대 16자리까지 숫자, 영문, 특수문자 각
+                                        1개 이상 포함</p>-->
                                 </div>
                                 <!-- pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$" -->
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="pw2">비밀번호 확인</label>
-                                    <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인"
-                                           class="form-control" maxlength="16" required>
+                                    <input type="password" th:field="*{pw2}" id="pw2" placeholder="비밀번호 확인을 위해 다시 한번 입력해주세요."
+                                           class="form-control" maxlength="20" required>
                                     <div class="info" id="alert-success">비밀번호가 일치합니다.</div>
                                     <div class="info text-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+                                    <p th:if="${#fields.hasErrors('pw2')}" th:errors="*{pw2}" class="text-danger info">Incorrect data</p>
                                 </div>
 
 

@@ -23,6 +23,10 @@
         let realpath = /*[[@{'/'}]]*/ 'default';
     </script>
     <script th:src="@{/js/postLayout.js}"></script>
+    <!-- 화면 캡쳐 CDN -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         .post-style {
@@ -96,12 +100,16 @@
         .color {
             mix-blend-mode: difference; color: #000000;
         }
+        .color {
+            mix-blend-mode: difference; color: #000000;
+        }
         .original li { float: left;}
         .post { background-size: contain;
             background-repeat: repeat-y;
             background-position: center;
             min-height: 700px;}
         .content { position: relative; z-index: 1}
+
 
         .bg {
             position: absolute;
@@ -129,16 +137,17 @@
 <th:block th:replace="~{include/header :: header}" class="mb-0"></th:block>
 
 
-<section class="section">
+<section class="section" id="main_capture">
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 th:text="${detail.title}" class="ms-5"></h1>
+                <h1 class="ms-5">[[${detail.title}]] <a class="fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
+            <div class="col-5 text-end" style="position: relative; z-index: 999">
                 <i class="fas fa-plus-circle fa-3x pe-3" style="color: #51B56D; cursor: pointer" id="boardMenu"></i>
-                <div id="boardMenuList" class="me-2 mt-2 p-2 pb-0 pt-3">
+                <div id="boardMenuList" data-html2canvas-ignore="true" class="me-2 mt-2 p-2 pb-0 pt-3">
                     <ul class="p-0" style="list-style-type: none">
                         <li th:if="${detail.layout != 'GROUP'}">
                             <button type="button" class="btn btn-outline-main mb-2" style="width: 100%" data-bs-toggle="modal" data-bs-target="#postRegisterModal">포스트잇 쓰기</button>
@@ -148,9 +157,10 @@
                                     data-bs-toggle="modal" data-bs-target="#groupRegisterModal">그룹 추가</button>
                         </li>
                         <li>
-                            <button class="btn btn-outline-main mb-2"
+                            <!--<button class="btn btn-outline-main mb-2"
                                     style="width: 100%"
-                                    data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>
+                                    data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>-->
+                            <button class="btn btn-outline-main mb-2" style="width: 100%" id="export-board">내보내기</button>
                         </li>
                     </ul>
                 </div>
@@ -158,6 +168,7 @@
             <!-- 포스트잇 등록 슬라이드 메뉴 끝 -->
         </div>
     </div>
+
 
     <!-- 배경이미지 X -->
     <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
@@ -176,7 +187,24 @@
     </div>
     <th:block th:replace="~{include/modal :: modal}"></th:block>
 </div>
+    <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
+    <div class="container-fluid m-0 row">
+        <th:block th:if="${detail.layout eq 'GRID'}">
+            <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
+        </th:block>
+        <th:block th:if="${detail.layout eq 'TIMELINE'}">
+            <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
+            <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
+        </th:block>
+        <th:block th:if="${detail.layout eq 'GROUP'}">
+            <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
+            <th:block th:replace="~{include/modal :: groupModal}"></th:block>
+        </th:block>
+    </div>
+    <th:block th:replace="~{include/modal :: modal}"></th:block>
+</div>
 
+<!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
 <!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
     <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
         <div class="container-fluid m-0 row">
@@ -193,10 +221,16 @@
         </div>
         <th:block th:replace="~{include/modal :: modal}"></th:block>
     </div>-->
+    </div>-->
 
 
 
 </section>
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+</body>
+
+<script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
+<script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
 
@@ -243,6 +277,18 @@
                 toggleMenu('close'); // 메뉴에서 마우스가 벗어나면 닫힘
             }
         );
+
+        let boardImage = /*[[${detail.bgImage}]]*/ 'default';
+        if(boardImage === null){
+            $("#bgColorBoard").css('background-color', /*[[${detail.bgColor}]]*/ 'default');
+        } else {
+            let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
+            let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
+            $("#bgImageBoard").css('background-image', url('/fileImages/'+boardSavePath+'/' +boardSaveName+ '\''));
+        }
+    });
+
+    // 포스트 별 나의 좋아요 표시
 
         let boardImage = /*[[${detail.bgImage}]]*/ 'default';
         if(boardImage === null){
