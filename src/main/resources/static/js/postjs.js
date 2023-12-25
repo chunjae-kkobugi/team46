@@ -181,3 +181,21 @@ function editPostModal(pno){
         }
     });
 }
+
+// 그룹 추가
+$(document).on('submit', '#groupRegisterForm', function(e){
+    e.preventDefault();
+    let form = $(this)[0];
+    groupAdd(form);
+
+    $('#groupRegisterModal .btn-close').click();
+});
+
+// 그룹 추가
+$(document).on('submit', '#groupModifyForm', function(e){
+    e.preventDefault();
+    let form = $(this)[0];
+    groupEdit(form);
+
+    $('#groupModifyModal .btn-close').click();
+});

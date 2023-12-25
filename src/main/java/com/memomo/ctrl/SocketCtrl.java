@@ -99,7 +99,7 @@ public class SocketCtrl {
         postService.postRemove(pno, oldLeft, oldRight, bno);
         plist.remove(originIdx);
 
-        System.out.println(postDTO);
+        log.info("===Post REMOVE==="+postDTO);
         return postDTO.getPno();
     }
 
@@ -126,6 +126,7 @@ public class SocketCtrl {
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
+        log.info("===Post SORT==="+layout);
         return plist;
     }
 
