@@ -289,14 +289,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostDTO postGet(Long pno) {
-        Post post = postRepo.findById(pno).orElseThrow();
-        Layout layout = layoutRepo.findByPno(pno).orElseThrow();
-        PostFile file = fileRepo.findByPnoAndFstatus(pno, "ACTIVE");
-
-        PostDTO dto = mapper.map(post, PostDTO.class);
-        dto.setLayout(layout);
-        dto.setFile(file);
-        return dto;
+        return postRepo.postGetAll(pno);
     }
 
     @Override

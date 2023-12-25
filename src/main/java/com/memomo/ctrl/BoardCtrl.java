@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ public class BoardCtrl {
     private PostService postService;
     @Autowired
     private MemberService memberService;
+    BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
 
     @RequestMapping("list")
     public String boardList(Model model, HttpServletRequest request){
@@ -100,6 +102,10 @@ public class BoardCtrl {
         String id = memberService.getLoginId();
         boardDTO.setTeacher(id);
 //        boardDTO.setBgImage(boardDTO.getFile().getFno());
+
+        String originBpw = boardDTO.getBpw();
+        String pw = pwEncoder.encode(originBpw);
+        boardDTO.setBpw(pw);
         int bno = boardService.boardAdd(boardDTO, boardFile, request);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";

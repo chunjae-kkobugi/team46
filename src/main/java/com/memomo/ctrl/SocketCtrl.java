@@ -1,5 +1,6 @@
 package com.memomo.ctrl;
 
+import com.memomo.dto.BoardDTO;
 import com.memomo.dto.PostDTO;
 import com.memomo.entity.*;
 import com.memomo.service.BoardGroupService;
@@ -71,8 +72,9 @@ public class SocketCtrl {
 
         plist = plist2;
 
-        Board board = boardService.boardDetail(bno);
+        BoardDTO board = boardService.boardDetail(bno);
         List<Likes> myLikes = likesService.myLikes(bno, sid);
+        BoardFile bgImage = null;
 
         model.addAttribute("detail", board);
         model.addAttribute("postList", postList);
@@ -156,11 +158,11 @@ public class SocketCtrl {
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-//        String uploadDir = "C:\\Users\\User\\Desktop\\uploadImg\\";
+        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
-        ServletContext application = request.getSession().getServletContext();
-        String uploadDir = application.getRealPath("/images/postImage");
+//        ServletContext application = request.getSession().getServletContext();
+//        String uploadDir = application.getRealPath("/images/postImage");
 
         Long pno;
         if (!postFile.isPresent() || postFile.isEmpty()) {
@@ -194,7 +196,7 @@ public class SocketCtrl {
         }
         log.info(dto);
         // 로컬 경로
-        String uploadDir = "C:\\Users\\1889018\\Desktop\\uploadImg\\";
+        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
 //            ServletContext application = request.getSession().getServletContext();
@@ -227,13 +229,14 @@ public class SocketCtrl {
 
     @PostMapping("/post/addComment")
     @ResponseBody
-    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public Comment commentAdd(@RequestParam("pno") Long pno, @RequestParam("content") String content, HttpServletRequest request) {
 
         log.info("comment register>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
         Cookie cookie = WebUtils.getCookie(request, "nickCookie");
         String loginId = memberService.getLoginId();
         String sid = loginId.equals("") ? cookie.getValue() : loginId;
+
         Comment comment = new Comment();
         log.info("---------- sid: " + sid);
         comment.setAuthor(sid);
@@ -262,9 +265,10 @@ public class SocketCtrl {
         return group.getGno();
     }
 
-    @MessageMapping("/comments/{pno}")
-    @SendTo("/stomp-receive/comments/{pno}")
-    public Long commentCount(@DestinationVariable Long pno){
-        return commentService.commentCount(pno);
+    @MessageMapping("/comments/{bno}")
+    @SendTo("/stomp-receive/comments/{bno}")
+    public Comment commentCount(@DestinationVariable Long bno, Comment comment){
+        comment.setCno(commentService.commentCount(comment.getPno()));
+        return comment;
     }
 }

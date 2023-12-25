@@ -100,14 +100,13 @@ public class MemberCtrl {
     }
 
     @GetMapping("/enter/{bno}")
-    public String enter(@PathVariable String bno, Model model) {
+    public String enter(@PathVariable Integer bno, Model model) {
         NicknameDTO nicknameDTO = new NicknameDTO();
         Integer boardNum = Integer.valueOf(bno);
         nicknameDTO.setBno(boardNum);
         model.addAttribute("nicknameDTO", nicknameDTO);
         //System.out.println("보드 비번 : " + boardService.boardDetail(boardNum).getBpw());
         model.addAttribute("boardDetail", boardService.boardDetail(boardNum));
-
         return "member/enter";
     }
 
@@ -118,8 +117,12 @@ public class MemberCtrl {
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
         response.addCookie(nickCookie);
         Integer bno = nicknameDTO.getBno();
-        String bpw = boardService.boardDetail(bno).getBpw();
-        if (!nicknameDTO.getPassword().equals(bpw)) {
+
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        String originBpw = nicknameDTO.getPassword();
+        String storedBpw = boardService.boardDetail(bno).getBpw();
+//        String bpw = boardService.boardDetail(bno).getBpw();
+        if (!pwEncoder.matches(originBpw, storedBpw)) {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter/" + bno;
         }
