@@ -37,7 +37,7 @@ function timeline(e, v) {
         b = {
             forceVerticalMode: {
                 type: "integer",
-                defaultValue: 600
+                defaultValue: 700
             },
             horizontalStartPosition: {
                 type: "string",
@@ -150,17 +150,18 @@ function timeline(e, v) {
             }),
                 function(e) {
                     e.timelineEl.classList.remove("timeline--horizontal", "timeline--mobile"), e.scroller.removeAttribute("style"), e.items.forEach(function(e) {
-                        e.removeAttribute("style"), e.classList.remove( "timeline__item--left", "timeline__item--right")
+                        e.removeAttribute("style"), e.classList.remove( "timeline__item--left", "timeline__item--right", "d-flex", "justify-content-end")
                     });
                     var t = e.timelineEl.querySelectorAll(".timeline-nav-button");
                     [].forEach.call(t, function(e) {
                         e.parentNode.removeChild(e)
                     })
-                }(e), window.innerWidth <= e.settings.forceVerticalMode && e.timelineEl.classList.add("timeline--mobile"), "horizontal" === e.settings.mode && window.innerWidth > e.settings.forceVerticalMode ? s(e) : function(i) {
+                }(e), window.innerWidth <= e.settings.forceVerticalMode && e.timelineEl.classList.add("timeline--mobile"),
+                "horizontal" === e.settings.mode && window.innerWidth > e.settings.forceVerticalMode ? s(e) : function(i) {
                 var n = 0;
                 i.items.forEach(function(e, t) {
                     !l(e, i.settings.verticalTrigger) && 0 < t ? null : n = t;
-                    t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left")
+                    t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left", 'd-flex', 'justify-content-end')
                 });
 
             }(e), e.timelineEl.classList.add("timeline--loaded"), setTimeout(function() {
@@ -168,6 +169,7 @@ function timeline(e, v) {
             }, 500)
         })
     }
+
     e.length && [].forEach.call(e, function(e) {
         var t = e.id ? "#" + e.id : "." + e.className,
             i = "could not be found as a direct descendant of",
