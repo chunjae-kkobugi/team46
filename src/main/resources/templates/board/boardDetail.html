@@ -30,8 +30,8 @@
 
     <style>
         .post-style {
-            width: 275px;
-            height: 275px;
+            width: 260px;
+            height: 260px;
             text-overflow: ellipsis;
         }
 
@@ -128,6 +128,13 @@
             width: fit-content;
             min-width: 300px;
         }
+        .iconBtn{
+            cursor: pointer;
+        }
+
+        .ui-sortable-handle:active{
+            cursor: grabbing;
+        }
     </style>
 </head>
 
@@ -142,7 +149,7 @@
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 class="ms-5">[[${detail.title}]] <a class="fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
+                <h1 class="ms-5">[[${detail.title}]] <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
@@ -169,8 +176,6 @@
         </div>
     </div>
 
-
-    <!-- 배경이미지 X -->
     <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
@@ -189,6 +194,8 @@
     </div>
 
 </section>
+
+
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
 <script th:src="@{/js/postjs.js}" th:inline="javascript"></script>

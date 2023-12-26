@@ -184,8 +184,6 @@ public class SocketCtrl {
         return postService.postGet(pno);
     }
 
-    ;
-
     @PostMapping("/post/edit")
     @ResponseBody
     public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
@@ -271,5 +269,13 @@ public class SocketCtrl {
     public Comment commentCount(@DestinationVariable Long bno, Comment comment){
         comment.setCno(commentService.commentCount(comment.getPno()));
         return comment;
+    }
+
+    @MessageMapping("/layout/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/layout/{bno}")
+    public String postEdit(@DestinationVariable Integer bno, String message) {
+        log.info("===Layout Changed===");
+        return "layoutChanged";
     }
 }

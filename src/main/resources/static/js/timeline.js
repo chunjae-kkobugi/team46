@@ -37,7 +37,7 @@ function timeline(e, v) {
         b = {
             forceVerticalMode: {
                 type: "integer",
-                defaultValue: 750
+                defaultValue: 700
             },
             horizontalStartPosition: {
                 type: "string",

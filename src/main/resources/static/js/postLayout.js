@@ -10,24 +10,23 @@ function postLayout(p, sid){
             <div class="original content" id="original${p.pno}">
                     <!-- 포스트잇 메뉴 -->
                     <div id="postMenuList${p.pno}" class="pe-2 postMenu"
-                         style="position: absolute; right: 0; height: auto; z-index: 300; ${(sid===p.author)? '':'display: none;'}">
+                         style="position: absolute; right: 0; top: -5px; height: auto; z-index: 300; ${(sid===p.author)? '':'display: none;'}">
                          <input type="hidden" class="postAuthor" value="${p.author}">
                         <ul class="p-0" style="list-style-type: none">
                             <!-- 수정버튼 -->
-                            <li class="me-2" id="postModifyBtn${p.pno}" 
+                            <li class="me-2 iconBtn" id="postModifyBtn${p.pno}" 
                             data-bs-toggle="modal" data-bs-target="#postEditModal" data-pno="${p.pno}" onclick="editPostModal(this.getAttribute('data-pno'))">
-                                <span><i class="fa-pen-to-square fa-solid color"></i>
+                                <span><i class="fa-pen-to-square fa-solid"></i>
                             </li>
-
                             <!-- 삭제 버튼 -->
-                            <li class="postRemoveBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))">
-                                <span><i class="fa-solid fa-trash-can color"></i></span>
+                            <li class="postRemoveBtn iconBtn" data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))">
+                                <span><i class="fa-solid fa-trash-can"></i></span>
                             </li>
                         </ul>
                     </div>
                     
                     <!-- 포스트잇 내용 -->
-                    <div class="text-body" style="height: 210px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
+                    <div class="text-body" style="height: 200px;" data-bs-toggle="modal" data-bs-target="#postGetModal" id="getPost${p.pno}" data-pno="${p.pno}" onclick="getPostModal(this.getAttribute('data-pno'))">
                         <p class="card-text pt-3 color post-text-style" style="font-size: 20px;">${p.content}</p>
                     </div>
                     <!-- 포스트 정보(작성자, 좋아요 수, 댓글 수)-->
@@ -37,8 +36,6 @@ function postLayout(p, sid){
                         <p class="card-text text-end mb-0 color"><i class="comments fa-regular fa-comment" data-pno="${p.pno}"></i> <span>${p.comments===null?0:p.comments}</span></p>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -47,7 +44,7 @@ function postLayout(p, sid){
 }
 
 function gridLayout(p, sid){
-    let newPost = `<li class="mb-3 mt-2 ui-sortable-handle ui-state-defaul" data-pno="${p.pno}">`;
+    let newPost = `<li class="mt-2 ui-sortable-handle ui-state-defaul" data-pno="${p.pno}">`;
     newPost += postLayout(p, sid);
     newPost += `</li>`
     return newPost

@@ -18,6 +18,7 @@ function connect() {
         receiveGroupEdit();
         receiveGroupRemove();
         receiveCommentCount();
+        receiveLayout();
     });
 }
 
@@ -47,10 +48,10 @@ function receiveAdd(){
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
             let newPost = JSON.parse(message.body);
             if(layoutNow === 'GRID'){
-                let postT = gridLayout(newPost);
+                let postT = gridLayout(newPost, sid);
                 $("#sortable").append(postT);
             } else if(layoutNow==='TIMELINE'){
-                let postT = timelineLayout(newPost);
+                let postT = timelineLayout(newPost, sid);
                 console.log(postT);
                 $(".timeline__items").append(postT);
                 let timeLen = $(".timeline__item").length
@@ -153,12 +154,12 @@ function receiveSort(){
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
             let newOrder = JSON.parse(message.body);
             if(layoutNow==='GRID'){
-                let fragment = document.createDocumentFragment();
+                let fragment = $(document.createDocumentFragment());
                 newOrder.forEach(function(order){
-                    let pnoLi = document.querySelector(`#sortable > li[data-pno=${order}]`);
-                    fragment.appendChild(pnoLi);
+                    let pnoLi = $(`li.ui-sortable-handle[data-pno=${order}]`);
+                    fragment.append(pnoLi);
                 });
-                document.getElementById('sortable').appendChild(fragment);
+                $('#sortable').append(fragment);
             }
 
             else if(layoutNow === 'TIMELINE'){
@@ -303,5 +304,24 @@ function receiveCommentCount(){
             let comments = $(`.comments[data-pno=${c.pno}]`).next().text(c.cno);
         },
     {}
+    )
+}
+
+function layoutChange(){
+    let sendUrl = "/stomp-send/layout/" + bno;
+    stompClient.send(
+        sendUrl,
+        {},
+        {}
+    );
+}
+
+function receiveLayout(){
+    stompClient.subscribe(
+        '/stomp-receive/layout/' + bno,
+        function (message){
+            location.reload();
+        },
+        {}
     )
 }
