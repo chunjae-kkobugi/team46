@@ -158,7 +158,12 @@
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 class="ms-5">[[${detail.title}]] <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
+                <h1 class="ms-5">[[${detail.title}]]
+                    <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <i class="iconBtn copy-btn fs-3 ms-1 fa-solid fa-link" onclick="copyUrl()"></i>
+                </h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
@@ -327,6 +332,14 @@
             }
         }
     });
+
+    //현재 url 변수로 가져오기
+    let nowUrl = window.location.href;
+    function copyUrl(){
+        navigator.clipboard.writeText(nowUrl).then(res=>{
+            alert("링크가 복사되었습니다!");
+        })
+    }
 
     // 소켓 통신 연결
     window.onload = function (){
