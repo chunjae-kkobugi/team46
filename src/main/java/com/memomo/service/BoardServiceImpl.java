@@ -144,6 +144,13 @@ public class BoardServiceImpl implements BoardService{
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
 
+
+            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
+            Board board = result.orElseThrow();
+            BoardFile fileResult = boardFileRepo.findBoardFileByFno(board.getBgImage());
+            fileResult.change("REMOVE");
+
+
             // 서버 경로
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/boardImage/");
@@ -201,8 +208,6 @@ public class BoardServiceImpl implements BoardService{
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
             }
-            BoardFile fileResult = boardFileRepo.findBoardFileByFno(boardDTO.getBgImage());
-            fileResult.change("REMOVE");
 
             BoardFile image = new BoardFile();
             image.setBno(boardDTO.getBno());
@@ -212,15 +217,17 @@ public class BoardServiceImpl implements BoardService{
             image.setFileType(fileExtension);
             image.setStatus("ACTIVE");
 
-            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
-            Board board = result.orElseThrow();
-
             BoardFile existingFile = boardDTO.getFile();
             if (existingFile != null) {
                 existingFile.setStatus("REMOVE");
             }
-            String encryptedBpw = board.getBpw();
-            boardDTO.setBpw(encryptedBpw);
+            // 만약 비밀번호가 변경되었다면
+            if (!boardDTO.getBpw().equals(board.getBpw())) {
+                // 새 비밀번호를 암호화하여 설정
+                String encryptedPassword = pwEncoder.encode(boardDTO.getBpw());
+                boardDTO.setBpw(encryptedPassword);
+            }
+
 
             // 게시판 정보 변경
             board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
@@ -235,10 +242,11 @@ public class BoardServiceImpl implements BoardService{
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
 
-            // 비밀번호 변경
+            // 만약 비밀번호가 변경되었다면
             if (!boardDTO.getBpw().equals(board.getBpw())) {
-                String pw = pwEncoder.encode(boardDTO.getBpw());
-                boardDTO.setBpw(pw);
+                // 새 비밀번호를 암호화하여 설정
+                String encryptedPassword = pwEncoder.encode(boardDTO.getBpw());
+                boardDTO.setBpw(encryptedPassword);
             }
 
             // 게시판 정보 변경
@@ -248,7 +256,6 @@ public class BoardServiceImpl implements BoardService{
             boardRepo.save(board);
         }
     }
-
 
     @Override
     public Integer boardRemove(Integer bno) {
