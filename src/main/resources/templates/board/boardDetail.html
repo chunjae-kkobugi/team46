@@ -257,7 +257,7 @@
         } else {
             let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
             let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
-            $("#bgImageBoard").css('background-image', url('/images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\''));
+            $("#bgImageBoard").css('background-image', url(realpath+'images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\''));
         }
     });
 

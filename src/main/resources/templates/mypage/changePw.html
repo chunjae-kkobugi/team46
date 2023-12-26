@@ -3,6 +3,9 @@
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
     <title>마이페이지</title>
+    <script th:inline="javascript">
+        let realpath = /*[[@{'/'}]]*/ 'default';
+    </script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <th:block th:replace="~{include/header :: header}"></th:block>
@@ -56,7 +59,7 @@
             return false;
         }
         $.ajax({
-            url: "/mypage/check",
+            url: realpath+"mypage/check",
             type: "post",
             dataType: "json",
             data: {"password": password},

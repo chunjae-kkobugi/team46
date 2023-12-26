@@ -9,4 +9,9 @@ public class HomeCtrl {
     public String home(){
         return "/index";
     }
+
+    @RequestMapping("/team46")
+    public String home3(){
+        return "/index";
+    }
 }

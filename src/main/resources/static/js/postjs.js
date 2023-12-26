@@ -30,7 +30,7 @@ $(document).on('submit', '#postAddForm', function(e){
         type: "post",
         method: "post",
         enctype: "multipart/form-data",
-        url: "/post/add",
+        url: realpath+"post/add",
         cache: false,
         contentType: false,
         processData: false,
@@ -67,7 +67,7 @@ $(document).on('submit', '#postEditForm', function(e){
         type: "post",
         method: "post",
         enctype: "multipart/form-data",
-        url: "/post/edit",
+        url: realpath+"post/edit",
         cache: false,
         contentType: false,
         processData: false,
@@ -102,7 +102,7 @@ $(document).on('click', '.myLike', function(){
 function getPostModal(pno){
     $.ajax({
         type: 'GET',
-        url: /*realpath +  */'/post/getPost/' + pno,
+        url: realpath+'post/getPost/' + pno,
         success: function(data) {
             // 상세보기
             let postHTML = `<p style="font-size: 13px;">${data.author}</p><p>${data.content}</p>`
@@ -110,7 +110,7 @@ function getPostModal(pno){
             $("#postDetailImage").html("");
             if(data.bgImage!==null){
                 console.log(data.bgImage);
-                let img = `<img src="/images/postImage/${data.file.savePath}/${data.file.saveName}" alt="" id="postDetailImage" style="width: 100%;">`
+                let img = `<img src="${realpath}images/postImage/${data.file.savePath}/${data.file.saveName}" alt="" id="postDetailImage" style="width: 100%;">`
                 $("#postDetailImage").append(img);
             }
             $('.getPost').html(postHTML);
@@ -152,7 +152,7 @@ $(document).on('submit', '#commentAddForm', function(e){
     let params = {"pno" : pno, "content" : content};
     $.ajax({
         type:'POST',
-        url: '/post/addComment',
+        url: realpath+'post/addComment',
         data: params,
         success:function(data) {
             let commentHTML = '';
@@ -174,7 +174,7 @@ $(document).on('submit', '#commentAddForm', function(e){
 function editPostModal(pno){
     $.ajax({
         type: 'GET',
-        url: /*realpath +  */'/post/getPost/' + pno,
+        url: realpath+'post/getPost/' + pno,
         success: function(data) {
             let form = $("#postEditForm")[0];
             form.pno.setAttribute('value', pno);
@@ -228,7 +228,7 @@ $(document).on('submit', '#boardModifyForm', function(e){
         type: "post",
         method: "post",
         enctype: "multipart/form-data",
-        url: "/board/modify",
+        url: realpath+"board/modify",
         cache: false,
         contentType: false,
         processData: false,
