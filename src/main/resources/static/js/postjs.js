@@ -178,7 +178,7 @@ function editPostModal(pno){
         success: function(data) {
             let form = $("#postEditForm")[0];
             form.pno.setAttribute('value', pno);
-            $(form.content).text(data.content);
+            $("#postEditForm textarea").text(data.content);
             form.bgColor.setAttribute('value', data.bgColor);
 
             $(`#postEditForm select option[value=${data.gno}]`).prop("selected", true);
