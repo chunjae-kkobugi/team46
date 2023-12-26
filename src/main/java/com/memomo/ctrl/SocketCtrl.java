@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -149,7 +152,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/add")
     @ResponseBody
-    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
+    public Long postAddPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) throws IOException {
         log.info("post register start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -164,12 +167,14 @@ public class SocketCtrl {
         dto.setAuthor(sid);
         dto.setPstatus("ACTIVE");
         // 로컬 경로
-        String uploadDir = "C:\\upload\\";
+//        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
 //        ServletContext application = request.getSession().getServletContext();
 //        String uploadDir = application.getRealPath("/images/postImage");
 
+        Resource resource = new ClassPathResource("/static/images/postImage/");
+        String uploadDir = resource.getFile().getAbsolutePath();
         Long pno;
         if (!postFile.isPresent() || postFile.isEmpty()) {
             pno = postService.postAdd(dto, null, uploadDir);
@@ -191,7 +196,7 @@ public class SocketCtrl {
 
     @PostMapping("/post/edit")
     @ResponseBody
-    public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) {
+    public Long postEditPro(@ModelAttribute PostDTO dto, @RequestParam("postFile") Optional<MultipartFile> postFile, BindingResult bindingResult, HttpServletRequest request) throws IOException {
         log.info("post EDIT start------------------------------");
 
         if (bindingResult.hasErrors()) {
@@ -200,11 +205,14 @@ public class SocketCtrl {
         }
         log.info(dto);
         // 로컬 경로
-        String uploadDir = "C:\\upload\\";
+//        String uploadDir = "C:\\upload\\";
 
 //        서버 경로
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/postImage");
+
+        Resource resource = new ClassPathResource("/static/images/postImage/");
+        String uploadDir = resource.getFile().getAbsolutePath();
 
         Long pno;
         if (!postFile.isPresent() || postFile.isEmpty()) {
