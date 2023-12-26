@@ -6,7 +6,7 @@ function postLayout(p, sid){
     <div class="m-2">
         <div class="card shadow-sm post-style">
             <div class="timeline__content content card-body" id="post${p.pno}">
-            <div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(\'/fileImages/' + p.file.savePath + '/' + p.file.saveName + '\');'}"></div>    
+            <div class="bg" style="${(p.bgImage==null)? 'background-color: '+p.bgColor : 'background-repeat : repeat-y; background-position : center; background-image: url(\'/images/postImage/' + p.file.savePath + '/' + p.file.saveName + '\');'}"></div>    
             <div class="original content" id="original${p.pno}">
                     <!-- 포스트잇 메뉴 -->
                     <div id="postMenuList${p.pno}" class="pe-2 postMenu"

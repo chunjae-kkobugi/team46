@@ -67,7 +67,7 @@ public class PostServiceImpl implements PostService{
             MultipartFile multipartFile = postFile;
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
+            String saveFolder = uploadDir + '/' + today;
             System.out.println(saveFolder);
 
             File uploadPath = new File(saveFolder);
@@ -138,7 +138,7 @@ public class PostServiceImpl implements PostService{
             MultipartFile multipartFile = postFile;
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
+            String saveFolder = uploadDir + '/'+  today;
             System.out.println(saveFolder);
 
             File uploadPath = new File(saveFolder);
