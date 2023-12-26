@@ -19,7 +19,7 @@
                             <form th:action="@{/member/join}" th:object="${member}" method="post" onsubmit="return joinCheck(this)">
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="name">이름</label>
-                                    <input type="text" th:field="*{name}" id="name" placeholder="이름" class="form-control" autofocus>
+                                    <input type="text" th:field="*{name}" id="name" maxlength="100" placeholder="이름" class="form-control" autofocus>
                                     <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger info">Incorrect data</p>
                                 </div>
 
@@ -62,12 +62,12 @@
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="email">이메일</label><br>
-                                    <input type="email" th:field="*{email}" id="email" placeholder="이메일" class="form-control">
+                                    <input type="email" th:field="*{email}" id="email" maxlength="100" placeholder="이메일" class="form-control">
                                     <input type="button" class="btn btn-main ms-1" value="인증요청" onclick="sendNumber()">
                                     <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger info">Incorrect data</p>
 
                                     <div id="mail_number" name="mail_number" style="display: none" class="mt-1">
-                                        <input type="text" name="number" id="cert-num" placeholder="인증번호 입력"
+                                        <input type="text" name="number" id="cert-num" maxlength="20" placeholder="인증번호 입력"
                                                class="form-control">
                                         <button type="button" class="btn btn-main ms-1" name="confirmBtn"
                                                 id="confirmBtn" onclick="confirmNumber()">인증확인
@@ -80,17 +80,17 @@
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="school">학교</label>
-                                    <input type="text" th:field="*{school}" id="school" placeholder="학교"
+                                    <input type="text" th:field="*{school}" id="school" maxlength="100" placeholder="학교"
                                            class="form-control" required>
                                 </div>
 
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="addr1">주소</label>
-                                    <input type="text" name="addr1" id="addr1" placeholder="기본 주소"
+                                    <input type="text" name="addr1" id="addr1" maxlength="100" placeholder="기본 주소"
                                            class="form-control mb-1" required>
-                                    <input type="text" name="addr2" id="addr2" placeholder="상세 주소"
+                                    <input type="text" name="addr2" id="addr2" maxlength="200" placeholder="상세 주소"
                                            class="form-control mb-1" required>
-                                    <input type="text" name="postcode" id="postcode" placeholder="우편번호"
+                                    <input type="text" name="postcode" id="postcode" maxlength="10" placeholder="우편번호"
                                            class="form-control">
                                     <button type="button" id="post_btn" onclick="findAddr()" class="btn btn-main ms-1">
                                         우편번호 검색

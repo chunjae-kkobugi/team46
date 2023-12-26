@@ -19,74 +19,74 @@
                             </div>
                             <h5 class="tit blt-gray">회원정보 수정</h5>
                             <form method="post" role="form">
-                            <div class="tbl-write th-gray">
-                                <table class="table table-bordered align-middle">
-                                    <colgroup>
-                                        <col style="width:20%;">
-                                        <col style="width:auto;">
-                                    </colgroup>
-                                    <tbody>
-                                    <tr>
-                                        <th class="text-center">이름</th>
-                                        <td><input type="text" name="name" id="name" class="form-control"
-                                                   th:value="${member.name}"></td>
-                                        <!--<input type="text" name="name" id="name" class="form-control" th:value="${member.name}">-->
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">아이디</th>
-                                        <td>
-                                            <span class="ms-1">[[${member.id}]]</span>
-                                        </td>
-                                        <input type="hidden" name="id" id="id" th:value="${member.id}" readonly>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center pwd">비밀번호</th>
-                                        <td>
-                                            <!--<button type="button" class="btn btn-main btn-sm" onclick="reco()">변경</button>-->
-                                            <a th:href="@{/mypage/changePw}" class="btn btn-main btn-sm">변경</a>
-                                        </td>
-                                        <input type="hidden" name="pw" id="pw" class="form-control"
-                                               th:value="${member.pw}">
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">전화번호</th>
-                                        <td><input type="text" name="tel" id="tel" class="form-control"
-                                                   th:value="${member.tel}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">이메일</th>
-                                        <td><input type="email" name="email" id="email" class="form-control"
-                                                   th:value="${member.email}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">학교</th>
-                                        <td><input type="text" name="school" id="school" class="form-control"
-                                                   th:value="${member.school}"></td>
-                                    </tr>
+                                <div class="tbl-write th-gray">
+                                    <table class="table table-bordered align-middle">
+                                        <colgroup>
+                                            <col style="width:20%;">
+                                            <col style="width:auto;">
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th class="text-center">이름</th>
+                                            <td><input type="text" name="name" id="name" maxlength="100" class="form-control"
+                                                       th:value="${member.name}"></td>
+                                            <!--<input type="text" name="name" id="name" class="form-control" th:value="${member.name}">-->
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">아이디</th>
+                                            <td>
+                                                <span class="ms-1">[[${member.id}]]</span>
+                                            </td>
+                                            <input type="hidden" name="id" id="id" th:value="${member.id}" readonly>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center pwd">비밀번호</th>
+                                            <td>
+                                                <!--<button type="button" class="btn btn-main btn-sm" onclick="reco()">변경</button>-->
+                                                <a th:href="@{/mypage/changePw}" class="btn btn-main btn-sm">변경</a>
+                                            </td>
+                                            <input type="hidden" name="pw" id="pw" class="form-control"
+                                                   th:value="${member.pw}">
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">전화번호</th>
+                                            <td><input type="text" name="tel" id="tel" maxlength="13" class="form-control"
+                                                       th:value="${member.tel}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">이메일</th>
+                                            <td><input type="email" name="email" id="email" maxlength="100" class="form-control"
+                                                       th:value="${member.email}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">학교</th>
+                                            <td><input type="text" name="school" id="school" maxlength="100" class="form-control"
+                                                       th:value="${member.school}"></td>
+                                        </tr>
 
-                                    <tr>
-                                        <th class="text-center">주소</th>
-                                        <td>
-                                            <input type="text" name="addr1" id="addr1" th:value="${member.addr1}"
-                                                   class="form-control mb-1">
-                                            <input type="text" name="addr2" id="addr2" th:value="${member.addr2}"
-                                                   class="form-control mb-1">
-                                            <input type="text" name="postcode" id="postcode"
-                                                   th:value="${member.postcode}" class="form-control">
-                                            <button type="button" id="post_btn" onclick="findAddr()"
-                                                    class="ms-1 btn btn-main btn-sm">우편번호 검색
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <tr>
+                                            <th class="text-center">주소</th>
+                                            <td>
+                                                <input type="text" name="addr1" id="addr1" maxlength="100" th:value="${member.addr1}"
+                                                       class="form-control mb-1">
+                                                <input type="text" name="addr2" id="addr2" maxlength="200" th:value="${member.addr2}"
+                                                       class="form-control mb-1">
+                                                <input type="text" name="postcode" id="postcode" maxlength="10"
+                                                       th:value="${member.postcode}" class="form-control">
+                                                <button type="button" id="post_btn" onclick="findAddr()"
+                                                        class="ms-1 btn btn-main btn-sm">우편번호 검색
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <div class="text-center my-4">
-                                <button type="submit" class="btn btn-outline-main mx-1">수정</button>
-                                <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
-                                <a th:href="@{/mypage/info}" class="btn btn-outline-main mx-1">취소</a>
-                            </div>
+                                <div class="text-center my-4">
+                                    <button type="submit" class="btn btn-outline-main mx-1">수정</button>
+                                    <!--<button type="button" class="btn btn-outline-main mx-1">취소</button>-->
+                                    <a th:href="@{/mypage/info}" class="btn btn-outline-main mx-1">취소</a>
+                                </div>
                             </form>
 
                             <div class="border-bottom mb-4"></div>
