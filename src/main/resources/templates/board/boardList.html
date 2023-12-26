@@ -88,10 +88,14 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form th:action="@{/board/modify(bno=${list.bno})}" method="post" enctype="multipart/form-data">
+                                    <form th:action="@{/board/modify2(bno=${list.bno})}" method="post" enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <label for="boardTitle" class="col-form-label">게시판 이름</label>
                                             <input type="text" name="title" class="form-control" id="boardTitle" aria-describedby="title" th:value="${list.title}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="bpw" class="col-form-label">비밀번호</label>
+                                            <input type="password" name="bpw" class="form-control" id="bpw" aria-describedby="bpw">
                                         </div>
                                         <div class="row">
                                             <div class="col">

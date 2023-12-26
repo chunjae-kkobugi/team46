@@ -45,6 +45,7 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     private BoardFileRepository boardFileRepo;
 
+    BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
 
     @Override
     public Integer boardAdd(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) throws IOException {
@@ -100,6 +101,7 @@ public class BoardServiceImpl implements BoardService{
                 if (Files.probeContentType(savePath).startsWith("image")){
                     File thumbnail = new File(uploadPath, "s_" + saveName);
                     Thumbnailator.createThumbnail(savePath.toFile(), thumbnail, 411, 255);
+                    log.info(saveName);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -207,50 +209,45 @@ public class BoardServiceImpl implements BoardService{
             image.setOriginName(imageOriginName);
             image.setSaveName(imageSaveName);
             image.setSavePath(today);
-            // 파일 확장자를 fileType 에 저장
             image.setFileType(fileExtension);
             image.setStatus("ACTIVE");
 
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
 
-            BoardFile existingFile = boardDTO.getFile(); // 실제 필드명으로 변경
+            BoardFile existingFile = boardDTO.getFile();
             if (existingFile != null) {
                 existingFile.setStatus("REMOVE");
             }
+            String encryptedBpw = board.getBpw();
+            boardDTO.setBpw(encryptedBpw);
 
+            // 게시판 정보 변경
             board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
-//            board.change(board.getTitle(), boardDTO. getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage());
-            // 이미지 정보를 게시판 정보에 연결
+
+            // 파일 및 게시판 저장
             boardDTO.setFile(image);
             boardRepo.save(board);
-
-            // 파일 저장
             boardFileRepo.save(image);
             board.setBgImage(image.getFno());
             boardRepo.save(board);
-            log.info("-------------------------------------------------------------------------------" + image.getFno());
-            log.info("---------------------------------------------board : " + board);
         } else {
-            // 파일이 첨부되지 않은 경우에 실행되는 코드 블록
-            // 파일이 첨부되지 않았으므로 파일 정보를 건드리지 않고 게시판 정보만 수정
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
 
-            // 게시판 정보만 업데이트 (파일 정보는 건드리지 않음)
-            if (boardFile == null || boardFile.isEmpty()) {
-                // 파일이 첨부되지 않은 경우, 기존 bgImage 값을 유지
-                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), board.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
-            } else {
-                // 파일이 첨부된 경우, 새로운 bgImage 값을 사용
-                board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            // 비밀번호 변경
+            if (!boardDTO.getBpw().equals(board.getBpw())) {
+                String pw = pwEncoder.encode(boardDTO.getBpw());
+                boardDTO.setBpw(pw);
             }
 
+            // 게시판 정보 변경
+            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+
+            // 게시판 저장
             boardRepo.save(board);
-            log.info("게시판 정보 수정 완료: " + board);
         }
     }
-
 
 
     @Override
