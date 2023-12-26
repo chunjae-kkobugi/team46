@@ -89,6 +89,7 @@ function timeline(e, v) {
             a = t.value,
             r = n;
         if ("px" === s && n <= a) {
+            console.warn('The value entered for the setting "verticalTrigger" is larger than the window height. The default value will be used instead.');
             var o = _slicedToArray(l, 3);
             a = o[1], s = o[2]
         }
@@ -149,7 +150,7 @@ function timeline(e, v) {
             }),
                 function(e) {
                     e.timelineEl.classList.remove("timeline--horizontal", "timeline--mobile"), e.scroller.removeAttribute("style"), e.items.forEach(function(e) {
-                        e.removeAttribute("style"), e.classList.remove("animated", "fadeIn", "timeline__item--left", "timeline__item--right")
+                        e.removeAttribute("style"), e.classList.remove( "timeline__item--left", "timeline__item--right")
                     });
                     var t = e.timelineEl.querySelectorAll(".timeline-nav-button");
                     [].forEach.call(t, function(e) {
@@ -158,14 +159,10 @@ function timeline(e, v) {
                 }(e), window.innerWidth <= e.settings.forceVerticalMode && e.timelineEl.classList.add("timeline--mobile"), "horizontal" === e.settings.mode && window.innerWidth > e.settings.forceVerticalMode ? s(e) : function(i) {
                 var n = 0;
                 i.items.forEach(function(e, t) {
-                    e.classList.remove("animated", "fadeIn"), !l(e, i.settings.verticalTrigger) && 0 < t ? e.classList.add("animated") : n = t, t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left")
+                    !l(e, i.settings.verticalTrigger) && 0 < t ? null : n = t;
+                    t % 2 == ("left" === i.settings.verticalStartPosition ? 1 : 0) && window.innerWidth > i.settings.forceVerticalMode ? e.classList.add("timeline__item--right") : e.classList.add("timeline__item--left")
                 });
-                for (var e = 0; e < n; e += 1) i.items[e].classList.remove("animated", "fadeIn");
-                window.addEventListener("scroll", function() {
-                    i.items.forEach(function(e) {
-                        l(e, i.settings.verticalTrigger) && e.classList.add("fadeIn")
-                    })
-                })
+
             }(e), e.timelineEl.classList.add("timeline--loaded"), setTimeout(function() {
                 e.timelineEl.style.opacity = 1
             }, 500)
@@ -184,20 +181,40 @@ function timeline(e, v) {
             if (!(s = l.querySelector(".timeline__items"))) throw new Error(p + " .timeline__items " + i + " .timeline__wrap");
             a = [].slice.call(s.children, 0)
         } catch (e) {
-            return {
-                var t, i;r[e] = b[e].defaultValue,
-                n[e] ? r[e] = n[e] : v && v[e] && (r[e] = v[e]),
-                "integer" === b[e].type ? r[e] && (t = r[e], i = e, "number" == typeof t || t % 1 == 0 || (var o = b.verticalTrigger.defaultValue.match(/(\d*\.?\d*)(.*)/), d = r.verticalTrigger.match(/(\d*\.?\d*)(.*)/), c = _slicedToArray(d, 3), m = c[1], u = c[2], f = !0;
-            if (m || (m = h[1], u = h[2]
-                }
-            r.verticalTrigger = {
-                unit: u,
-                value: m
-            }, r.moveItems > r.visibleItems && ({
-                var e = window.innerWidth;e !== t && (a(), t = e)
-        }, 250)
+            return console.warn(e.message), !1
+        }
+        Object.keys(b).forEach(function(e) {
+            var t, i;
+            r[e] = b[e].defaultValue, n[e] ? r[e] = n[e] : v && v[e] && (r[e] = v[e]), "integer" === b[e].type ? r[e] && (t = r[e], i = e, "number" == typeof t || t % 1 == 0 || (console.warn(p + ' The value "' + t + '" entered for the setting "' + i + '" is not an integer.'), 0)) || (r[e] = b[e].defaultValue) : "string" === b[e].type && b[e].acceptedValues && -1 === b[e].acceptedValues.indexOf(r[e]) && (console.warn(p + ' The value "' + r[e] + '" entered for the setting "' + e + '" was not recognised.'), r[e] = b[e].defaultValue)
+        });
+        var o = b.verticalTrigger.defaultValue.match(/(\d*\.?\d*)(.*)/),
+            d = r.verticalTrigger.match(/(\d*\.?\d*)(.*)/),
+            c = _slicedToArray(d, 3),
+            m = c[1],
+            u = c[2],
+            f = !0;
+        if (m || (console.warn(p + " No numercial value entered for the 'verticalTrigger' setting."), f = !1), "px" !== u && "%" !== u && (console.warn(p + " The setting 'verticalTrigger' must be a percentage or pixel value."), f = !1), "%" === u && (100 < m || m < 0) ? (console.warn(p + " The 'verticalTrigger' setting value must be between 0 and 100 if using a percentage value."), f = !1) : "px" === u && m < 0 && (console.warn(p + " The 'verticalTrigger' setting value must be above 0 if using a pixel value."), f = !1), !1 === f) {
+            var h = _slicedToArray(o, 3);
+            m = h[1], u = h[2]
+        }
+        r.verticalTrigger = {
+            unit: u,
+            value: m
+        }, r.moveItems > r.visibleItems && (console.warn(p + ' The value of "moveItems" (' + r.moveItems + ') is larger than the number of "visibleItems" (' + r.visibleItems + '). The value of "visibleItems" has been used instead.'), r.moveItems = r.visibleItems), r.startIndex > a.length - r.visibleItems && a.length > r.visibleItems ? (console.warn(p + " The 'startIndex' setting must be between 0 and " + (a.length - r.visibleItems) + " for this timeline. The value of " + (a.length - r.visibleItems) + " has been used instead."), r.startIndex = a.length - r.visibleItems) : a.length <= r.visibleItems ? (console.warn(p + " The number of items in the timeline must exceed the number of visible items to use the 'startIndex' option."), r.startIndex = 0) : r.startIndex < 0 && (console.warn(p + " The 'startIndex' setting must be between 0 and " + (a.length - r.visibleItems) + " for this timeline. The value of 0 has been used instead."), r.startIndex = 0), g.push({
+            timelineEl: e,
+            wrap: l,
+            scroller: s,
+            items: a,
+            settings: r
         })
-    }
-    window.jQuery && (window.jQuery.fn.timeline = function(e) {
-        return timeline(this, e), this
-    });
+    }), a(), window.addEventListener("resize", function() {
+        clearTimeout(i), i = setTimeout(function() {
+            var e = window.innerWidth;
+            e !== t && (a(), t = e)
+        }, 250)
+    })
+}
+
+window.jQuery && (window.jQuery.fn.timeline = function(e) {
+    return timeline(this, e), this
+});

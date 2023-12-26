@@ -1,5 +1,16 @@
-// 포스트 공통 함수
+/* 게시판 공통 함수 */
 
+// 포스트 글쓰기 영역
+$(".xBtn i").click(function(){
+    $("#postRegister").addClass("register")
+})
+$("#submit").click(function(){
+    $("#postRegister").addClass("register")
+})
+
+
+
+/* 포스트 공통 함수 */
 // 포스트 추가
 $(document).on('submit', '#postAddForm', function(e){
     let form = $(this)[0];
@@ -87,7 +98,6 @@ $(document).on('click', '.myLike', function(){
     }
 });
 
-
 // 포스트 상세 보기
 function getPostModal(pno){
     $.ajax({
@@ -145,6 +155,7 @@ $(document).on('submit', '#commentAddForm', function(e){
             $('.comment').prepend(commentHTML);
             $('.noComment').remove();
             $('#commentContent').val('');
+            commentCount(pno);
         },
         error: function(err){
             console.log(err);

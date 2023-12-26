@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{include/head :: head}"></th:block>
+    <title>아이디 찾기</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<th:block th:replace="~{include/header :: header}"></th:block>
+
+<!--<section class="login py-5 border-top-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8 align-item-center">
+                <div class="mx-5 text-center">
+                    <h3>아이디 찾기</h3>
+                    &lt;!&ndash;<p th:text="${boardDetail}"></p>&ndash;&gt;
+                    <h6>([[${name}]], [[${email}]]) 로 검색된 아이디입니다.</h6>
+                    <h6>[[${id}]]</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>-->
+<section class="login py-5 border-top-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8 align-item-center">
+                <div class="mx-5">
+                    <!--<h3 class="text-center">아이디 찾기</h3>-->
+                    <!--<p th:text="${boardDetail}"></p>-->
+                    <form th:action="@{/member/findId}" method="post">
+                        <div class="code-tabs">
+                            <ul class="nav nav-justified">
+                                <li class="nav-item active">
+                                    <a class="nav-link" th:href="@{/member/findId}">아이디 찾기</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" th:href="@{/member/findPw}">비밀번호 찾기</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <fieldset class="p-4">
+                            <div class="form-control mb-3 border-0">
+                                ([[${name}]], [[${email}]])<br>
+                                로 검색된 아이디입니다.
+                            </div>
+                            <div class="form-control mb-3 border-0">
+                                [[${id}]]
+                            </div>
+                            <a th:href="@{/member/login}" class="form-control btn btn-main font-weight-bold text-white">로그인하기</a>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    var rt = /*[[${rt}]]*/ null;
+    var id = /*[[${id}]]*/ null;
+
+    console.log(rt + " " + id);
+    if (rt === true && id === null) {
+        alert('존재하지 않는 회원정보입니다.');
+    }
+</script>
+</body>
+</html>

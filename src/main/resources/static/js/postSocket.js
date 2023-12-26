@@ -17,7 +17,7 @@ function connect() {
         receiveGroupAdd();
         receiveGroupEdit();
         receiveGroupRemove();
-        receiveCount();
+        receiveCommentCount();
     });
 }
 
@@ -26,15 +26,6 @@ function disconnect() {
         stompClient.disconnect();
     }
     console.log("Disconnected");
-}
-
-//창 키면 바로 연결
-window.onload = function (){
-    connect();
-}
-
-window.BeforeUnloadEvent = function (){
-    disconnect();
 }
 
 function postAdd(pno){
@@ -56,11 +47,18 @@ function receiveAdd(){
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
             let newPost = JSON.parse(message.body);
             if(layoutNow === 'GRID'){
-                let postT = postLayout(newPost);
+                let postT = gridLayout(newPost);
                 $("#sortable").append(postT);
             } else if(layoutNow==='TIMELINE'){
                 let postT = timelineLayout(newPost);
+                console.log(postT);
                 $(".timeline__items").append(postT);
+                let timeLen = $(".timeline__item").length
+                if((timeLen-1)%2==0){
+                    $(`.timeline__item[data-pno=${newPost.pno}]`).addClass("timeline__item--left d-flex justify-content-end");
+                } else {
+                    $(`.timeline__item[data-pno=${newPost.pno}]`).addClass("timeline__item--right");
+                }
             }
         },
 {}  // 헤더 (Object 선택)
@@ -84,7 +82,7 @@ function receiveEdit(){
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
             let newPost = JSON.parse(message.body);
             if(layoutNow==='GRID'){
-                let postT = postLayout(newPost);
+                let postT = gridLayout(newPost);
                 $(`li[data-pno=${newPost.pno}]`).replaceWith(postT);
             } else if(layoutNow==='TIMELINE'){
                 let postT = timelineLayout(newPost);
@@ -151,14 +149,24 @@ function receiveSort(){
             }
 
             else if(layoutNow === 'TIMELINE'){
-                let fragment = document.createDocumentFragment();
+                let originalTimelineItems = document.querySelector('.timeline__items');
+                let cloned = originalTimelineItems.cloneNode(true);
+                var i = 0;
+                $(".timeline__items").html("");
+
                 newOrder.forEach(function(order){
-                    let pnoLi = $(`.timeline__items > .timeline__item[data-pno=${order}]`)[0];
-                    console.log(pnoLi);
-                    fragment.appendChild(pnoLi);
+                    let pnoLi = $(cloned).find(`.timeline__item[data-pno=${order}]`)[0];
+                    $(pnoLi).removeClass('timeline__item--left d-flex justify-content-end timeline__item--right');
+                    if(i%2==0){
+                        $(pnoLi).addClass('timeline__item--left d-flex justify-content-end');
+                    } else {
+                        $(pnoLi).addClass('timeline__item--right');
+                    }
+
+                    $(".timeline__items").append(pnoLi);
+                    $(`.timeline__item[data-pno=${order}]`).removeAttr("style");
+                    i++;
                 });
-                document.getElementsByClassName('timeline__items').appendChild(fragment);
-                alert("TIMELINE");
             }
         },
         {}  // 헤더 (Object 선택)
@@ -264,7 +272,7 @@ function receiveGroupRemove(){
 }
 
 function commentCount(pno){
-    let sendUrl = "/stomp-send/comments/" + pno;
+    let sendUrl = "/stomp-send/comments/" + bno;
     stompClient.send(
         sendUrl,
         {},
@@ -274,14 +282,12 @@ function commentCount(pno){
     );
 }
 
-function receiveCount(){
+function receiveCommentCount(){
     stompClient.subscribe(
-        '/stomp-receive/comments/' + pno,
+        '/stomp-receive/comments/' + bno,
         function (message){
-            let count = message.body
-            let comments = $('.comments[data-pno='+pno+']').next();
-            comments.text(count)
-            $()
+            let c = JSON.parse(message.body);
+            let comments = $(`.comments[data-pno=${c.pno}]`).next().text(c.cno);
         },
     {}
     )
