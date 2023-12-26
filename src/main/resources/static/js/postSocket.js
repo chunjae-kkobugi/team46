@@ -83,14 +83,18 @@ function receiveEdit(){
         '/stomp-receive/edit/'+bno, // destination (String 필수)
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
             let newPost = JSON.parse(message.body);
+            let myLike = $(`.myLike[data-pno=${newPost.pno}]`);
+
             if(layoutNow==='GRID'){
-                let postT = gridLayout(newPost);
+                let postT = gridLayout(newPost, sid);
                 $(`li[data-pno=${newPost.pno}]`).replaceWith(postT);
             } else if(layoutNow==='TIMELINE'){
-                let postT = timelineLayout(newPost);
+                let postT = timelineLayout(newPost, sid);
                 var selectedClasses = $(`.timeline__item[data-pno=${newPost.pno}]`).attr('class');
                 $(`.timeline__item[data-pno=${newPost.pno}]`).replaceWith(postT).addClass(selectedClasses);
             }
+
+            $(`.myLike[data-pno=${newPost.pno}]`).replaceWith(myLike);
         },
         {}  // 헤더 (Object 선택)
     );
@@ -204,7 +208,7 @@ function receiveLikes(){
     stompClient.subscribe(
         '/stomp-receive/likes/'+bno, // destination (String 필수)
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
-            console.log("RECEIVE LIKE");
+            // console.log("RECEIVE LIKE");
             let post = JSON.parse(message.body);
             let myLike = $(`.myLike[data-pno=${post.pno}]`).next();
             myLike.text(post.likes);
