@@ -7,11 +7,14 @@ import com.memomo.entity.BoardFile;
 import com.memomo.repository.BoardFileRepository;
 import com.memomo.repository.BoardRepository;
 import com.memomo.repository.PostRepository;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,16 +54,19 @@ public class BoardServiceImpl implements BoardService{
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
 
-//            // 서버 경로
+            // 서버 경로
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
 //            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
-            String uploadDir = "C:\\upload\\";
+//            String uploadDir = "C:\\upload\\";
+
+            Resource resource = new ClassPathResource("/static/images/boardImage/");
+            String uploadDir = resource.getFile().getAbsolutePath();
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
+            String saveFolder = uploadDir + '/' + today;
             System.out.println(saveFolder);
 
 
@@ -127,7 +133,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void boardEdit(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request) {
+    public void boardEdit(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request){
 
         // 파일 업로드
         String imageOriginName = "";
@@ -136,14 +142,23 @@ public class BoardServiceImpl implements BoardService{
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
 
-//            // 서버 경로
+            // 서버 경로
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/boardImage/");
 
             // 로컬 경로
 //            String uploadDir = "D:\\kim\\project\\tproj\\project06\\team46\\src\\main\\resources\\static\\images\\boardImage\\";
 
-            String uploadDir = "C:\\upload\\";
+//            String uploadDir = "C:\\upload\\";
+
+            Resource resource = new ClassPathResource("/static/images/boardImage/");
+            String uploadDir = null;
+            try {
+                uploadDir = resource.getFile().getAbsolutePath();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = uploadDir + today;
             System.out.println(saveFolder);
