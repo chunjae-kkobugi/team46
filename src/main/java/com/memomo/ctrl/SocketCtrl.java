@@ -69,7 +69,7 @@ public class SocketCtrl {
         if (loggedOut) {
             sid = cookie.getValue().split(":")[0];
         }
-        if (!sid.equals(boardService.boardDetail(bno).getTeacher())) {
+        if (!loggedOut && !sid.equals(boardService.boardDetail(bno).getTeacher())) {
             model.addAttribute("msg", "잘못된 접근입니다.");
             model.addAttribute("url", "");
             return "member/alert";
