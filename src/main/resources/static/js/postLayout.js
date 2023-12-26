@@ -49,7 +49,6 @@ function gridLayout(p, sid){
     newPost += `</li>`
     return newPost
 }
-
 function timelineLayout(p, sid){
     let newPost = `<div class="timeline__item ui-sortable-handle ui-state-default" data-pno="${p.pno}">`;
     newPost += postLayout(p, sid);
