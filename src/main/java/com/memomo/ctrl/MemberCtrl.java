@@ -115,12 +115,7 @@ public class MemberCtrl {
 
     @PostMapping("/nick")
     public String enterNick(NicknameDTO nicknameDTO, HttpServletResponse response, RedirectAttributes rttr, Model model) {
-        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname());
-        nickCookie.setPath("/");
-        nickCookie.setMaxAge(60 * 60 * 24 * 1);
-        response.addCookie(nickCookie);
         Integer bno = nicknameDTO.getBno();
-
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String originBpw = nicknameDTO.getPassword();
         String storedBpw = boardService.boardDetail(bno).getBpw();
@@ -129,6 +124,46 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter/" + bno;
         }
+        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
+        return "redirect:/post/detail?bno=" + bno;
+    }
+
+    @GetMapping("/enter")
+    public String enterAtHome(Model model) {
+        NicknameDTO nicknameDTO = new NicknameDTO();
+        //Integer boardNum = Integer.valueOf(bno);
+        //nicknameDTO.setBno(boardNum);
+        model.addAttribute("nicknameDTO", nicknameDTO);
+        //System.out.println("보드 비번 : " + boardService.boardDetail(boardNum).getBpw());
+        return "member/enterAtHome";
+    }
+
+    @PostMapping("/nick0")
+    public String enterNick0(NicknameDTO nicknameDTO, HttpServletResponse response, RedirectAttributes rttr, Model model) {
+        //System.out.println("nicknameDTO : " + nicknameDTO);
+        Integer bno = nicknameDTO.getBno();
+        boolean found = boardRepository.existsById(bno);
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("found", found);
+        // 존재하지 않는 게시판 번호인 경우
+        if (!found) {
+            return "redirect:/member/enter";
+        }
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        String originBpw = nicknameDTO.getPassword();
+        String storedBpw = boardService.boardDetail(bno).getBpw();
+        //String bpw = boardService.boardDetail(bno).getBpw();
+        if (!pwEncoder.matches(originBpw, storedBpw)) {
+            rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/member/enter";
+        }
+        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
         return "redirect:/post/detail?bno=" + bno;
     }
 
