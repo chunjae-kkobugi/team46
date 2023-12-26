@@ -264,8 +264,8 @@
         } else {
             let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
             let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
-            $("#bgImageBoard").css('background-image', url(realpath+'images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\''));
-        }
+            $("#bgImageBoard").css('background-image', 'url(\''+realpath+'images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\')');
+        } 
     });
 
     // 포스트 별 나의 좋아요 표시

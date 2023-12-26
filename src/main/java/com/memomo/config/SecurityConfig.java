@@ -73,7 +73,9 @@ public class SecurityConfig {
                 requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .requestMatchers(new AntPathRequestMatcher( "/css/**"))
                 .requestMatchers(new AntPathRequestMatcher( "/js/**"))
-                .requestMatchers(new AntPathRequestMatcher( "/img/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/images/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/plugins/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/fileImages/**"))
                 .requestMatchers(new AntPathRequestMatcher( "/lib/**"));
     }
 
