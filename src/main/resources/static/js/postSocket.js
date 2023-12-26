@@ -1,5 +1,6 @@
 function connect() {
-    var socket = new SockJS('/stomp');
+    // 운영 서버로 돌릴 떄는 '/team46/stomp'로 바꾸기
+    var socket = new SockJS('/team46/stomp');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         stompClient.subscribe(
@@ -203,6 +204,7 @@ function receiveLikes(){
     stompClient.subscribe(
         '/stomp-receive/likes/'+bno, // destination (String 필수)
         function (message) { // 콜백, 서버에서 받은 메시지 처리 function (message)
+            console.log("RECEIVE LIKE");
             let post = JSON.parse(message.body);
             let myLike = $(`.myLike[data-pno=${post.pno}]`).next();
             myLike.text(post.likes);

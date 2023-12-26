@@ -9,11 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import javax.sql.DataSource;
 
@@ -32,12 +36,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
-                //.requestMatchers("/admin/**", "/lecture/**", "/teacher/**").permitAll()
-                //.requestMatchers("/", "/**", "/login", "/join_frm", "join_frm_u", "join_frm_t").permitAll()
-                .requestMatchers("/", "/member/**", "/board/list", "/post/**", "/send-mail", "/confirm", "/stomp/**", "/socket/**").permitAll()
+                .requestMatchers(new MvcRequestMatcher(introspector,"/")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/board/list")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/post/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/send-mail")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/confirm")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/stomp/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/socket/**")).permitAll()
                 .anyRequest().authenticated());
 
         http.formLogin((formLogin) -> formLogin
@@ -49,7 +57,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/member/loginPro", true)
         );
 
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         http.logout((logout) -> logout
                 .logoutUrl("/member/logout")
@@ -60,8 +68,12 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
-        return (web) -> web.ignoring().requestMatchers(
-                PathRequest.toStaticResources().atCommonLocations());
+        return (web) -> web.ignoring().
+                requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .requestMatchers(new AntPathRequestMatcher( "/css/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/js/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/img/**"))
+                .requestMatchers(new AntPathRequestMatcher( "/lib/**"));
     }
 
     @Bean
