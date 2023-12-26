@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class PageDTO<E, T> {
     }
 
     public Pageable getPageable(){
-        return PageRequest.of(this.pageNow-1, this.postScreen);
+        return PageRequest.of(this.pageNow-1, this.postScreen, Sort.Direction.DESC, "bno");
     }
 
     public void build(Page<E> result){
