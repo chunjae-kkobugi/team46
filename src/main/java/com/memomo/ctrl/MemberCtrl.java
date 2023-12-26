@@ -104,6 +104,12 @@ public class MemberCtrl {
 
     @GetMapping("/enter/{bno}")
     public String enter(@PathVariable Integer bno, Model model) {
+        String loginId = memberService.getLoginId();
+        if (!loginId.equals("")) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "");
+            return "member/alert";
+        }
         NicknameDTO nicknameDTO = new NicknameDTO();
         Integer boardNum = Integer.valueOf(bno);
         nicknameDTO.setBno(boardNum);
@@ -133,6 +139,12 @@ public class MemberCtrl {
 
     @GetMapping("/enter")
     public String enterAtHome(Model model) {
+        String loginId = memberService.getLoginId();
+        if (!loginId.equals("")) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "");
+            return "member/alert";
+        }
         NicknameDTO nicknameDTO = new NicknameDTO();
         //Integer boardNum = Integer.valueOf(bno);
         //nicknameDTO.setBno(boardNum);
