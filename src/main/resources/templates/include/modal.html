@@ -212,6 +212,43 @@
             </div>
         </div>
     </div>
+    <!-- 내보내기 모달 창 끝 -->
+
+    <!-- 닉네임 변경 모달 창 시작 -->
+    <div class="modal fade" id="changeNickModal" aria-labelledby="changeNickModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="changeNickModalLabel">닉네임 변경</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/member/changeNick}" method="post">
+                        <div class="row justify-content-center align-items-center mb-3">
+                            <div class="col-3">
+                                <label for="curNick" class="form-label ms-2">현재 닉네임</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="text" id="curNick" name="curNick" th:value="${sid}" readonly>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-3">
+                                <label for="newNick" class="form-label ms-2">변경 닉네임</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control" type="text" id="newNick" name="newNick" placeholder="변경 닉네임">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="justify-content: center;">
+                    <button type="submit" class="btn btn-main">변경</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 닉네임 변경 모달 창 끝 -->
 
     <!--  모달창 스크립트 시작 -->
     <script th:inline="javascript">

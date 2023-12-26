@@ -249,4 +249,9 @@ public class MemberCtrl {
         return "redirect:/member/findPw";
     }
 
+    @PostMapping("/changeNick")
+    public String updateNick(HttpServletResponse response, RedirectAttributes rttr, Model model) {
+        return "redirect:/";
+    }
+
 }
