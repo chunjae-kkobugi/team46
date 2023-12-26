@@ -56,13 +56,14 @@ public class SocketCtrl {
         String sid = memberService.getLoginId();
         //System.out.println("sid : " + sid);
         boolean loggedOut = sid.equals("");
-
         Cookie cookie = WebUtils.getCookie(request, "nickCookie");
-        if ((cookie == null && loggedOut) //닉네임 설정을 한적이 없고, 로그아웃 상태라면
-                || (cookie != null && !bno.equals(Integer.valueOf(cookie.getValue().split(":")[1])) && loggedOut)) {
-            // 닉네임 설정을 한적은 있으나, 해당 게시판 번호에 대한 설정이 아니었다면, 비로그인 상태라면
+        if (cookie == null && loggedOut) {
             return "redirect:/member/enter/" + bno;
-        } else if (loggedOut) {
+        }
+        if (cookie != null && !bno.equals(Integer.valueOf(cookie.getValue().split(":")[1])) && loggedOut) {
+            return "redirect:/member/enter/" + bno;
+        }
+        if (loggedOut) {
             sid = cookie.getValue().split(":")[0];
         }
 
