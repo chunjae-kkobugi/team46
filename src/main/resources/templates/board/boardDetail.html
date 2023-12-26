@@ -159,7 +159,16 @@
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 class="ms-5">[[${detail.title}]] <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal" sec:authorize="isAuthenticated()"><i class="fa-solid fa-pencil"></i></a></h1>
+                <h1 class="ms-5">[[${detail.title}]]
+                    <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal" sec:authorize="isAuthenticated()">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#changeNickModal" sec:authorize="!isAuthenticated()">
+                        <i class="fa-solid fa-user-pen"></i>
+                    </a>
+
+                    <i class="iconBtn copy-btn fs-3 ms-2 fa-solid fa-link" onclick="copyUrl()"></i>
+                </h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
@@ -174,9 +183,6 @@
                                     data-bs-toggle="modal" data-bs-target="#groupRegisterModal">그룹 추가</button>
                         </li>
                         <li>
-                            <!--<button class="btn btn-outline-main mb-2"
-                                    style="width: 100%"
-                                    data-bs-toggle="modal" data-bs-target="#modifyModal">게시판 수정</button>-->
                             <button class="btn btn-outline-main mb-2" style="width: 100%" id="export-board">내보내기</button>
                         </li>
                     </ul>
@@ -258,7 +264,7 @@
         } else {
             let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
             let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
-            $("#bgImageBoard").css('background-image', url('/images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\''));
+            $("#bgImageBoard").css('background-image', url(realpath+'images/boardImage/'+boardSavePath+'/' +boardSaveName+ '\''));
         }
     });
 
@@ -328,6 +334,14 @@
             }
         }
     });
+
+    //현재 url 변수로 가져오기
+    let nowUrl = window.location.href;
+    function copyUrl(){
+        navigator.clipboard.writeText(nowUrl).then(res=>{
+            alert("링크가 복사되었습니다!");
+        })
+    }
 
     // 소켓 통신 연결
     window.onload = function (){

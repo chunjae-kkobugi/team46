@@ -69,6 +69,11 @@ public class SocketCtrl {
         if (loggedOut) {
             sid = cookie.getValue().split(":")[0];
         }
+        if (!loggedOut && !sid.equals(boardService.boardDetail(bno).getTeacher())) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "");
+            return "member/alert";
+        }
 
         List<PostDTO> postList = postService.postListAll(bno);
         List<BoardGroup> groupList = boardGroupService.groupList(bno);
@@ -235,7 +240,7 @@ public class SocketCtrl {
     @GetMapping("/post/getPost/{pno}")
     @ResponseBody
     public PostDTO getPost(@PathVariable Long pno, HttpServletRequest request) {
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pno : " + pno);
+        log.info("====== GET POST pno : " + pno);
         return postService.getPost(pno);
     }
 

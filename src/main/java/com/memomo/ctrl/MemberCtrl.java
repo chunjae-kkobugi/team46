@@ -104,6 +104,12 @@ public class MemberCtrl {
 
     @GetMapping("/enter/{bno}")
     public String enter(@PathVariable Integer bno, Model model) {
+        String loginId = memberService.getLoginId();
+        if (!loginId.equals("")) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "");
+            return "member/alert";
+        }
         NicknameDTO nicknameDTO = new NicknameDTO();
         Integer boardNum = Integer.valueOf(bno);
         nicknameDTO.setBno(boardNum);
@@ -124,7 +130,15 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter/" + bno;
         }
-        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
+        String nick = nicknameDTO.getNickname();
+        boolean duplicated = memberRepository.existsById(nick);
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("duplicated", duplicated);
+        if (duplicated) {
+            return "redirect:/member/enter/" + bno;
+        }
+
+        Cookie nickCookie = new Cookie("nickCookie", nick + ":" + bno);
         nickCookie.setPath("/");
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
         response.addCookie(nickCookie);
@@ -133,6 +147,12 @@ public class MemberCtrl {
 
     @GetMapping("/enter")
     public String enterAtHome(Model model) {
+        String loginId = memberService.getLoginId();
+        if (!loginId.equals("")) {
+            model.addAttribute("msg", "잘못된 접근입니다.");
+            model.addAttribute("url", "");
+            return "member/alert";
+        }
         NicknameDTO nicknameDTO = new NicknameDTO();
         //Integer boardNum = Integer.valueOf(bno);
         //nicknameDTO.setBno(boardNum);
@@ -160,6 +180,13 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter";
         }
+        String nick = nicknameDTO.getNickname();
+        boolean duplicated = memberRepository.existsById(nick);
+        rttr.addFlashAttribute("duplicated", duplicated);
+        if (duplicated) {
+            return "redirect:/member/enter";
+        }
+
         Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
         nickCookie.setPath("/");
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
@@ -220,6 +247,11 @@ public class MemberCtrl {
             memberRepository.save(member);
         }
         return "redirect:/member/findPw";
+    }
+
+    @PostMapping("/changeNick")
+    public String updateNick(HttpServletResponse response, RedirectAttributes rttr, Model model) {
+        return "redirect:/";
     }
 
 }

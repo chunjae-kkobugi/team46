@@ -18,10 +18,7 @@
                     <form th:action="@{/member/nick0}" th:object="${nicknameDTO}" method="post">
                         <fieldset class="p-4">
                             <input class="form-control mb-3" type="text" id="bno" name="bno" placeholder="게시판 번호를 입력하세요." th:field="*{bno}" required>
-                            <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." th:field="*{nickname}" required>
-                            <!-- 비밀번호가 존재할때만 보이도록 -->
-                            <!--<th:block th:if="${boardDetail.bpw != ''}">-->
-                            <!--</th:block>-->
+                            <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." pattern="[A-Za-z0-9가-힣]*" oninvalid="invalidInput()" th:field="*{nickname}" required>
                             <input class="form-control mb-3" type="password" id="bpw" name="bpw" placeholder="비밀번호를 입력하세요." th:field="*{password}">
                             <p class="text-danger">[[${msg}]]</p>
                             <button type="submit" class="form-control btn btn-main font-weight-bold"
@@ -38,11 +35,19 @@
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 <script th:inline="javascript">
+    function invalidInput() {
+        alert("닉네임은 영문, 한글, 숫자만 입력 가능합니다.");
+    }
+
     var rt = /*[[${rt}]]*/ null;
     var found = /*[[${found}]]*/ null;
+    var duplicated = /*[[${duplicated}]]*/ null;
 
-    if (found === false) {
+    if (rt === true && found === false) {
         alert('존재하지 않는 게시판입니다.');
+    }
+    if (rt === true && duplicated === true) {
+        alert('사용할 수 없는 닉네임입니다.');
     }
 </script>
 </body>

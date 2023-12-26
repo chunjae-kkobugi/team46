@@ -3,6 +3,9 @@
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
     <title>회원가입</title>
+    <script th:inline="javascript">
+        let realpath = /*[[@{'/'}]]*/ 'default';
+    </script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <th:block th:replace="~{include/header :: header}"></th:block>
@@ -224,7 +227,7 @@
 
                                     $("#mail_number").css("display", "block");
                                     $.ajax({
-                                        url: "/send-mail",
+                                        url: realpath+"send-mail",
                                         type: "post",
                                         dataType: "json",
                                         data: {"mail": $("#email").val()},
@@ -245,7 +248,7 @@
                                         return;
                                     }
                                     $.ajax({
-                                        url: "/confirm",
+                                        url: realpath+"confirm",
                                         type: "post",
                                         dataType: "json",
                                         data: {"inputNum": inputNum},
