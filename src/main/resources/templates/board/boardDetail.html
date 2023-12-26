@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:replace="~{include/head :: head}"></th:block>
     <title th:text="${detail.title}"></title>
@@ -158,7 +159,7 @@
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 class="ms-5">[[${detail.title}]] <a th:if="${detail.teacher == sid}" class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
+                <h1 class="ms-5">[[${detail.title}]] <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal" sec:authorize="isAuthenticated()"><i class="fa-solid fa-pencil"></i></a></h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
