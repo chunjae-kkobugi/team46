@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/post/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/send-mail")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/confirm")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/isDuplicated")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/member/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/stomp/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/socket/**")).permitAll()
