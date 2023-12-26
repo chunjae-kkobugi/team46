@@ -119,7 +119,6 @@ public class MemberCtrl {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String originBpw = nicknameDTO.getPassword();
         String storedBpw = boardService.boardDetail(bno).getBpw();
-
         //String bpw = boardService.boardDetail(bno).getBpw();
         if (!pwEncoder.matches(originBpw, storedBpw)) {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
@@ -145,16 +144,11 @@ public class MemberCtrl {
     @PostMapping("/nick0")
     public String enterNick0(NicknameDTO nicknameDTO, HttpServletResponse response, RedirectAttributes rttr, Model model) {
         //System.out.println("nicknameDTO : " + nicknameDTO);
-        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname());
-        nickCookie.setPath("/");
-        nickCookie.setMaxAge(60 * 60 * 24 * 1);
-        response.addCookie(nickCookie);
         Integer bno = nicknameDTO.getBno();
-        //BoardDTO board = boardService.boardDetail(bno);
-        //boolean found = board != null;
         boolean found = boardRepository.existsById(bno);
         rttr.addFlashAttribute("rt", true);
         rttr.addFlashAttribute("found", found);
+        // 존재하지 않는 게시판 번호인 경우
         if (!found) {
             return "redirect:/member/enter";
         }
@@ -166,6 +160,10 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter";
         }
+        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
         return "redirect:/post/detail?bno=" + bno;
     }
 
@@ -207,7 +205,7 @@ public class MemberCtrl {
         String id = request.getParameter("id");
         String email = request.getParameter("email");
         //System.out.printf("id : %s, name : %s, email : %s\n", id, name, email);
-        boolean found =  memberService.existsId(email, id);
+        boolean found = memberService.existsId(email, id);
         //System.out.println("찾았는지 ? : " + found);
         rttr.addFlashAttribute("rt", true);
         rttr.addFlashAttribute("found", found);
