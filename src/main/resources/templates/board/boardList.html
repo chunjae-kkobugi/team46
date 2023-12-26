@@ -17,6 +17,13 @@
             cursor: pointer;
         }
         .bgImage { background-repeat: no-repeat; background-position: center; width: 100%; height: 225px;}
+        .bno {
+            position: absolute;
+            font-size: 23px;
+            color: #ffffff;
+            background-color: #51b56d;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -40,6 +47,7 @@
                     <div class="col">
                         <div class="card shadow-sm">
                             <a th:href="@{/post/detail(bno=${list.bno})}">
+                                <span class="bno ms-2 mt-2 p-2 pb-0 pt-0" th:text="${list.bno}"></span>
                                 <!-- 배경이미지X -->
                                 <div th:if="${list.bgImage eq null}"
                                      class="bd-placeholder-img card-img-top"
