@@ -28,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import java.security.Principal;
 import java.util.List;
@@ -250,8 +251,16 @@ public class MemberCtrl {
     }
 
     @PostMapping("/changeNick")
-    public String updateNick(HttpServletResponse response, RedirectAttributes rttr, Model model) {
-        return "redirect:/";
+    public String updateNick(HttpServletRequest request, HttpServletResponse response) {
+        String newNick = request.getParameter("newNick");
+        Cookie cookie = WebUtils.getCookie(request, "nickCookie");
+        Integer bno = Integer.valueOf(cookie.getValue().split(":")[1]);
+
+        Cookie nickCookie = new Cookie("nickCookie", newNick + ":" + bno);
+        nickCookie.setPath("/");
+        nickCookie.setMaxAge(60 * 60 * 24 * 1);
+        response.addCookie(nickCookie);
+        return "redirect:/post/detail?bno=" + bno;
     }
 
 }
