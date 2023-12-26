@@ -63,4 +63,11 @@ public class SecurityConfig {
         return (web) -> web.ignoring().requestMatchers(
                 PathRequest.toStaticResources().atCommonLocations());
     }
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        DefaultHttpFirewall firewall = new DefaultHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
+    }
 }
