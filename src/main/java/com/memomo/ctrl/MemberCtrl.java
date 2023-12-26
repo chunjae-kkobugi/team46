@@ -119,6 +119,7 @@ public class MemberCtrl {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String originBpw = nicknameDTO.getPassword();
         String storedBpw = boardService.boardDetail(bno).getBpw();
+
         //String bpw = boardService.boardDetail(bno).getBpw();
         if (!pwEncoder.matches(originBpw, storedBpw)) {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
