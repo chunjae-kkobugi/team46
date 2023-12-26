@@ -18,7 +18,7 @@
                     <form th:action="@{/member/nick}" th:object="${nicknameDTO}" method="post">
                         <fieldset class="p-4">
                             <input class="form-control mb-3" type="text" id="bno" name="bno" placeholder="게시판 번호를 입력하세요." th:value="${nicknameDTO.bno}" th:field="*{bno}" readonly>
-                            <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." th:field="*{nickname}" required>
+                            <input class="form-control mb-3" type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." pattern="[A-Za-z0-9가-힣]*" oninvalid="invalidInput()" th:field="*{nickname}" required>
                             <input class="form-control mb-3" type="password" id="bpw" name="bpw" placeholder="비밀번호를 입력하세요." th:field="*{password}">
                             <p class="text-danger">[[${msg}]]</p>
                             <button type="submit" class="form-control btn btn-main font-weight-bold"
@@ -33,5 +33,17 @@
 </section>
 
 <th:block th:replace="~{include/footer :: footer}"></th:block>
+<script th:inline="javascript">
+    function invalidInput() {
+        alert("닉네임은 영문, 한글, 숫자만 입력 가능합니다.");
+    }
+
+    var rt = /*[[${rt}]]*/ null;
+    var duplicated = /*[[${duplicated}]]*/ null;
+
+    if (rt === true && duplicated === true) {
+        alert('사용할 수 없는 닉네임입니다.');
+    }
+</script>
 </body>
 </html>
