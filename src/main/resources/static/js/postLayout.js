@@ -47,7 +47,7 @@ function postLayout(p, sid){
 }
 
 function gridLayout(p, sid){
-    let newPost = `<li class="col-2 mb-3 mt-2 ui-sortable-handle ui-state-defaul" data-pno="${p.pno}">`;
+    let newPost = `<li class="mb-3 mt-2 ui-sortable-handle ui-state-defaul" data-pno="${p.pno}">`;
     newPost += postLayout(p, sid);
     newPost += `</li>`
     return newPost

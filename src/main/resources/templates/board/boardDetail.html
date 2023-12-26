@@ -82,6 +82,7 @@
             top: -15px;
             cursor: pointer;
         }
+
         .register {
             display: none;
             position: relative;
@@ -145,7 +146,6 @@
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
-            <div class="col-5 text-end" style="position: relative; z-index: 999">
                 <i class="fas fa-plus-circle fa-3x pe-3" style="color: #51B56D; cursor: pointer" id="boardMenu"></i>
                 <div id="boardMenuList" data-html2canvas-ignore="true" class="me-2 mt-2 p-2 pb-0 pt-3">
                     <ul class="p-0" style="list-style-type: none">
@@ -172,46 +172,12 @@
 
     <!-- 배경이미지 X -->
     <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
-    <div class="container-fluid m-0 row">
-        <th:block th:if="${detail.layout eq 'GRID'}">
-            <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
-        </th:block>
-        <th:block th:if="${detail.layout eq 'TIMELINE'}">
-            <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
-            <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
-        </th:block>
-        <th:block th:if="${detail.layout eq 'GROUP'}">
-            <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
-            <th:block th:replace="~{include/modal :: groupModal}"></th:block>
-        </th:block>
-    </div>
-    <th:block th:replace="~{include/modal :: modal}"></th:block>
-</div>
-    <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
-    <div class="container-fluid m-0 row">
-        <th:block th:if="${detail.layout eq 'GRID'}">
-            <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
-        </th:block>
-        <th:block th:if="${detail.layout eq 'TIMELINE'}">
-            <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
-            <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
-        </th:block>
-        <th:block th:if="${detail.layout eq 'GROUP'}">
-            <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
-            <th:block th:replace="~{include/modal :: groupModal}"></th:block>
-        </th:block>
-    </div>
-    <th:block th:replace="~{include/modal :: modal}"></th:block>
-</div>
-
-<!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
-<!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
-    <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
                 <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
             </th:block>
             <th:block th:if="${detail.layout eq 'TIMELINE'}">
+                <script type="text/javascript" th:src="@{/js/timeline.js}"></script>
                 <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
             </th:block>
             <th:block th:if="${detail.layout eq 'GROUP'}">
@@ -219,21 +185,12 @@
                 <th:block th:replace="~{include/modal :: groupModal}"></th:block>
             </th:block>
         </div>
-        <th:block th:replace="~{include/modal :: modal}"></th:block>
-    </div>-->
-    </div>-->
-
-
+    <th:block th:replace="~{include/modal :: modal}"></th:block>
+    </div>
 
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
-
-<script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
-<script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
-<th:block th:replace="~{include/footer :: footer}"></th:block>
-</body>
-
 <script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
 <script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 
@@ -289,21 +246,71 @@
     });
 
     // 포스트 별 나의 좋아요 표시
-
-        let boardImage = /*[[${detail.bgImage}]]*/ 'default';
-        if(boardImage === null){
-            $("#bgColorBoard").css('background-color', /*[[${detail.bgColor}]]*/ 'default');
-        } else {
-            let boardSavePath = /*[[${detail.file?.savePath}]]*/ 'default';
-            let boardSaveName = /*[[${detail.file?.saveName}]]*/ 'default';
-            $("#bgImageBoard").css('background-image', url('/fileImages/'+boardSavePath+'/' +boardSaveName+ '\''));
-        }
-    });
-
-    // 포스트 별 나의 좋아요 표시
     myLikes.forEach(function(l){
         $(`.myLike[data-pno=${l.pno}]`).removeClass('fa-regular').addClass('fa-solid');
     })
+
+    // 내보내기
+    $(function(){
+        $("#export-board").on("click", function(){
+            /*$('#exportModal').modal('hide');*/
+
+            html2canvas(document.querySelector("#main_capture"), {
+            }).then(canvas => {
+                var imgData = canvas.toDataURL('image/jpg');
+                var currentDateTime = new Date().toISOString().slice(0, 19).replace(/[-T:/]/g, "");
+                var curFileName = "board_" + currentDateTime + ".jpg";
+                // 모달 창에 이미지를 표시합니다.
+                $('#previewImage').attr('src', imgData);
+                $('#save-img').attr('download', curFileName);
+                $('#exportModal').modal('show');
+            });
+        });
+        $('#save-img').on('click', function(){
+            var imgData = $('#previewImage').attr('src');
+            saveAs(imgData, $('#save-img').attr('download'));
+            /*$('#exportModal').modal('hide');*/
+        });
+        $("#save-pdf").on("click", function(){
+            html2canvas(document.querySelector("#main_capture")).then(canvas => {
+                var imgData = canvas.toDataURL('image/jpg');
+                var currentDateTime = new Date().toISOString().slice(0, 19).replace(/[-T:/]/g, "");
+                var curFileName = "board_" + currentDateTime + ".pdf";
+
+                var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
+                var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+                window.jsPDF = window.jspdf.jsPDF;
+                var doc = new jsPDF('p', 'mm', 'a4');
+                var position = 0;
+                // 첫 페이지 출력
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                // 한 페이지 이상일 경우 루프 돌면서 출력
+                while (heightLeft >= 20) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                // 파일 저장
+                doc.save(curFileName);
+            });
+        });
+        function saveAs(uri, filename) {
+            var link = document.createElement('a');
+            if ('download' in link) {
+                link.href = uri;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                window.open(uri);
+            }
+        }
+    });
 
     // 소켓 통신 연결
     window.onload = function (){
