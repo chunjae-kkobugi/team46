@@ -129,6 +129,15 @@ public class BoardCtrl {
         return "boardModify";
     }
 
+    @PostMapping("modify2")
+    public String boardModify2(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        log.info("board modify-----------" + boardDTO);
+        boardService.boardEdit(boardDTO, boardFile, request);
+        redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addAttribute("bno", boardDTO.getBno());
+        return "redirect:/post/detail";
+    }
+
     @GetMapping("remove")
     public String boardRemove(@RequestParam("bno") Integer bno, RedirectAttributes redirectAttributes, HttpServletRequest request){
         log.info("board remove-------------------------------" + bno);

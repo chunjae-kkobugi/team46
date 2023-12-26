@@ -44,9 +44,16 @@
                 <input type="password" class="form-control" id="bpw" name="bpw" maxlength="10">
             </div>
             <div class="row mb-3">
+<!--                <div class="col-4">-->
+<!--                    <label for="maxStudent" class="form-label"> 최대 학생수 </label>-->
+<!--                    <input type="number" class="form-control" name="maxStudent" id="maxStudent" value="1" max="50" min="1" required>-->
+<!--                </div>-->
                 <div class="col-4">
-                    <label for="maxStudent" class="form-label"> 최대 학생수 </label>
-                    <input type="number" class="form-control" name="maxStudent" id="maxStudent" value="1" max="50" min="1" required>
+                    <label for="layout" class="form-label"> 레이아웃 </label>
+                    <select name="layout" id="layout" class="form-select">
+                        <option value="GRID">격자형</option>
+                        <option value="TIMELINE">타임라인형</option>
+                    </select>
                 </div>
                 <div class="col-4">
                     <label for="boardFile" class="form-label uploadHidden"> 배경이미지 <span>(선택)</span></label>
