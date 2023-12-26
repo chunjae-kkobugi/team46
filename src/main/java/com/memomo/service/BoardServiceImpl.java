@@ -235,14 +235,15 @@ public class BoardServiceImpl implements BoardService{
             Optional<Board> result = boardRepo.findById(boardDTO.getBno());
             Board board = result.orElseThrow();
 
-            // 비밀번호 변경
-            if (!boardDTO.getBpw().equals(board.getBpw())) {
+            // 새 비밀번호 입력 시 비밀번호 전달
+            if(boardDTO.getBpw()!=null){
                 String pw = pwEncoder.encode(boardDTO.getBpw());
                 boardDTO.setBpw(pw);
             }
 
             // 게시판 정보 변경
-            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
+            modelMapper.map(board, boardDTO); // null 이 아닌 변경된 값만 board 에 대입
+//            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
 
             // 게시판 저장
             boardRepo.save(board);

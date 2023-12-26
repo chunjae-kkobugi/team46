@@ -221,7 +221,7 @@ $(document).on('submit', '#boardModifyForm', function(e){
     formData.append('bno', bno);
     formData.append('bgColor', form.bgColor.value);
     formData.append('title', form.title.value);
-    formData.append('maxStudent', form.maxStudent.value);
+    // formData.append('maxStudent', form.maxStudent.value);
     formData.append('layout', form.layout.value);
 
     $.ajax({
@@ -241,5 +241,5 @@ $(document).on('submit', '#boardModifyForm', function(e){
         }
     });
 
-    form.send();
+    $('#modifyModal .btn-close').click();
 });

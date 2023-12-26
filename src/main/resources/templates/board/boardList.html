@@ -25,9 +25,6 @@
             border-radius: 2px;
         }
     </style>
-    <script th:inline="javascript">
-        let realpath = /*[[@{'/'}]]*/ 'default';
-    </script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 <th:block th:replace="~{include/header :: header}"></th:block>
@@ -67,7 +64,7 @@
                                     <ul class="p-0">
                                         <!-- 수정버튼 -->
                                         <li class="me-2" th:id="'boardModifyBtn'+${list.bno}">
-                                            <span data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-pen-to-square fa-solid"></i></span>
+                                            <span data-bs-toggle="modal" th:data-bs-target="'#modifyModal' + ${list.bno}"><i class="fa-pen-to-square fa-solid"></i></span>
                                         </li>
                                         <!-- 삭제 버튼 -->
                                         <li class="boardRemoveBtn">
@@ -83,7 +80,7 @@
                         </div>
                     </div>
                     <!-- 게시판 정보 수정 모달창 시작 -->
-                    <div class="modal fade" id="modifyModal" aria-labelledby="modifyModalLabel" aria-hidden="true">
+                    <div class="modal fade" th:id="'modifyModal' + ${list.bno}" aria-labelledby="modifyModal2Label" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
