@@ -105,7 +105,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean findId(String email, String name, String id) {
+    public boolean existsId(String email, String id) {
         Optional<Member> optionalMember = memberRepo.findByEmailAndId(email, id);
         if (optionalMember.isEmpty()) {
             return false;

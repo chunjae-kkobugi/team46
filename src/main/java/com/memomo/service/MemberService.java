@@ -24,5 +24,5 @@ public interface MemberService {
 
     String findId(String email, String name);
 
-    boolean findId(String email, String name, String id);
+    boolean existsId(String email, String id);
 }
