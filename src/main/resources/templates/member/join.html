@@ -66,7 +66,7 @@
                                 <div class="form-outline mb-4">
                                     <label class="form-label blind" for="email">이메일</label><br>
                                     <input type="email" th:field="*{email}" id="email" maxlength="100" placeholder="이메일" class="form-control">
-                                    <input type="button" class="btn btn-main ms-1" value="인증요청" onclick="sendNumber()">
+                                    <input type="button" class="btn btn-main ms-1" value="인증요청" onclick="checkEmail()">
                                     <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger info">Incorrect data</p>
 
                                     <div id="mail_number" name="mail_number" style="display: none" class="mt-1">
@@ -109,7 +109,7 @@
 
 
                             <script th:inline="javascript">
-                                let realpath = /*[[@{'/'}]]*/ 'default';
+                                //let realpath = /*[[@{'/'}]]*/ 'default';
                                 var confirm = "";
 
                                 $(document).ready(function () {
@@ -218,14 +218,30 @@
                                     }
                                 }
 
-                                function sendNumber() {
+                                function checkEmail() {
                                     if ($("#email").val() === "") {
                                         alert("이메일을 입력하지 않았습니다.");
                                         $("#email").focus();
                                         return;
                                     }
-
-                                    $("#mail_number").css("display", "block");
+                                    $.ajax({
+                                        url: realpath+"isDuplicated",
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {"email": $("#email").val()},
+                                        success: function (data) {
+                                            if (data) {
+                                                alert("이미 가입된 이메일입니다.");
+                                            } else {
+                                                sendNumber();
+                                            }
+                                        }, error: function (request, status, error) {
+                                            //alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                                            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error)
+                                        }
+                                    });
+                                }
+                                function sendNumber() {
                                     $.ajax({
                                         url: realpath+"send-mail",
                                         type: "post",
@@ -233,6 +249,7 @@
                                         data: {"mail": $("#email").val()},
                                         success: function (data) {
                                             alert("인증번호가 발송되었습니다.");
+                                            $("#mail_number").css("display", "block");
                                             $("#confirm").attr("value", data);
                                         }, error: function (request, status, error) {
                                             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -261,7 +278,6 @@
                                             }
                                         }
                                     });
-
                                 }
                             </script>
 

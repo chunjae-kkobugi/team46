@@ -194,8 +194,8 @@
                     <h1 class="modal-title fs-5" id="changeNickModalLabel">닉네임 변경</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form th:action="@{/member/changeNick}" method="post">
+                <form th:action="@{/member/changeNick}" method="post">
+                    <div class="modal-body">
                         <div class="row justify-content-center align-items-center mb-3">
                             <div class="col-3">
                                 <label for="curNick" class="form-label ms-2">현재 닉네임</label>
@@ -209,14 +209,14 @@
                                 <label for="newNick" class="form-label ms-2">변경 닉네임</label>
                             </div>
                             <div class="col-9">
-                                <input class="form-control" type="text" id="newNick" name="newNick" placeholder="변경 닉네임">
+                                <input class="form-control" type="text" id="newNick" name="newNick" maxlength="30" pattern="[A-Za-z0-9가-힣]*" oninvalid="invalidInput()" placeholder="변경 닉네임">
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer" style="justify-content: center;">
-                    <button type="submit" class="btn btn-main">변경</button>
-                </div>
+                    </div>
+                    <div class="modal-footer" style="justify-content: center;">
+                        <button type="submit" class="btn btn-main">변경</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -224,6 +224,11 @@
 
     <!--  모달창 스크립트 시작 -->
     <script th:inline="javascript">
+        // 닉네임 변경
+        function invalidInput() {
+            alert("닉네임은 영문, 한글, 숫자만 입력 가능합니다.");
+        }
+
         // 포스트 수정 모달
         $('#postEditModal .btn-close').click(function (){
             $("#postEditModal textarea").text("");
