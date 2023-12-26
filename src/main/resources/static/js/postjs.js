@@ -106,6 +106,13 @@ function getPostModal(pno){
         success: function(data) {
             // 상세보기
             let postHTML = `<p style="font-size: 13px;">${data.author}</p><p>${data.content}</p>`
+
+            $("#postDetailImage").html("");
+            if(data.bgImage!==null){
+                console.log(data.bgImage);
+                let img = `<img src="/images/postImage/${data.file.savePath}/${data.file.saveName}" alt="" id="postDetailImage" style="width: 100%;">`
+                $("#postDetailImage").append(img);
+            }
             $('.getPost').html(postHTML);
 
             // 댓글 입력 pno
