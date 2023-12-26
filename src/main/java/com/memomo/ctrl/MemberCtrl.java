@@ -130,7 +130,15 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter/" + bno;
         }
-        Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
+        String nick = nicknameDTO.getNickname();
+        boolean duplicated = memberRepository.existsById(nick);
+        rttr.addFlashAttribute("rt", true);
+        rttr.addFlashAttribute("duplicated", duplicated);
+        if (duplicated) {
+            return "redirect:/member/enter/" + bno;
+        }
+
+        Cookie nickCookie = new Cookie("nickCookie", nick + ":" + bno);
         nickCookie.setPath("/");
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
         response.addCookie(nickCookie);
@@ -172,6 +180,13 @@ public class MemberCtrl {
             rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
             return "redirect:/member/enter";
         }
+        String nick = nicknameDTO.getNickname();
+        boolean duplicated = memberRepository.existsById(nick);
+        rttr.addFlashAttribute("duplicated", duplicated);
+        if (duplicated) {
+            return "redirect:/member/enter";
+        }
+
         Cookie nickCookie = new Cookie("nickCookie", nicknameDTO.getNickname() + ":" + bno);
         nickCookie.setPath("/");
         nickCookie.setMaxAge(60 * 60 * 24 * 1);
