@@ -181,3 +181,58 @@ function editPostModal(pno){
         }
     });
 }
+
+// 그룹 추가
+$(document).on('submit', '#groupRegisterForm', function(e){
+    e.preventDefault();
+    let form = $(this)[0];
+    groupAdd(form);
+
+    $('#groupRegisterModal .btn-close').click();
+});
+
+// 그룹 추가
+$(document).on('submit', '#groupModifyForm', function(e){
+    e.preventDefault();
+    let form = $(this)[0];
+    groupEdit(form);
+
+    $('#groupModifyModal .btn-close').click();
+});
+
+// 게시판 수정
+$(document).on('submit', '#boardModifyForm', function(e){
+    e.preventDefault();
+    let form = $(this)[0];
+
+    var formData = new FormData();
+
+    if (form.boardFile.files[0] !== undefined) {
+        formData.append('boardFile', form.boardFile.files[0]);
+    }
+
+    formData.append('bno', bno);
+    formData.append('bgColor', form.bgColor.value);
+    formData.append('title', form.title.value);
+    formData.append('maxStudent', form.maxStudent.value);
+    formData.append('layout', form.layout.value);
+
+    $.ajax({
+        type: "post",
+        method: "post",
+        enctype: "multipart/form-data",
+        url: "/board/modify",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function(data) {
+            layoutChange();
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+
+    form.send();
+});

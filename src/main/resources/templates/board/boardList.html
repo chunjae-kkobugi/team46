@@ -67,8 +67,8 @@
                                             <span data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-pen-to-square fa-solid"></i></span>
                                         </li>
                                         <!-- 삭제 버튼 -->
-                                        <li class="boardRemoveBtn" th:id="'boardRemoveBtn'+${list.bno}" th:bno="${list.bno}" onclick="postRemove(this.getAttribute('bno'))">
-                                            <a th:href="@{/board/remove(bno=${list.bno})}"><i class="fa-solid fa-trash-can" style="color: #000000"></i></a>
+                                        <li class="boardRemoveBtn">
+                                            <a th:bno="${list.bno}" onclick="boardRemove(this.getAttribute('bno'))"><i class="fa-solid fa-trash-can" style="color: #000000"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -139,7 +139,11 @@
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 
 <script th:inline="javascript">
-
+    function boardRemove(bno){
+        if(confirm("정말로 삭제하시겠습니까?") == true){
+            location.href = '/board/remove?bno='+bno;
+        }
+    }
 </script>
 </body>
 </html>

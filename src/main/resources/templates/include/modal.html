@@ -11,23 +11,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/board/modify(bno=${detail.bno})}" method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" id="boardModifyForm">
                         <div class="mb-3">
                             <label for="boardTitle" class="col-form-label">게시판 이름</label>
-                            <input type="text" name="title" class="form-control" id="boardTitle" aria-describedby="title" th:value="${detail.title}">
+                            <input type="text" name="title" class="form-control" id="boardTitle" aria-describedby="title" th:value="${detail.title}" maxlength="95">
                         </div>
                         <div class="row">
                             <div class="col">
                                 <label for="layout" class="col-form-label">레이아웃</label>
-                                <select name="layout" id="layout" class="form-select" th:value="${detail.layout}">
-                                    <option value="GRID"> 격자형 </option>
-                                    <option value="TIMELINE"> 타임라인 </option>
-                                    <option value="GROUP"> 그룹형 </option>
+                                <select name="layout" id="layout" class="form-select">
+                                    <option value="GRID" th:selected="${detail.layout}=='GRID'"> 격자형 </option>
+                                    <option value="TIMELINE" th:selected="${detail.layout}=='TIMELINE'"> 타임라인 </option>
+                                    <option value="GROUP" th:selected="${detail.layout}=='GROUP'"> 그룹형 </option>
                                 </select>
                             </div>
                             <div class="col">
                                 <label for="maxStudent" class="col-form-label">최대 인원 수</label>
-                                <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${detail.maxStudent}">
+                                <input type="number" name="maxStudent" class="form-control" id="maxStudent" th:value="${detail.maxStudent}" min="1" max="50">
                             </div>
                         </div>
 
@@ -37,7 +37,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="boardFile" class="col-form-label">배경이미지</label>
-                            <input type="file" name="boardFile" class="form-control" id="boardFile" th:value="${detail.bgColor}" style="height: auto">
+                            <input type="file" name="boardFile" class="form-control" id="boardFile" style="height: auto">
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">수정</button>
@@ -106,7 +106,7 @@
                             </div>
                             <div class="col mb-3">
                                 <label for="postFile" class="col-form-label">배경이미지</label>
-                                <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto">
+                                <input type="file" name="postFile" class="form-control" id="postFile" style="height: auto" accept="image/*">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -133,6 +133,7 @@
                         <div class="mb-3" th:if="${detail.layout == 'GROUP'}">
                             <label for="gno">그룹</label>
                             <select name="gno" class="form-select">
+                                <option>그룹없음</option>
                                 <option th:each="g : ${groupList}" th:value="${g.gno}" th:text="${g.title}"></option>
                             </select>
                         </div>
@@ -147,7 +148,7 @@
                             </div>
                             <div class="col mb-3">
                                 <label for="postFile" class="col-form-label">배경이미지</label>
-                                <input type="file" name="postFile" class="form-control" style="height: auto">
+                                <input type="file" name="postFile" class="form-control" style="height: auto" accept="image/*">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -240,7 +241,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" id="groupRegisterModalForm">
+                    <form method="post" id="groupRegisterForm">
                         <input type="hidden" name="bno" th:value="${detail.bno}">
                         <div class="mb-3">
                             <label for="title" class="col-form-label">그룹 이름</label>
@@ -251,7 +252,7 @@
                             <input type="color" name="gColor" class="form-control" id="gColor" value="#ffffff">
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">수정</button>
+                            <button type="submit" class="btn btn-primary">등록</button>
                         </div>
                     </form>
                 </div>
@@ -288,5 +289,20 @@
         </div>
     </div>
     <!-- 그룹 수정 모달 창 끝 -->
+
+    <!--  그룹 모달 스크립트 시작  -->
+    <script th:inline="javascript">
+        // 그룹 수정
+        $('#groupModifyModal .btn-close').click(function (){
+            $("#groupRegisterForm input[name='title']").val("");
+        });
+
+        // 그룹 추가
+        $("#groupRegisterModal .btn-close").click(function() {
+            $("#groupRegisterForm input[name='title']").val("");
+            $("#groupRegisterForm input[name='gColor']").val('#ffffff');
+        });
+    </script>
+    <!--  그룹 모달 스크립트 끝  -->
 </th:block>
 </body>

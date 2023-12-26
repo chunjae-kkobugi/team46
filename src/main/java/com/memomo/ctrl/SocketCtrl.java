@@ -99,7 +99,7 @@ public class SocketCtrl {
         postService.postRemove(pno, oldLeft, oldRight, bno);
         plist.remove(originIdx);
 
-        System.out.println(postDTO);
+        log.info("===Post REMOVE==="+postDTO);
         return postDTO.getPno();
     }
 
@@ -126,6 +126,7 @@ public class SocketCtrl {
         // 나의 새로운 이전 노드 내가 head 가 되는 경우 0
 
         postService.postSort(oldRight, oldLeft, newRight, newLeft, layout.getPno(), bno);
+        log.info("===Post SORT==="+layout);
         return plist;
     }
 
@@ -182,8 +183,6 @@ public class SocketCtrl {
         log.info(pno + "------pno");
         return postService.postGet(pno);
     }
-
-    ;
 
     @PostMapping("/post/edit")
     @ResponseBody
@@ -270,5 +269,13 @@ public class SocketCtrl {
     public Comment commentCount(@DestinationVariable Long bno, Comment comment){
         comment.setCno(commentService.commentCount(comment.getPno()));
         return comment;
+    }
+
+    @MessageMapping("/layout/{bno}")
+    // Ant Path Pattern 과 template { 변수 } 가 사용가능하다. 이 template 변수는 @DestinationVariable 을 참조
+    @SendTo("/stomp-receive/layout/{bno}")
+    public String postEdit(@DestinationVariable Integer bno, String message) {
+        log.info("===Layout Changed===");
+        return "layoutChanged";
     }
 }

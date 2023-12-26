@@ -13,11 +13,6 @@
     <script th:src="@{/js/stomp.min.js}"></script>
     <script th:src="@{/js/jquery-ui-1.13.2/jquery-ui.js}"></script>
 
-    <!-- 화면 캡쳐 CDN -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <!-- 핵심 변수 선언 -->
     <script th:inline="javascript">
         const bno = /*[[${detail.bno}]]*/ 1;                // 세션 게시판 번호
@@ -28,11 +23,15 @@
         let realpath = /*[[@{'/'}]]*/ 'default';
     </script>
     <script th:src="@{/js/postLayout.js}"></script>
+    <!-- 화면 캡쳐 CDN -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         .post-style {
-            width: 275px;
-            height: 275px;
+            width: 260px;
+            height: 260px;
             text-overflow: ellipsis;
         }
 
@@ -83,6 +82,7 @@
             top: -15px;
             cursor: pointer;
         }
+
         .register {
             display: none;
             position: relative;
@@ -101,12 +101,16 @@
         .color {
             mix-blend-mode: difference; color: #000000;
         }
+        .color {
+            mix-blend-mode: difference; color: #000000;
+        }
         .original li { float: left;}
         .post { background-size: contain;
             background-repeat: repeat-y;
             background-position: center;
             min-height: 700px;}
         .content { position: relative; z-index: 1}
+
 
         .bg {
             position: absolute;
@@ -120,13 +124,16 @@
             height: 100%;
         }
 
-        .section a {
-            color: #040404;
-            text-decoration: none;
+        .groupLayout {
+            width: fit-content;
+            min-width: 300px;
         }
-        .section a:hover {
-            color: #555555;
+        .iconBtn{
             cursor: pointer;
+        }
+
+        .ui-sortable-handle:active{
+            cursor: grabbing;
         }
     </style>
 </head>
@@ -142,7 +149,7 @@
     <div class="mt-4 pb-3 " style="border-bottom: 1px solid rgb(175 174 174)">
         <div class="justify-content-between" style="display: flex">
             <div class="col-5">
-                <h1 class="ms-5">[[${detail.title}]] <a class="fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
+                <h1 class="ms-5">[[${detail.title}]] <a class="iconBtn fs-3 ms-1" data-bs-toggle="modal" data-bs-target="#modifyModal"><i class="fa-solid fa-pencil"></i></a></h1>
             </div>
             <!-- 포스트잇 등록 슬라이드 메뉴 시작 -->
             <div class="col-5 text-end" style="position: relative; z-index: 999">
@@ -169,7 +176,6 @@
         </div>
     </div>
 
-    <!-- 배경이미지 X -->
     <div class="post" th:id="${(detail.bgImage == null)? 'bgColorBoard': 'bgImageBoard'}">
         <div class="container-fluid m-0 row">
             <th:block th:if="${detail.layout eq 'GRID'}">
@@ -184,32 +190,14 @@
                 <th:block th:replace="~{include/modal :: groupModal}"></th:block>
             </th:block>
         </div>
-        <th:block th:replace="~{include/modal :: modal}"></th:block>
+    <th:block th:replace="~{include/modal :: modal}"></th:block>
     </div>
 
-    <!--    &lt;!&ndash; 배경이미지 O &ndash;&gt;
-        <div class="post" th:if="${detail.bgImage == null}" th:style="'background-color : ' +${detail.bgColor}">
-            <div class="container-fluid m-0 row">
-                <th:block th:if="${detail.layout eq 'GRID'}">
-                    <div th:replace="~{include/boardLayout :: grid-layout}" class="mb-0"></div>
-                </th:block>
-                <th:block th:if="${detail.layout eq 'TIMELINE'}">
-                    <div th:replace="~{include/boardLayout :: timeline-layout}" class="mb-0"></div>
-                </th:block>
-                <th:block th:if="${detail.layout eq 'GROUP'}">
-                    <div th:replace="~{include/boardLayout :: group-layout}" class="mb-0"></div>
-                    <th:block th:replace="~{include/modal :: groupModal}"></th:block>
-                </th:block>
-            </div>
-            <th:block th:replace="~{include/modal :: modal}"></th:block>
-        </div>-->
-
-
-
 </section>
+
+
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
-
 <script th:src="@{/js/postjs.js}" th:inline="javascript"></script>
 <script th:src="@{/js/postSocket.js}" th:inline="javascript"></script>
 
