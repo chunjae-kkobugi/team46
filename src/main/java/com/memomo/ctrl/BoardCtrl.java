@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Log4j2
@@ -35,6 +37,9 @@ public class BoardCtrl {
     @Autowired
     private MemberService memberService;
     BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private SimpMessagingTemplate msg;
 
     @RequestMapping("list")
     public String boardList(Model model, HttpServletRequest request){
@@ -112,12 +117,16 @@ public class BoardCtrl {
     }
 
     @PostMapping("modify")
-    public String boardModify(BoardDTO boardDTO, MultipartFile boardFile, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public String boardModify(@ModelAttribute BoardDTO boardDTO, @RequestParam("boardFile") Optional<MultipartFile> boardFile, HttpServletRequest request) {
         log.info("board modify-----------" + boardDTO);
-        boardService.boardEdit(boardDTO, boardFile, request);
-        redirectAttributes.addFlashAttribute("result", "modified");
-        redirectAttributes.addAttribute("bno", boardDTO.getBno());
-        return "redirect:/post/detail";
+        if(!boardFile.isPresent() || boardFile.isEmpty()){
+            boardService.boardEdit(boardDTO, null, request);
+        } else {
+            boardService.boardEdit(boardDTO, boardFile.orElseThrow(), request);
+        }
+
+        return "boardModify";
     }
 
     @GetMapping("remove")

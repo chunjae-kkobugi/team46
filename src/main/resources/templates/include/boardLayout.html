@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <body>
+<!-- 격자형 그리드 레이아웃 -->
 <th:block th:fragment="grid-layout">
     <ul id="sortable" class="ui-sortable">
     </ul>
@@ -25,7 +26,7 @@
     </script>
 </th:block>
 
-<!-- 타임라인 레이아웃 -->
+<!-- 연대기형 타임라인 레이아웃 -->
 <th:block th:fragment="timeline-layout">
     <!-- 타임라인 -->
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
@@ -58,21 +59,16 @@
 
         $(function(){
             jQuery('.timeline').timeline();
-
-            timeline(document.querySelectorAll('.timeline'), {
-                verticalStartPosition: 'left' // or right
-            });
-
-            $(".timeline__item--left ").addClass("d-flex justify-content-end");
+            // $(".timeline__item--left ").addClass("d-flex justify-content-end");
         });
     </script>
 </th:block>
 
-<!-- 그룹형 레이아웃 -->
+<!-- 모둠형 그룹 레이아웃 -->
 <th:block th:fragment="group-layout">
-    <div class="mt-5 row" id="groupList">
+    <div class="mt-5 mb-3 row" id="groupList">
         <!-- 그룹X -->
-        <div class="col-md-2">
+        <div class="groupLayout">
             <div class="card card-border-primary">
                 <div class="card-header">
                     <div class="card-actions float-end">
@@ -83,64 +79,10 @@
                     </div>
                     <h5 class="card-title mt-2">그룹 없음</h5>
                 </div>
-                <div class="card-body p-3">
-                    <!-- 그룹 내 포스트잇 시작 -->
-                    <div class="card mb-3"
-                         th:each="p : ${postList}" th:if="${p.layout.gno == null}"
-                         th:style="${p.bgImage == null ? 'height : 220px; background-color : ' + p.bgColor : 'height : 220px;'}"
-                         data-bs-toggle="modal" data-bs-target="#postGetModal" th:id="'getPost' + ${p.pno}">
-                        <div class="card-body p-3 original" th:id="'original' + ${p.pno}">
-                            <!-- 포스트잇 메뉴 시작 -->
-                            <div th:id="'postMenuList' + ${p.pno}" class="pe-3"
-                                 style="position: absolute; right: 0; height: auto; top: 10px; z-index: 10">
-                                <ul class="p-0" style="list-style-type: none">
-                                    <!-- 수정버튼 -->
-                                    <li class="me-2" th:id="'postModifyBtn' + ${p.pno}"
-                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
-                                        <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
-                                            <i class="fa-pen-to-square fa-solid"></i>
-                                        </span>
-                                    </li>
-                                    <!-- 삭제 버튼 -->
-                                    <li class="postRemoveBtn" th:data-pno="${p.pno}" onclick="postRemove(this.getAttribute('data-pno'))"
-                                        th:style="${ p.bgImage == null ? 'cursor: pointer; background-color : ' + p.bgColor : 'cursor: pointer; background-color : #ffffff' }">
-                                        <span th:style="${p.bgColor == '#ffffff' || p.bgColor == null ? 'color : #333333' : 'mix-blend-mode: difference; color : #ffffff'}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- 포스트잇 메뉴 끝 -->
-                            <div data-bs-toggle="modal" data-bs-target="#postGetModal" th:id="'getPost' + ${p.pno}" style="height: 100%; cursor: pointer">
-                                <p th:text="${p.content}" class="color pt-3" style="height: 70%"></p>
-                                <p class="text-end mb-0 color" th:text="${p.author}"></p>
-                            </div>
-                        </div>
-                        <!-- 포스트잇 수정 -->
-                        <div class="card-body p-3 modify register" th:id="'modify' + ${p.pno}">
-                            <form class="postEditForm" method="post" enctype="multipart/form-data">
-                                <div class="justify-content-center row">
-                                    <textarea name="content" cols="30" rows="5" class="form-control" maxlength="900" style="resize: none;height: 80px;">[[${p.content}]]</textarea>
-                                    <input type="hidden" name="pno" th:id="${p.pno}" th:value="${p.pno}">
-                                    <input type="hidden" name="bno" th:id="${p.bno}" th:value="${p.bno}">
-                                    <div class="justify-content-between row">
-                                        <input type="color" class="col-2 form-control mt-1" name="bgColor" id="bgColor" th:value="${p.bgColor}">
-                                        <input type="file" class="col form-control mb-2 me-2 mt-2 uploadFiles" id="postFile" name="postFile" style="height: auto">
-                                    </div>
-                                    <div class="btn-group d-flex">
-                                        <button type="button" class="btn btn-main" th:id="'reset' + ${p.pno}"> 취소 </button>
-                                        <button type="submit" class="btn btn-main" th:id="'modSubmit' + ${p.pno}"> 수정 </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- 포스트잇 수정 끝 -->
-                    </div>
-                    <!-- 그룹 내 포스트잇 끝 -->
-                </div>
+                <div class="card-body p-1 groupPostList" id="noGroupPostList"></div>
             </div>
         </div>
-        <!-- 그룹 끝 -->
+        <!-- 그룹X 끝 -->
     </div>
 
     <script th:inline="javascript">
@@ -151,12 +93,12 @@
         })
 
         postList.forEach(function(p){
-            let newPost = groupPost(p);
+            let newPost = postLayout(p, sid);
             let gno = p.layout.gno;
             if(gno!==null){
                 $(`.groupPostList[data-gno=${gno}]`).append(newPost);
             } else {
-                $("#noGroup").append(newPost);
+                $("#noGroupPostList").append(newPost);
             }
         })
 

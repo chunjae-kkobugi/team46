@@ -34,10 +34,10 @@
 </section>
 <section class="section pb-5">
     <div class="col-6 container">
-        <form th:action="@{/board/register}" method="post" enctype="multipart/form-data">
+        <form id="boardRegisterForm" th:action="@{/board/register}" method="post" enctype="multipart/form-data">
             <div class="col-12 mb-3">
                 <label for="title" class="form-label"> 게시판 이름 </label>
-                <input type="text" class="form-control" id="title" name="title" maxlength="80" required>
+                <input type="text" class="form-control" id="title" name="title" maxlength="95" required>
             </div>
             <div class="col-12 mb-3">
                 <label for="bpw" class="form-label"> 비밀번호 <span>(선택)</span></label>
@@ -46,7 +46,7 @@
             <div class="row mb-3">
                 <div class="col-4">
                     <label for="maxStudent" class="form-label"> 최대 학생수 </label>
-                    <input type="number" class="form-control" name="maxStudent" id="maxStudent" value="1" max="50">
+                    <input type="number" class="form-control" name="maxStudent" id="maxStudent" value="1" max="50" min="1" required>
                 </div>
                 <div class="col-4">
                     <label for="boardFile" class="form-label uploadHidden"> 배경이미지 <span>(선택)</span></label>
@@ -70,4 +70,18 @@
 </section>
 <th:block th:replace="~{include/footer :: footer}"></th:block>
 </body>
+<script>
+    $("#boardRegisterForm").submit(function(e){
+        e.preventDefault();
+        let form = $(this)[0];
+        let titleVal = $("#title").val();
+
+        if($.trim(titleVal)===""){
+            alert("게시판 제목은 공백이 될 수 없습니다.");
+            return false;
+        }
+
+        form.submit();
+    })
+</script>
 </html>
