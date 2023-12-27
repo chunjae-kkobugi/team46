@@ -144,6 +144,12 @@ public class BoardServiceImpl implements BoardService{
         if (boardFile != null && !boardFile.isEmpty()) {
             MultipartFile multipartFile = boardFile;
 
+
+            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
+            Board board = result.orElseThrow();
+            BoardFile fileResult = boardFileRepo.findBoardFileByFno(board.getBgImage());
+            fileResult.change("REMOVE");
+
             // 서버 경로
 //            ServletContext application = request.getSession().getServletContext();
 //            String uploadDir = application.getRealPath("/images/boardImage/");
@@ -162,7 +168,7 @@ public class BoardServiceImpl implements BoardService{
             }
 
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = uploadDir + today;
+            String saveFolder = uploadDir + '/' + today;
             System.out.println(saveFolder);
 
 
@@ -201,8 +207,6 @@ public class BoardServiceImpl implements BoardService{
                 e.printStackTrace();
                 System.out.println("업로드 실패" + e.getMessage());
             }
-            BoardFile fileResult = boardFileRepo.findBoardFileByFno(boardDTO.getBgImage());
-            fileResult.change("REMOVE");
 
             BoardFile image = new BoardFile();
             image.setBno(boardDTO.getBno());
@@ -211,9 +215,6 @@ public class BoardServiceImpl implements BoardService{
             image.setSavePath(today);
             image.setFileType(fileExtension);
             image.setStatus("ACTIVE");
-
-            Optional<Board> result = boardRepo.findById(boardDTO.getBno());
-            Board board = result.orElseThrow();
 
             BoardFile existingFile = boardDTO.getFile();
             if (existingFile != null) {
