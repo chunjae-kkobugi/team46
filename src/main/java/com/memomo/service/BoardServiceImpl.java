@@ -238,11 +238,13 @@ public class BoardServiceImpl implements BoardService{
             // 새 비밀번호 입력 시 비밀번호 전달
             if(boardDTO.getBpw()!=null){
                 String pw = pwEncoder.encode(boardDTO.getBpw());
-                boardDTO.setBpw(pw);
+                board.setBpw(pw);
             }
 
             // 게시판 정보 변경
-            modelMapper.map(board, boardDTO); // null 이 아닌 변경된 값만 board 에 대입
+            board.setTitle(boardDTO.getTitle());
+            board.setBgColor(boardDTO.getBgColor());
+            board.setLayout(boardDTO.getLayout());
 //            board.change(boardDTO.getTitle(), boardDTO.getBpw(), boardDTO.getMaxStudent(), boardDTO.getBgColor(), boardDTO.getBgImage(), boardDTO.getStatus(), boardDTO.getLayout());
 
             // 게시판 저장
