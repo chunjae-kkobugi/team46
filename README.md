@@ -23,6 +23,9 @@
 ## 📝프로젝트 설계
 
 ### UCD
+![join](./readme/ucd_join.png)
+![board](./readme/ucd_board.png)
+![board](./readme/ucd_post.png)
 
 
 ### ERD
@@ -43,3 +46,4 @@
 
 
 ## 🎥 시연 영상
+![video](./readme/team46_memomo.gif)
